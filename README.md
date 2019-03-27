@@ -1,25 +1,25 @@
-# chess.js
+# xiangqi.js
 
 [![Build Status](https://travis-ci.org/jhlywa/chess.js.svg?branch=master)](https://travis-ci.org/jhlywa/chess.js)
 
-chess.js is a Javascript chess library that is used for chess move
+xiangqi.js is a Javascript chess library that is used for chess move
 generation/validation, piece placement/movement, and check/checkmate/stalemate
 detection - basically everything but the AI.
 
-chess.js has been extensively tested in node.js and most modern browsers.
+xiangqi.js has been extensively tested in node.js and most modern browsers.
 
 ## Installation
 
 To install the stable version:
 
 ```sh
-npm install --save chess.js
+npm install --save xiangqi.js
 ```
 
-chess.js is also available via [CDNJS](https://cdnjs.com/libraries/chess.js):
+xiangqi.js is also available via [CDNJS](https://cdnjs.com/libraries/chess.js):
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xiangqi.js/0.10.2/xiangqi.js"></script>
 ```
 
 ## Example Code
@@ -37,7 +37,7 @@ while (!chess.game_over()) {
 console.log(chess.pgn());
 ```
 
-## Sites Using chess.js
+## Sites Using xiangqi.js
 
 - [chess.com](http://www.chess.com/)
 - [The Internet Chess Club (ICC)](http://www.chessclub.com/)
@@ -57,7 +57,7 @@ console.log(chess.pgn());
 Need a user interface?  Try Chris Oakman's excellent
 [chessboard.js](http://chessboardjs.com) library.  See
 [chessboard.js - Random vs Random](http://chessboardjs.com/examples#5002) for
-an example integration of chess.js with chessboard.js.
+an example integration of xiangqi.js with chessboard.js.
 
 ## API
 
@@ -322,7 +322,7 @@ must themselves be escaped (see `sloppy_pgn` example below). Avoid using
 a `newline_char` that may occur elsewhere in a PGN, such as `.` or `x`, as this
 will result in unexpected behavior.
 
-The `sloppy` flag is a boolean that permits chess.js to parse moves in
+The `sloppy` flag is a boolean that permits xiangqi.js to parse moves in
 non-standard notations. See `.move` documentation for more information about
 non-SAN notations.
 

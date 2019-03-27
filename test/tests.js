@@ -1,49 +1,52 @@
-if (typeof require != "undefined") {
+'use strict';
+
+if (typeof require !== 'undefined') {
   var chai = require('chai');
-  var Chess = require('../chess').Chess;
+  var Xiangqi = require('../xiangqi').Xiangqi;
 }
 
 var assert = chai.assert;
 
-describe("Perft", function() {
+/*
+describe('Perft', function() {
   var perfts = [
-    {fen: 'r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1',
+    {fen: 'r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R r KQkq - 0 1',
       depth: 3, nodes: 97862},
-    {fen: '8/PPP4k/8/8/8/8/4Kppp/8 w - - 0 1',
+    {fen: '8/PPP4k/8/8/8/8/4Kppp/8 r - - 0 1',
       depth: 4, nodes: 89363},
-    {fen: '8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1',
+    {fen: '8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 r - - 0 1',
       depth: 4, nodes: 43238},
-    {fen: 'rnbqkbnr/p3pppp/2p5/1pPp4/3P4/8/PP2PPPP/RNBQKBNR w KQkq b6 0 4',
+    {fen: 'rnbqkbnr/p3pppp/2p5/1pPp4/3P4/8/PP2PPPP/RNBQKBNR r KQkq b6 0 4',
       depth: 3, nodes: 23509},
   ];
 
   perfts.forEach(function(perft) {
-    var chess = new Chess();
-    chess.load(perft.fen);
+    var xiangqi = new Xiangqi();
+    xiangqi.load(perft.fen);
 
     it(perft.fen, function() {
-      var nodes = chess.perft(perft.depth);
-      assert(nodes == perft.nodes);
+      var nodes = xiangqi.perft(perft.depth);
+      assert(nodes === perft.nodes);
     });
 
   });
 });
+*/
 
-
-describe("Single Square Move Generation", function() {
+describe('Single Square Move Generation', function() {
 
   var positions = [
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',
       square: 'e2', verbose: false, moves: ['e3', 'e4']},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',
       square: 'e9', verbose: false, moves: []},  // invalid square
-    {fen: 'rnbqk1nr/pppp1ppp/4p3/8/1b1P4/2N5/PPP1PPPP/R1BQKBNR w KQkq - 2 3',
+    {fen: 'rnbqk1nr/pppp1ppp/4p3/8/1b1P4/2N5/PPP1PPPP/R1BQKBNR r KQkq - 2 3',
       square: 'c3', verbose: false, moves: []},  // pinned piece
     {fen: '8/k7/8/8/8/8/7p/K7 b - - 0 1',
       square: 'h2', verbose: false, moves: ['h1=Q+', 'h1=R+', 'h1=B', 'h1=N']},  // promotion
-    {fen: 'r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/2B1P3/2NP1N2/PPPBQPPP/R3K2R w KQ - 0 8',
+    {fen: 'r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/2B1P3/2NP1N2/PPPBQPPP/R3K2R r KQ - 0 8',
       square: 'e1', verbose: false, moves: ['Kf1', 'Kd1', 'O-O', 'O-O-O']},  // castling
-    {fen: 'r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/2B1P3/2NP1N2/PPPBQPPP/R3K2R w - - 0 8',
+    {fen: 'r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/2B1P3/2NP1N2/PPPBQPPP/R3K2R r - - 0 8',
       square: 'e1', verbose: false, moves: ['Kf1', 'Kd1']},  // no castling
     {fen: '8/7K/8/8/1R6/k7/1R1p4/8 b - - 0 1',
       square: 'a3', verbose: false, moves: []},  // trapped king
@@ -60,20 +63,20 @@ describe("Single Square Move Generation", function() {
   ];
 
   positions.forEach(function(position) {
-    var chess = new Chess();
-    chess.load(position.fen);
+    var xiangqi = new Xiangqi();
+    xiangqi.load(position.fen);
 
     it(position.fen + ' ' + position.square, function() {
 
-      var moves = chess.moves({square: position.square, verbose: position.verbose});
-      var passed = position.moves.length == moves.length;
+      var moves = xiangqi.moves({square: position.square, verbose: position.verbose});
+      var passed = position.moves.length === moves.length;
 
       for (var j = 0; j < moves.length; j++) {
         if (!position.verbose) {
-          passed = passed && moves[j] == position.moves[j];
+          passed = passed && moves[j] === position.moves[j];
         } else {
           for (var k in moves[j]) {
-            passed = passed && moves[j][k] == position.moves[j][k];
+            passed = passed && moves[j][k] === position.moves[j][k];
           }
         }
       }
@@ -86,43 +89,40 @@ describe("Single Square Move Generation", function() {
 });
 
 
+describe('Checkmate', function() {
 
-
-describe("Checkmate", function() {
-
-  var chess = new Chess();
+  var xiangqi = new Xiangqi();
   var checkmates = [
-    '8/5r2/4K1q1/4p3/3k4/8/8/8 w - - 0 7',
+    '8/5r2/4K1q1/4p3/3k4/8/8/8 r - - 0 7',
     '4r2r/p6p/1pnN2p1/kQp5/3pPq2/3P4/PPP3PP/R5K1 b - - 0 2',
-    'r3k2r/ppp2p1p/2n1p1p1/8/2B2P1q/2NPb1n1/PP4PP/R2Q3K w kq - 0 8',
+    'r3k2r/ppp2p1p/2n1p1p1/8/2B2P1q/2NPb1n1/PP4PP/R2Q3K r kq - 0 8',
     '8/6R1/pp1r3p/6p1/P3R1Pk/1P4P1/7K/8 b - - 0 4'
   ];
 
   checkmates.forEach(function(checkmate) {
-    chess.load(checkmate);
+    xiangqi.load(checkmate);
 
     it(checkmate, function() {
-      assert(chess.in_checkmate());
+      assert(xiangqi.in_checkmate());
     });
   });
 
 });
 
 
-
-describe("Stalemate", function() {
+describe('Stalemate', function() {
 
   var stalemates = [
     '1R6/8/8/8/8/8/7R/k6K b - - 0 1',
-    '8/8/5k2/p4p1p/P4K1P/1r6/8/8 w - - 0 2',
+    '8/8/5k2/p4p1p/P4K1P/1r6/8/8 r - - 0 2',
   ];
 
   stalemates.forEach(function(stalemate) {
-    var chess = new Chess();
-    chess.load(stalemate);
+    var xiangqi = new Xiangqi();
+    xiangqi.load(stalemate);
 
     it(stalemate, function() {
-      assert(chess.in_stalemate())
+      assert(xiangqi.in_stalemate());
     });
 
   });
@@ -130,29 +130,29 @@ describe("Stalemate", function() {
 });
 
 
-describe("Insufficient Material", function() {
+describe('Insufficient Material', function() {
 
   var positions = [
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', draw: false},
-    {fen: '8/8/8/8/8/8/8/k6K w - - 0 1', draw: true},
-    {fen: '8/2p5/8/8/8/8/8/k6K w - - 0 1', draw: false},
-    {fen: '8/2N5/8/8/8/8/8/k6K w - - 0 1', draw: true},
-    {fen: '8/2b5/8/8/8/8/8/k6K w - - 0 1', draw: true},
-    {fen: '8/b7/3B4/8/8/8/8/k6K w - - 0 1', draw: true},
-    {fen: '8/b7/B7/8/8/8/8/k6K w - - 0 1', draw: false},
-    {fen: '8/b1B1b1B1/1b1B1b1B/8/8/8/8/1k5K w - - 0 1', draw: true},
-    {fen: '8/bB2b1B1/1b1B1b1B/8/8/8/8/1k5K w - - 0 1', draw: false}
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1', draw: false},
+    {fen: '8/8/8/8/8/8/8/k6K r - - 0 1', draw: true},
+    {fen: '8/2p5/8/8/8/8/8/k6K r - - 0 1', draw: false},
+    {fen: '8/2N5/8/8/8/8/8/k6K r - - 0 1', draw: true},
+    {fen: '8/2b5/8/8/8/8/8/k6K r - - 0 1', draw: true},
+    {fen: '8/b7/3B4/8/8/8/8/k6K r - - 0 1', draw: true},
+    {fen: '8/b7/B7/8/8/8/8/k6K r - - 0 1', draw: false},
+    {fen: '8/b1B1b1B1/1b1B1b1B/8/8/8/8/1k5K r - - 0 1', draw: true},
+    {fen: '8/bB2b1B1/1b1B1b1B/8/8/8/8/1k5K r - - 0 1', draw: false}
   ];
 
   positions.forEach(function(position) {
-    var chess = new Chess();
-    chess.load(position.fen);
+    var xiangqi = new Xiangqi();
+    xiangqi.load(position.fen);
 
     it(position.fen, function() {
       if (position.draw) {
-        assert(chess.insufficient_material() && chess.in_draw());
+        assert(xiangqi.insufficient_material() && xiangqi.in_draw());
       } else {
-        assert(!chess.insufficient_material() && !chess.in_draw());
+        assert(!xiangqi.insufficient_material() && !xiangqi.in_draw());
       }
     });
 
@@ -161,33 +161,33 @@ describe("Insufficient Material", function() {
 });
 
 
-describe("Threefold Repetition", function() {
+describe('Threefold Repetition', function() {
 
   var positions = [
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-     moves: ['Nf3', 'Nf6', 'Ng1', 'Ng8', 'Nf3', 'Nf6', 'Ng1', 'Ng8']},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1',
+     moves: ['h0g2', 'h9g7', 'g2h0', 'g7h9', 'h0g2', 'h9g7', 'g2h0', 'g7h9']},
 
     /* Fischer - Petrosian, Buenos Aires, 1971 */
-    {fen: '8/pp3p1k/2p2q1p/3r1P2/5R2/7P/P1P1QP2/7K b - - 2 30',
-     moves: ['Qe5', 'Qh5', 'Qf6', 'Qe2', 'Re5', 'Qd3', 'Rd5', 'Qe2']},
+    // {fen: '8/pp3p1k/2p2q1p/3r1P2/5R2/7P/P1P1QP2/7K b - - 2 30',
+    //  moves: ['Qe5', 'Qh5', 'Qf6', 'Qe2', 'Re5', 'Qd3', 'Rd5', 'Qe2']},
   ];
 
   positions.forEach(function(position) {
-    var chess = new Chess();
-    chess.load(position.fen);
+    var xiangqi = new Xiangqi();
+    xiangqi.load(position.fen);
 
     it(position.fen, function() {
 
       var passed = true;
       for (var j = 0; j < position.moves.length; j++) {
-        if (chess.in_threefold_repetition()) {
+        if (xiangqi.in_threefold_repetition()) {
           passed = false;
           break;
         }
-        chess.move(position.moves[j]);
+        xiangqi.move(position.moves[j]);
       }
 
-      assert(passed && chess.in_threefold_repetition() && chess.in_draw());
+      assert(passed && xiangqi.in_threefold_repetition() && xiangqi.in_draw());
 
     });
 
@@ -195,11 +195,11 @@ describe("Threefold Repetition", function() {
 
 });
 
-
-describe("Algebraic Notation", function() {
+/*
+describe('Algebraic Notation', function() {
 
   var positions = [
-    {fen: '7k/3R4/3p2Q1/6Q1/2N1N3/8/8/3R3K w - - 0 1',
+    {fen: '7k/3R4/3p2Q1/6Q1/2N1N3/8/8/3R3K r - - 0 1',
      moves: ['Rd8#', 'Re7', 'Rf7', 'Rg7', 'Rh7#', 'R7xd6', 'Rc7', 'Rb7', 'Ra7',
              'Qf7', 'Qe8#', 'Qg7#', 'Qg8#', 'Qh7#', 'Q6h6#', 'Q6h5#', 'Q6f5',
              'Q6f6#', 'Qe6', 'Qxd6', 'Q5f6#', 'Qe7', 'Qd8#', 'Q5h6#', 'Q5h5#',
@@ -208,14 +208,14 @@ describe("Algebraic Notation", function() {
              'Ne5', 'Ne3', 'Ncd2', 'Nb2', 'Na3', 'Nc5', 'Nexd6', 'Nf6', 'Ng3',
              'Nf2', 'Ned2', 'Nc3', 'Rd2', 'Rd3', 'Rd4', 'Rd5', 'R1xd6', 'Re1',
              'Rf1', 'Rg1', 'Rc1', 'Rb1', 'Ra1', 'Kg2', 'Kh2', 'Kg1']},
-    {fen: '1r3k2/P1P5/8/8/8/8/8/R3K2R w KQ - 0 1',
+    {fen: '1r3k2/P1P5/8/8/8/8/8/R3K2R r KQ - 0 1',
      moves: ['a8=Q', 'a8=R', 'a8=B', 'a8=N', 'axb8=Q+', 'axb8=R+', 'axb8=B',
              'axb8=N', 'c8=Q+', 'c8=R+', 'c8=B', 'c8=N', 'cxb8=Q+', 'cxb8=R+',
              'cxb8=B', 'cxb8=N', 'Ra2', 'Ra3', 'Ra4', 'Ra5', 'Ra6', 'Rb1',
              'Rc1', 'Rd1', 'Kd2', 'Ke2', 'Kf2', 'Kf1', 'Kd1', 'Rh2', 'Rh3',
              'Rh4', 'Rh5', 'Rh6', 'Rh7', 'Rh8+', 'Rg1', 'Rf1+', 'O-O+',
              'O-O-O']},
-    {fen: '5rk1/8/8/8/8/8/2p5/R3K2R w KQ - 0 1',
+    {fen: '5rk1/8/8/8/8/8/2p5/R3K2R r KQ - 0 1',
      moves: ['Ra2', 'Ra3', 'Ra4', 'Ra5', 'Ra6', 'Ra7', 'Ra8', 'Rb1', 'Rc1',
              'Rd1', 'Kd2', 'Ke2', 'Rh2', 'Rh3', 'Rh4', 'Rh5', 'Rh6', 'Rh7',
              'Rh8+', 'Rg1+', 'Rf1']},
@@ -223,7 +223,7 @@ describe("Algebraic Notation", function() {
      moves: ['Rf7', 'Rf6', 'Rf5', 'Rf4', 'Rf3', 'Rf2', 'Rf1+', 'Re8+', 'Rd8',
              'Rc8', 'Rb8', 'Ra8', 'Kg7', 'Kf7', 'c1=Q+', 'c1=R+', 'c1=B',
              'c1=N']},
-    {fen: 'r3k2r/p2pqpb1/1n2pnp1/2pPN3/1p2P3/2N2Q1p/PPPB1PPP/R3K2R w KQkq c6 0 2',
+    {fen: 'r3k2r/p2pqpb1/1n2pnp1/2pPN3/1p2P3/2N2Q1p/PPPB1PPP/R3K2R r KQkq c6 0 2',
      moves: ['gxh3', 'Qxf6', 'Qxh3', 'Nxd7', 'Nxf7', 'Nxg6', 'dxc6', 'dxe6',
              'Rg1', 'Rf1', 'Ke2', 'Kf1', 'Kd1', 'Rb1', 'Rc1', 'Rd1', 'g3',
              'g4', 'Be3', 'Bf4', 'Bg5', 'Bh6', 'Bc1', 'b3', 'a3', 'a4', 'Qf4',
@@ -237,17 +237,17 @@ describe("Algebraic Notation", function() {
   ];
 
   positions.forEach(function(position) {
-    var chess = new Chess();
+    var xiangqi = new Xiangqi();
     var passed = true;
-    chess.load(position.fen);
+    xiangqi.load(position.fen);
 
     it(position.fen, function() {
-      var moves = chess.moves();
-      if (moves.length != position.moves.length) {
+      var moves = xiangqi.moves();
+      if (moves.length !== position.moves.length) {
         passed = false;
       } else {
         for (var j = 0; j < moves.length; j++) {
-          if (position.moves.indexOf(moves[j]) == -1) {
+          if (position.moves.indexOf(moves[j]) === -1) {
             passed = false;
             break;
           }
@@ -259,79 +259,80 @@ describe("Algebraic Notation", function() {
   });
 
 });
+*/
 
+describe('Get/Put/Remove', function() {
 
-describe("Get/Put/Remove", function() {
-
-  var chess = new Chess();
+  var xiangqi = new Xiangqi();
   var passed = true;
   var positions = [
-    {pieces: {a7: {type: chess.PAWN, color: chess.WHITE},
-              b7: {type: chess.PAWN, color: chess.BLACK},
-              c7: {type: chess.KNIGHT, color: chess.WHITE},
-              d7: {type: chess.KNIGHT, color: chess.BLACK},
-              e7: {type: chess.BISHOP, color: chess.WHITE},
-              f7: {type: chess.BISHOP, color: chess.BLACK},
-              g7: {type: chess.ROOK, color: chess.WHITE},
-              h7: {type: chess.ROOK, color: chess.BLACK},
-              a6: {type: chess.QUEEN, color: chess.WHITE},
-              b6: {type: chess.QUEEN, color: chess.BLACK},
-              a4: {type: chess.KING, color: chess.WHITE},
-              h4: {type: chess.KING, color: chess.BLACK}},
+    {pieces: {a7: {type: xiangqi.PAWN, color: xiangqi.RED},
+              b7: {type: xiangqi.PAWN, color: xiangqi.BLACK},
+              c7: {type: xiangqi.KNIGHT, color: xiangqi.RED},
+              d7: {type: xiangqi.KNIGHT, color: xiangqi.BLACK},
+              e7: {type: xiangqi.BISHOP, color: xiangqi.RED},
+              f7: {type: xiangqi.BISHOP, color: xiangqi.BLACK},
+              g7: {type: xiangqi.ROOK, color: xiangqi.RED},
+              h7: {type: xiangqi.ROOK, color: xiangqi.BLACK},
+              a6: {type: xiangqi.QUEEN, color: xiangqi.RED},
+              b6: {type: xiangqi.QUEEN, color: xiangqi.BLACK},
+              a4: {type: xiangqi.KING, color: xiangqi.RED},
+              h4: {type: xiangqi.KING, color: xiangqi.BLACK}},
      should_pass: true},
 
-    {pieces: {a7: {type: 'z', color: chess.WHTIE}}, // bad piece
+    {pieces: {a7: {type: 'z', color: xiangqi.RDE}}, // bad piece
      should_pass: false},
 
-    {pieces: {j4: {type: chess.PAWN, color: chess.WHTIE}}, // bad square
+    {pieces: {j4: {type: xiangqi.PAWN, color: xiangqi.RDE}}, // bad square
      should_pass: false},
 
     /* disallow two kings (black) */
-    {pieces: {a7: {type: chess.KING, color: chess.BLACK},
-              h2: {type: chess.KING, color: chess.WHITE},
-              a8: {type: chess.KING, color: chess.BLACK}},
+    {pieces: {a7: {type: xiangqi.KING, color: xiangqi.BLACK},
+              h2: {type: xiangqi.KING, color: xiangqi.RED},
+              a8: {type: xiangqi.KING, color: xiangqi.BLACK}},
       should_pass: false},
 
     /* disallow two kings (white) */
-    {pieces: {a7: {type: chess.KING, color: chess.BLACK},
-              h2: {type: chess.KING, color: chess.WHITE},
-              h1: {type: chess.KING, color: chess.WHITE}},
+    {pieces: {a7: {type: xiangqi.KING, color: xiangqi.BLACK},
+              h2: {type: xiangqi.KING, color: xiangqi.RED},
+              h1: {type: xiangqi.KING, color: xiangqi.RED}},
       should_pass: false},
 
     /* allow two kings if overwriting the exact same square */
-    {pieces: {a7: {type: chess.KING, color: chess.BLACK},
-              h2: {type: chess.KING, color: chess.WHITE},
-              h2: {type: chess.KING, color: chess.WHITE}},
+    {pieces: {a7: {type: xiangqi.KING, color: xiangqi.BLACK},
+              h2: {type: xiangqi.KING, color: xiangqi.RED},
+              h2: {type: xiangqi.KING, color: xiangqi.RED}},
       should_pass: true},
   ];
 
   positions.forEach(function(position) {
 
     passed = true;
-    chess.clear();
+    xiangqi.clear();
 
-    it("position should pass - " + position.should_pass, function() {
+    it('position should pass - ' + position.should_pass, function() {
+      var square, j, piece;
 
       /* places the pieces */
-      for (var square in position.pieces) {
-        passed &= chess.put(position.pieces[square], square);
+      for (square in position.pieces) {
+        passed &= xiangqi.put(position.pieces[square], square);
       }
 
       /* iterate over every square to make sure get returns the proper
        * piece values/color
        */
-      for (var j = 0; j < chess.SQUARES.length; j++) {
-        var square = chess.SQUARES[j];
+      for (j = 0; j < xiangqi.SQUARES.length; j++) {
+        square = xiangqi.SQUARES[j];
         if (!(square in position.pieces)) {
-          if (chess.get(square)) {
+          if (xiangqi.get(square)) {
             passed = false;
             break;
           }
         } else {
-          var piece = chess.get(square);
+          piece = xiangqi.get(square);
           if (!(piece &&
-              piece.type == position.pieces[square].type &&
-              piece.color == position.pieces[square].color)) {
+              piece.type === position.pieces[square].type &&
+              piece.color === position.pieces[square].color)) {
             passed = false;
             break;
           }
@@ -340,17 +341,17 @@ describe("Get/Put/Remove", function() {
 
       if (passed) {
         /* remove the pieces */
-        for (var j = 0; j < chess.SQUARES.length; j++) {
-          var square = chess.SQUARES[j];
-          var piece = chess.remove(square);
+        for (j = 0; j < xiangqi.SQUARES.length; j++) {
+          square = xiangqi.SQUARES[j];
+          piece = xiangqi.remove(square);
           if ((!(square in position.pieces)) && piece) {
             passed = false;
             break;
           }
 
           if (piece &&
-             (position.pieces[square].type != piece.type ||
-              position.pieces[square].color != piece.color)) {
+             (position.pieces[square].type !== piece.type ||
+              position.pieces[square].color !== piece.color)) {
             passed = false;
             break;
           }
@@ -358,12 +359,12 @@ describe("Get/Put/Remove", function() {
       }
 
       /* finally, check for an empty board */
-      passed = passed && (chess.fen() == '8/8/8/8/8/8/8/8 w - - 0 1');
+      passed = passed && (xiangqi.fen() === '8/8/8/8/8/8/8/8 r - - 0 1');
 
       /* some tests should fail, so make sure we're supposed to pass/fail each
        * test
        */
-      passed = (passed == position.should_pass);
+      passed = (passed === position.should_pass);
 
       assert(passed);
     });
@@ -373,38 +374,38 @@ describe("Get/Put/Remove", function() {
 });
 
 
-describe("FEN", function() {
+describe('FEN', function() {
 
   var positions = [
-    {fen: '8/8/8/8/8/8/8/8 w - - 0 1', should_pass: true},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', should_pass: true},
+    {fen: '8/8/8/8/8/8/8/8 r - - 0 1', should_pass: true},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1', should_pass: true},
     {fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1', should_pass: true},
     {fen: '1nbqkbn1/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/1NBQKBN1 b - - 1 2', should_pass: true},
 
     /* incomplete FEN string */
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBN w KQkq - 0 1', should_pass: false},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBN r KQkq - 0 1', should_pass: false},
 
     /* bad digit (9)*/
-    {fen: 'rnbqkbnr/pppppppp/9/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', should_pass: false},
+    {fen: 'rnbqkbnr/pppppppp/9/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1', should_pass: false},
 
     /* bad piece (X)*/
     {fen: '1nbqkbn1/pppp1ppX/8/4p3/4P3/8/PPPP1PPP/1NBQKBN1 b - - 1 2', should_pass: false},
   ];
 
   positions.forEach(function(position) {
-    var chess = new Chess();
+    var xiangqi = new Xiangqi();
 
     it(position.fen + ' (' + position.should_pass + ')', function() {
-      chess.load(position.fen);
-      assert(chess.fen() == position.fen == position.should_pass);
+      xiangqi.load(position.fen);
+      assert(xiangqi.fen() === position.fen === position.should_pass);
     });
 
   });
 
 });
 
-
-describe("PGN", function() {
+/*
+describe('PGN', function() {
 
   var passed = true;
   var error_message;
@@ -417,10 +418,10 @@ describe("PGN", function() {
              'h5', 'Bxg5', 'Bg2', 'Kxg2', 'Kf5', 'Bh4', 'Kg4', 'Bg3', 'Kf5', 'e4+',
              'Kg4', 'e5', 'h4', 'Bxh4', 'Kxh4', 'e6', 'c5', 'bxc5', 'bxc5', 'e7', 'c4',
              'bxc4', 'Kg4', 'e8=Q', 'Kf5', 'Qe5+', 'Kg4', 'Re4#'],
-     header: ['White', 'Jeff Hlywa', 'Black', 'Steve Bragg', 'GreatestGameEverPlayed?', 'True'],
+     header: ['Red', 'Jeff Hlywa', 'Black', 'Steve Bragg', 'GreatestGameEverPlayed?', 'True'],
      max_width:19,
-     newline_char:"<br />",
-     pgn: '[White "Jeff Hlywa"]<br />[Black "Steve Bragg"]<br />[GreatestGameEverPlayed? "True"]<br /><br />1. d4 d5 2. Nf3 Nc6<br />3. e3 e6 4. Bb5 g5<br />5. O-O Qf6<br />6. Nc3 Bd7<br />7. Bxc6 Bxc6<br />8. Re1 O-O-O<br />9. a4 Bb4 10. a5 b5<br />11. axb6 axb6<br />12. Ra8+ Kd7<br />13. Ne5+ Kd6<br />14. Rxd8+ Qxd8<br />15. Nxf7+ Ke7<br />16. Nxd5+ Qxd5<br />17. c3 Kxf7<br />18. Qf3+ Qxf3<br />19. gxf3 Bxf3<br />20. cxb4 e5<br />21. dxe5 Ke6<br />22. b3 Kxe5<br />23. Bb2+ Ke4<br />24. Bxh8 Nf6<br />25. Bxf6 h5<br />26. Bxg5 Bg2<br />27. Kxg2 Kf5<br />28. Bh4 Kg4<br />29. Bg3 Kf5<br />30. e4+ Kg4<br />31. e5 h4<br />32. Bxh4 Kxh4<br />33. e6 c5<br />34. bxc5 bxc5<br />35. e7 c4<br />36. bxc4 Kg4<br />37. e8=Q Kf5<br />38. Qe5+ Kg4<br />39. Re4#',
+     newline_char:'<br />',
+     pgn: '[Red "Jeff Hlywa"]<br />[Black "Steve Bragg"]<br />[GreatestGameEverPlayed? "True"]<br /><br />1. d4 d5 2. Nf3 Nc6<br />3. e3 e6 4. Bb5 g5<br />5. O-O Qf6<br />6. Nc3 Bd7<br />7. Bxc6 Bxc6<br />8. Re1 O-O-O<br />9. a4 Bb4 10. a5 b5<br />11. axb6 axb6<br />12. Ra8+ Kd7<br />13. Ne5+ Kd6<br />14. Rxd8+ Qxd8<br />15. Nxf7+ Ke7<br />16. Nxd5+ Qxd5<br />17. c3 Kxf7<br />18. Qf3+ Qxf3<br />19. gxf3 Bxf3<br />20. cxb4 e5<br />21. dxe5 Ke6<br />22. b3 Kxe5<br />23. Bb2+ Ke4<br />24. Bxh8 Nf6<br />25. Bxf6 h5<br />26. Bxg5 Bg2<br />27. Kxg2 Kf5<br />28. Bh4 Kg4<br />29. Bg3 Kf5<br />30. e4+ Kg4<br />31. e5 h4<br />32. Bxh4 Kxh4<br />33. e6 c5<br />34. bxc5 bxc5<br />35. e7 c4<br />36. bxc4 Kg4<br />37. e8=Q Kf5<br />38. Qe5+ Kg4<br />39. Re4#',
      fen: '8/8/8/4Q3/2P1R1k1/8/5PKP/8 b - - 4 39'},
     {moves: ['c4', 'e6', 'Nf3', 'd5', 'd4', 'Nf6', 'Nc3', 'Be7', 'Bg5', 'O-O', 'e3', 'h6',
              'Bh4', 'b6', 'cxd5', 'Nxd5', 'Bxe7', 'Qxe7', 'Nxd5', 'exd5', 'Rc1', 'Be6',
@@ -430,16 +431,16 @@ describe("PGN", function() {
              'Rxf5', 'Nh7', 'Rcf1', 'Qd8', 'Qg3', 'Re7', 'h4', 'Rbb7', 'e6', 'Rbc7',
              'Qe5', 'Qe8', 'a4', 'Qd8', 'R1f2', 'Qe8', 'R2f3', 'Qd8', 'Bd3', 'Qe8',
              'Qe4', 'Nf6', 'Rxf6', 'gxf6', 'Rxf6', 'Kg8', 'Bc4', 'Kh8', 'Qf4'],
-     header: ["Event", "Reykjavik WCh", "Site", "Reykjavik WCh", "Date", "1972.01.07", "EventDate", "?", "Round", "6", "Result", "1-0",
-            "White", "Robert James Fischer", "Black", "Boris Spassky", "ECO", "D59", "WhiteElo", "?", "BlackElo", "?", "PlyCount", "81"],
+     header: ['Event', 'Reykjavik WCh', 'Site', 'Reykjavik WCh', 'Date', '1972.01.07', 'EventDate', '?', 'Round', '6', 'Result', '1-0',
+            'Red', 'Robert James Fischer', 'Black', 'Boris Spassky', 'ECO', 'D59', 'WhiteElo', '?', 'BlackElo', '?', 'PlyCount', '81'],
      max_width:65,
-     pgn: '[Event "Reykjavik WCh"]\n[Site "Reykjavik WCh"]\n[Date "1972.01.07"]\n[EventDate "?"]\n[Round "6"]\n[Result "1-0"]\n[White "Robert James Fischer"]\n[Black "Boris Spassky"]\n[ECO "D59"]\n[WhiteElo "?"]\n[BlackElo "?"]\n[PlyCount "81"]\n\n1. c4 e6 2. Nf3 d5 3. d4 Nf6 4. Nc3 Be7 5. Bg5 O-O 6. e3 h6\n7. Bh4 b6 8. cxd5 Nxd5 9. Bxe7 Qxe7 10. Nxd5 exd5 11. Rc1 Be6\n12. Qa4 c5 13. Qa3 Rc8 14. Bb5 a6 15. dxc5 bxc5 16. O-O Ra7\n17. Be2 Nd7 18. Nd4 Qf8 19. Nxe6 fxe6 20. e4 d4 21. f4 Qe7\n22. e5 Rb8 23. Bc4 Kh8 24. Qh3 Nf8 25. b3 a5 26. f5 exf5\n27. Rxf5 Nh7 28. Rcf1 Qd8 29. Qg3 Re7 30. h4 Rbb7 31. e6 Rbc7\n32. Qe5 Qe8 33. a4 Qd8 34. R1f2 Qe8 35. R2f3 Qd8 36. Bd3 Qe8\n37. Qe4 Nf6 38. Rxf6 gxf6 39. Rxf6 Kg8 40. Bc4 Kh8 41. Qf4 1-0',
+     pgn: '[Event "Reykjavik WCh"]\n[Site "Reykjavik WCh"]\n[Date "1972.01.07"]\n[EventDate "?"]\n[Round "6"]\n[Result "1-0"]\n[Red "Robert James Fischer"]\n[Black "Boris Spassky"]\n[ECO "D59"]\n[WhiteElo "?"]\n[BlackElo "?"]\n[PlyCount "81"]\n\n1. c4 e6 2. Nf3 d5 3. d4 Nf6 4. Nc3 Be7 5. Bg5 O-O 6. e3 h6\n7. Bh4 b6 8. cxd5 Nxd5 9. Bxe7 Qxe7 10. Nxd5 exd5 11. Rc1 Be6\n12. Qa4 c5 13. Qa3 Rc8 14. Bb5 a6 15. dxc5 bxc5 16. O-O Ra7\n17. Be2 Nd7 18. Nd4 Qf8 19. Nxe6 fxe6 20. e4 d4 21. f4 Qe7\n22. e5 Rb8 23. Bc4 Kh8 24. Qh3 Nf8 25. b3 a5 26. f5 exf5\n27. Rxf5 Nh7 28. Rcf1 Qd8 29. Qg3 Re7 30. h4 Rbb7 31. e6 Rbc7\n32. Qe5 Qe8 33. a4 Qd8 34. R1f2 Qe8 35. R2f3 Qd8 36. Bd3 Qe8\n37. Qe4 Nf6 38. Rxf6 gxf6 39. Rxf6 Kg8 40. Bc4 Kh8 41. Qf4 1-0',
      fen: '4q2k/2r1r3/4PR1p/p1p5/P1Bp1Q1P/1P6/6P1/6K1 b - - 4 41'},
     {moves: ['f3', 'e5', 'g4', 'Qh4#'],     // testing max_width being small and having no comments
      header: [],
      max_width:1,
      pgn: '1. f3 e5\n2. g4 Qh4#',
-     fen: 'rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3'},
+     fen: 'rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR r KQkq - 1 3'},
     {moves: ['Ba5', 'O-O', 'd6', 'd4'],     // testing a non-starting position
      header: [],
      max_width:20,
@@ -451,21 +452,21 @@ describe("PGN", function() {
   positions.forEach(function(position, i) {
 
     it(i, function() {
-      var chess = ("starting_position" in position) ? new Chess(position.starting_position) : new Chess();
+      var xiangqi = ('starting_position' in position) ? new Xiangqi(position.starting_position) : new Xiangqi();
       passed = true;
-      error_message = "";
+      error_message = '';
       for (var j = 0; j < position.moves.length; j++) {
-        if (chess.move(position.moves[j]) === null) {
-          error_message = "move() did not accept " + position.moves[j] + " : ";
+        if (xiangqi.move(position.moves[j]) === null) {
+          error_message = 'move() did not accept ' + position.moves[j] + ' : ';
           break;
         }
       }
 
-      chess.header.apply(null, position.header);
-      var pgn = chess.pgn({max_width:position.max_width, newline_char:position.newline_char});
-      var fen = chess.fen();
+      xiangqi.header.apply(null, position.header);
+      var pgn = xiangqi.pgn({max_width:position.max_width, newline_char:position.newline_char});
+      var fen = xiangqi.fen();
       passed = pgn === position.pgn && fen === position.fen;
-      assert(passed && error_message.length == 0);
+      assert(passed && error_message.length === 0);
     });
 
   });
@@ -473,104 +474,265 @@ describe("PGN", function() {
 });
 
 
-describe("Load PGN", function() {
+describe('Load PGN', function() {
 
-  var chess = new Chess();
+  var xiangqi = new Xiangqi();
   var tests = [
-     {pgn: [
-       '[Event "Reykjavik WCh"]',
-       '[Site "Reykjavik WCh"]',
-       '[Date "1972.01.07"]',
-       '[EventDate "?"]',
-       '[Round "6"]',
-       '[Result "1-0"]',
-       '[White "Robert James Fischer"]',
-       '[Black "Boris Spassky"]',
-       '[ECO "D59"]',
-       '[WhiteElo "?"]',
-       '[BlackElo "?"]',
-       '[PlyCount "81"]',
-       '',
-       '1. c4 e6 2. Nf3 d5 3. d4 Nf6 4. Nc3 Be7 5. Bg5 O-O 6. e3 h6',
-       '7. Bh4 b6 8. cxd5 Nxd5 9. Bxe7 Qxe7 10. Nxd5 exd5 11. Rc1 Be6',
-       '12. Qa4 c5 13. Qa3 Rc8 14. Bb5 a6 15. dxc5 bxc5 16. O-O Ra7',
-       '17. Be2 Nd7 18. Nd4 Qf8 19. Nxe6 fxe6 20. e4 d4 21. f4 Qe7',
-       '22. e5 Rb8 23. Bc4 Kh8 24. Qh3 Nf8 25. b3 a5 26. f5 exf5',
-       '27. Rxf5 Nh7 28. Rcf1 Qd8 29. Qg3 Re7 30. h4 Rbb7 31. e6 Rbc7',
-       '32. Qe5 Qe8 33. a4 Qd8 34. R1f2 Qe8 35. R2f3 Qd8 36. Bd3 Qe8',
-       '37. Qe4 Nf6 38. Rxf6 gxf6 39. Rxf6 Kg8 40. Bc4 Kh8 41. Qf4 1-0'],
-       expect: true
-      },
-    {fen: '1n1Rkb1r/p4ppp/4q3/4p1B1/4P3/8/PPP2PPP/2K5 b k - 1 17',
-     pgn: [
-      '[Event "Paris"]',
-      '[Site "Paris"]',
-      '[Date "1858.??.??"]',
-      '[EventDate "?"]',
-      '[Round "?"]',
-      '[Result "1-0"]',
-      '[White "Paul Morphy"]',
-      '[Black "Duke Karl / Count Isouard"]',
-      '[ECO "C41"]',
-      '[WhiteElo "?"]',
-      '[BlackElo "?"]',
-      '[PlyCount "33"]',
-      '',
-      '1.e4 e5 2.Nf3 d6 3.d4 Bg4 {This is a weak move',
-      'already.--Fischer} 4.dxe5 Bxf3 5.Qxf3 dxe5 6.Bc4 Nf6 7.Qb3 Qe7',
-      '8.Nc3 c6 9.Bg5 {Black is in what\'s like a zugzwang position',
-      'here. He can\'t develop the [Queen\'s] knight because the pawn',
-      'is hanging, the bishop is blocked because of the',
-      'Queen.--Fischer} b5 10.Nxb5 cxb5 11.Bxb5+ Nbd7 12.O-O-O Rd8',
-      '13.Rxd7 Rxd7 14.Rd1 Qe6 15.Bxd7+ Nxd7 16.Qb8+ Nxb8 17.Rd8# 1-0'],
-      expect: true},
-    // Github Issue #134 - Load PGN with comment before first move
-    {fen : 'r1bqk2r/pp1nbppp/2p1pn2/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w kq - 4 7',
+    {
       pgn: [
-      '[Event "2012 ROCHESTER GRAND WINTER OPEN"]',
-      '[Site "Rochester"]',
-      '[Date "2012.02.04"]',
-      '[Round "1"]',
-      '[White "Jensen, Matthew"]',
-      '[Black "Gaustad, Kevin"]',
-      '[Result "1-0"]',
-      '[ECO "E01"]',
-      '[WhiteElo "2131"]',
-      '[BlackElo "1770"]',
-      '[Annotator "Jensen, Matthew"]',
-      '',
-      '{ Kevin and I go way back.  I checked the USCF player stats and my previous',
-      'record against Kevin was 4 losses and 1 draw out of 5 games.  All of our',
-      'previous games were between 1992-1998. }',
-      '1.d4 Nf6 2.c4 e6 3.g3 { Avrukh says',
-      'to play 3.g3 instead of 3.Nf3 in case the Knight later comes to e2, as in the',
-      'Bogo-Indian. } 3...d5 4.Bg2 c6 5.Nf3 Be7 6.O-O Nbd7',
-      '1-0'],
-      expect: true},
-    {pgn: [
-      '1. e4 e5 2. f4 exf4 3. Nf3 g5 4. h4 g4 5. Ne5 Nf6 6. Nxg4 Nxe4',
-      '7. d3 Ng3 8. Bxf4 Nxh1 9. Qe2+ Qe7 10. Nf6+ Kd8 11. Bxc7+ Kxc7',
-      '12. Nd5+ Kd8 13. Nxe7 Bxe7 14. Qg4 d6 15. Qf4 Rg8 16. Qxf7 Bxh4+',
-      '17. Kd2 Re8 18. Na3 Na6 19. Qh5 Bf6 20. Qxh1 Bxb2 21. Qh4+ Kd7',
-      '22. Rb1 Bxa3 23. Qa4+'],
-      expect: true},
-    /* regression test - broken PGN parser ended up here:
-     * fen = rnbqk2r/pp1p1ppp/4pn2/1N6/1bPN4/8/PP2PPPP/R1BQKB1R b KQkq - 2 6 */
+        '[Game "Chinese Chess"]',
+        '[Event "第24届“五羊杯”全国冠军邀请赛"]',
+        '[Site "广州"]',
+        '[Date "2004.01.05"]',
+        '[Round "决赛(加赛)"]',
+        '[RedTeam "广州"]',
+        '[Red "吕钦"]',
+        '[BlackTeam "广州"]',
+        '[Black "许银川"]',
+        '[Result "1-0"]',
+        '[Opening "中炮过河炮对左三步虎"]',
+        '[ECCO "B24"]',
+        '',
+        ' 1. 炮二平五 马８进７',
+        ' 2. 马二进三 车９平８',
+        ' 3. 兵三进一 炮８平９',
+        ' 4. 马八进七 卒３进１',
+        ' 5. 炮八进四 马２进３',
+        ' 6. 炮八平七 车１平２',
+        ' 7. 车九平八 象３进５',
+        ' 8. 车八进四 车８进４',
+        ' 9. 炮七平三 炮２平１',
+        '10. 车八进五 马３退２',
+        '11. 车一进一 马２进３',
+        '12. 车一平八 马３进４',
+        '13. 车八进三 马４进３',
+        '14. 炮三平九 车８平４',
+        '15. 仕六进五 车４退１',
+        '16. 炮九退一 车４平３',
+        '17. 相七进九 炮１平３',
+        '18. 炮九进四 炮３退２',
+        '19. 马三进四 车３平１',
+        '20. 炮九平八 马３进５',
+        '21. 相三进五 炮９进４',
+        '22. 马四进六 车１退２',
+        '23. 相九退七 车１平４',
+        '24. 马六进四 车４平６',
+        '25. 车八平四 马７退５',
+        '26. 兵三进一 马５进３',
+        '27. 炮八平九 马３退２',
+        '28. 炮九平七 象５退３',
+        '29. 兵三进一 马２进３',
+        '30. 车四平六 车６进１',
+        '31. 兵九进一 士６进５',
+        '32. 相五退三 卒３进１',
+        '33. 车六平七 马３进４',
+        '34. 马四退三 炮９平７',
+        '35. 马三进二 马４进６',
+        '36. 相七进五 象７进５',
+        '37. 车七平五 炮７平８',
+        '38. 兵三进一 车６进１',
+        '39. 马二退三 车６进１',
+        '40. 车五进二 车６平７',
+        '41. 车五平二 炮８平７',
+        '42. 仕五进六 车７退２',
+        '43. 车二退三 炮７进２',
+        '44. 兵五进一 炮７平６',
+        '45. 车二平五 车７进２',
+        '46. 兵五进一 卒９进１',
+        '47. 马七进六 卒９进１',
+        '48. 马三退二 马６进７',
+        '49. 车五平四 炮６平４',
+        '50. 马六进四 卒９平８',
+        '51. 车四退二 卒８进１',
+        '52. 马二退一 马７退８',
+        '53. 车四平六 马８退６',
+        '54. 兵五平四 车７平６',
+        '55. 马一进三 卒８平７',
+        '56. 马三进一 卒７平８',
+        '57. 车六平九 车６进１',
+        '58. 马一退三 卒８平７',
+        '59. 相五退七 车６平５',
+        '60. 马三进五 卒７平６',
+        '61. 仕六退五 卒６平５',
+        '62. 马五进三 车５平７',
+        '63. 马三退四 卒５平６',
+        '64. 马四进二 车７平６',
+        '65. 车九进二 卒６平７',
+        '66. 相七进五 卒７平８',
+        '67. 马二进四 卒８平７',
+        '68. 马四退六 车６进１',
+        '69. 车九退二 车６平４',
+        '70. 兵九进一 卒７平６',
+        '71. 车九进三 卒６平５',
+        '72. 车九平五 1-0'
+      ],
+      expect: true
+    },
+    {
+      pgn: [
+        '[Game "Chinese Chess"]',
+        '[Event "1982年全国赛"]',
+        '[Date "1982.12.11"]',
+        '[Red "柳大华"]',
+        '[Black "杨官璘"]',
+        '[Result "1/2-1/2"]',
+        '',
+        '1.  炮八平五 马２进３ 2.  马八进七 车１平２ 3.  车九平八 马８进７',
+        '4.  兵三进一 卒３进１ 5.  车八进六 炮２平１ 6.  车八平七 炮１退１',
+        '7.  马二进三 士６进５ 8.  炮二平一 炮１平３ 9.  车七平六 马３进２',
+        '10. 车一平二 车９平８ 11. 马七退五 卒３进１ 12. 车六退一 炮３进５',
+        '13. 车二进六 马２进４ 14. 炮五平七 车２进２ 15. 炮七进二 车２平４',
+        '16. 马三进四 炮８平９ 17. 车二平三 车８进７ 18. 兵三进一 炮３平２',
+        '19. 兵三平四 炮２进３ 20. 马五进三 马４退６ 21. 仕四进五 车８退４',
+        '22. 车六平七 象３进１ 23. 车三平二 象１进３ 24. 车二退三 炮２退３',
+        '25. 兵五进一 炮２退１ 26. 相三进五 炮２平５ 27. 炮一退一 炮９退１',
+        '28. 炮一平三 炮９平７ 29. 炮七退二 车４平６ 30. 炮七平八 象３退１',
+        '31. 车二平七 车６平２ 32. 炮八平七 车２平６ 33. 炮七平八 车６平２',
+        '34. 炮八平九 车２平６ 35. 炮九进四 马６进８ 36. 炮九平八 象７进５',
+        '37. 炮三平四 马８进６ 38. 炮八退三 马６进７ 39. 帅五平四 后马进６',
+        '40. 车七平五 卒５进１ 41. 炮八退二 车６进１ 42. 车五平三 炮７平６',
+        '43. 炮四进一 马７进９ 44. 车三平二 炮６退１ 45. 炮八进四 马９退７',
+        '46. 车二进二 象１进３ 47. 炮八平五 炮５平２ 48. 兵九进一 炮２进１',
+        '49. 炮四进一 炮２进１ 50. 仕五进六 炮２进２ 51. 帅四进一 炮２平４',
+        '52. 兵九进一 炮４平７ 53. 帅四平五 炮７退２ 54. 炮四进二 炮６进４',
+        '55. 马四退三 车６平２ 56. 帅五平四 炮６退４ 57. 车二退四 车２平５',
+        '58. 炮五平六 士５进６ 59. 帅四平五 车５平２ 60. 兵九平八 车２平１',
+        '61. 兵八平九 车１平２ 62. 兵九平八 车２平１ 63. 兵八平九 1/2-1/2'
+      ],
+      expect: true
+    },
+    {
+      // pgn without comments behind moves.
+      fen: '2b2a3/3ka4/4b4/N8/8p/P5p2/4p4/9/4A4/4KAB2 b - - 0 43',
+      pgn: [
+        '[Game "Chinese Chess"]',
+        '[Event "第一届全运会象棋决赛"]',
+        '[Date "1959.??.??"]',
+        '[Red "李义庭"]',
+        '[Black "王嘉良"]',
+        '[Result "1/2-1/2"]',
+        '[Opening "五六炮对屏风马先进3卒"]',
+        '[ECCO "C70"]',
+        '',
+        '1.  炮二平五    马８进７   2.  马二进三    卒３进１  ',
+        '{黑方进3卒是屏风马应中炮的一种着法。一般认为，这种走法使后手方的作战计划暴露过早，',
+        '因此，后手方必须十分熟悉这一布局的变化，才能应付裕如。黑方的用意在于，不让对方先进七兵，因为李义庭对中炮进七兵的布局尤其擅长}',
+        '3.  车一平二    车９平８   4.  马八进九  ',
+        '{过去，红棋的一方往往走巡河车，然后兑兵，',
+        '如王再越在《梅花谱》中所介绍的，现在，这种走法比较不常见了，原因是它的变化已为大家所熟悉，容易成和。',
+        '红方上边马之后，一般有炮八平六（五六炮）、炮八平七（五七炮）、炮八进四（五八炮，但须先进三兵）或车九进一的四种变化} ',
+        '马２进３ 5.  炮八平六  ',
+        '{红方选定五六炮的布局} ',
+        '车１平２  ',
+        '{黑方一般习见的走法是炮8进2，既防红右车过河，又封红左车，但红方可以进七兵先献，以后升右车捉死卒，红方仍保留先手。',
+        '如改应马2进3封车，红方兵三进一，将来有炮六进三打马，黑方马2退3后再炮六进一打卒，一般认为演变下去对红方有利}',
+        '6.  车九平八    象７进５  ',
+        '{早作马回窝心新颖布局的准备} ',
+        '7.  车八进六    卒７进１   8.  车八平七    马３退５  ',
+        '{有句老话：“马回中心必定凶”。意思是，回窝心马的一方总是凶多吉少，但这是过去的看法，',
+        '建国后象棋布局日新月异，早就打破了前人的常规。黑方不宜走马3进4，否则红炮打士得势}',
+        '9.  车二进四  ',
+        '{红车巡河比过河车路宽敞，但此时如改走炮五进四，得中卒后，仍有先手。兑去子力以后，局势比现在稍要简单一些。',
+        '为谋求复杂变化的条件下斗智，寻找胜利的可能，红方的战术思想是：尽量保持战斗实力，争取主动} ',
+        '炮２进５  ',
+        '{为削弱红方中路攻势，进炮邀兑，这步棋是明智的}',
+        '10. 兵九进一 ',
+        '{挺边兵为边马开路，出马以后可以支援左车，是稳步进攻的着法} ',
+        '炮８进１ 11. 车七进二    炮２平５   12. 相三进五    车２进３  ',
+        '{黑方进车抢占要道，埋伏退炮打死车的阴谋}',
+        '13. 马九进八    车２平４   14. 仕六进五    炮８退２   15. 车七退二    车４平３   ',
+        '16. 马八进七    炮８平９ ',
+        '{现在黑方平炮兑车，已为以后弃子夺先准备条件}',
+        '17. 车二平四  ',
+        '{红方避兑占四路要道比车二平六稳健。如果改走车二平六，粗看可以得士，但右翼容易受黑方威胁。',
+        '如改走车二进五兑车，容易走成和局} ',
+        '车８进７   18. 车四进四  ',
+        '{这时，棋盘上逐渐出现紧张局势，红方下一步有马七进八准备挂角的杀机} ',
+        '马５进３   19. 炮六进五 ',
+        '{红方炮打马配合车攻击黑炮，来势汹汹} ',
+        '车８平７   ',
+        '20. 炮六平三    炮９进５ ',
+        '{经过一阵搏杀，黑方实现了弃子夺先的战术计划}',
+        '21. 炮三平七    炮９进３   22. 相五退三    车７进２   23. 车四平二    车７退３   ',
+        '24. 车二退八    炮９退３  ',
+        '{黑方虽失一子，但车炮控制要道，况5卒俱全，乍看起来，红方并不利。观至此，不禁为红方捏把汗}',
+        '25. 炮七平八  ',
+        '{既可以退炮打中卒，有可以进马压象田，红方此时借对攻达到积极防守的目的}',
+        ' 炮９平５  ',
+        '{炮轰中兵是棋势复杂化。如改走平车杀中兵，较为平稳，易成和局}',
+        '26. 相七进五  ',
+        '{经过惊涛骇浪之后，红方谨慎地补上一相。其实，改补相为上士（士五进四），则红方以车马炮单缺相对黑车炮多卒，',
+        '谋攻谋和究竟都比较主动。但这时的局势千变万化，一时奥妙难测，在受竞赛时限的条件下要洞察其秘，毕竟是有困难的}',
+        ' 炮５退１  ',
+        '{黑方退炮后，黑车即将调往右翼，给红方以巨大的威胁} ',
+        '27. 马七进六    士４进５   28. 炮八进二  象３进１ 29. 马六退八 将５平４ 30. 马八退六    炮５退１   ',
+        '31. 炮八退四    车７平３  32. 炮八平五    卒５进１  ',
+        '{为摆脱黑方的威胁，红方在以上几个回合中，马炮协作，以机警细致的着法步步紧迫黑方，终于兑去黑炮，平息了风波。',
+        '现在的局势：红方车马兵单缺相，黑方车多卒士象全。以后双方残局着法工稳，终成正和} ',
+        '33. 车二进四    车３平４   34. 马六进七    象１退３   35. 车二进二    车４退５   36. 车二平七    卒９进１ ',
+        '37. 马七退六    车４平２   38. 车七退一    卒５进１   39. 车七平八    车２进３   40. 马六退八    卒５进１ ',
+        '41. 马八进七    将４进１   42. 相五退三    卒７进１   43. 马七退九    1/2-1/2'
+      ],
+      expect: true
+    },
+    {
+      // Load PGN with comment before first move
+      fen: '2R6/5k2C/n8/p1p5p/6b2/6p2/9/9/9/4K4 b - - 0 38',
+      pgn: [
+        '[Game "Chinese Chess"]',
+        '[Event "许银川让九子对聂棋圣"]',
+        '[Site "广州"]',
+        '[Date "1999.12.09"]',
+        '[Red "许银川"]',
+        '[Black "聂卫平"]',
+        '[Result "1-0"]',
+        '[FEN "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR r - - 0 1"]',
+        '{　　评注：许银川',
+        '　　象棋让九子原属茶余饭后的娱乐，不意今日却被摆上赛桌，更为离奇的是：我的对手竟是在围棋棋坛上叱咤风云的聂大帅。赛前我并不了解对手的实力，但相信以聂棋圣在围棋上所体现出来的过人智慧，必能在棋理上触类旁通。因此我在赛前也作了一些准备，在对局中更是小心翼翼，不敢掉以轻心。',
+        '　　许银川让去５只兵和双士双相，执红先行。棋盘如右图所示。当然，PGN文件里是无法嵌入图片的。}',
+        '',
+        '',
+        '',
+        '1. 炮八平五 炮８平５',
+        '{　　红方首着架中炮必走之着，聂棋圣还架中炮拼兑子力，战术对头。}',
+        '2. 炮五进五 象７进５ 3. 炮二平五',
+        '{　　再架中炮也属正着，如改走马八进七，则象５退７，红方帅府受攻，当然若红方仍再架中炮拼兑，那么失去双炮就难有作用了。}',
+        '马８进７ 4. 马二进三 车９平８ 5. 马八进七 马２进１ 6. 车九平六 车１平２',
+        '{　　聂棋圣仍按常规战法出动主力，却忽略了红方车塞象眼的凶着，应走车１进１。}',
+        '7. 车六进八',
+        '{　　红车疾点象眼，局势霎时有剑拔弩张之感。这种对弈不能以常理揣度，红方只能像程咬金的三板斧一般猛攻一轮，若黑方防守得法则胜负立判。}',
+        '炮２进７',
+        '{　　却说聂棋圣见我来势汹汹，神色顿时颇为凝重，一番思索之后沉下底炮以攻为守，果是身手不凡。此着如改走炮２平３，则帅五平六，炮３进５，车六进一，将５进１，炮五退二，黑方不易驾驭局面。}',
+        '8. 车一进四 炮２平１ 9. 马七进八 炮１退４ 10. 马八退七 炮１进４ 11. 马七进八 车２进２',
+        '{　　其实黑方仍可走炮１退４，红方若续走马八退七，则仍炮１进４不变作和，因黑右车叫将红可车六退九，故不算犯规。}',
+        '12. 炮五平八 炮１退４',
+        '{　　劣着，导致失子，应走车２平３，红方如马八进六，则车３退１，红方无从着手。但有一点必须注意，黑车躲进暗道似与棋理相悖，故聂棋圣弃子以求局势缓和情有可原。}',
+        '13. 炮八进五 炮１平９ 14. 炮八平三 车８进２ 15. 炮三进一 车８进２ 16. 马八进六 炮９平５',
+        '17. 炮三平一 士６进５ 18. 马六进四 车８平５ 19. 帅五平六',
+        '{　　可直接走马四进三叫将再踩中象。}',
+        '车５平６ 20. 马四进三 将５平６ 21. 车六退四 卒５进１ 22. 车六进二 炮５平７',
+        '23. 前马退二 象５进７ 24. 马二退三 卒５进１ 25. 车六平三 卒５平６ 26. 车三进三 将６进１',
+        '27. 后马进二 士５进６ 28. 马二进三 将６平５ 29. 前马进二',
+        '{　　红方有些拖沓，应直接走车三平六立成绝杀。}',
+        '将５进１ 30. 车三平六 士６退５ 31. 马二退三 车６退１ 32. 车六退三',
+        '{　　再擒一车，以下着法仅是聊尽人事而已。}',
+        '车６平７ 33. 车六平三 卒６平７ 34. 车三平五 将５平６ 35. 帅六平五 将６退１',
+        '36. 车五进二 将６退１ 37. 车五进一 将６进１ 38. 车五平七',
+        '{　　至此，聂棋圣认负。与此同时，另一盘围棋对弈我被屠去一条大龙，已无力再战，遂平分秋色，皆大欢喜。}',
+        '1-0'
+      ],
+      expect: true
+    },
+    // regression test - broken PGN parser ended up here:
+    // fen = rnbqk2r/pp1p1ppp/4pn2/1N6/1bPN4/8/PP2PPPP/R1BQKB1R b KQkq - 2 6
     {pgn: ['1. d4 Nf6 2. c4 e6 3. Nf3 c5 4. Nc3 cxd4 5. Nxd4 Bb4 6. Nb5'],
      fen: 'rnbqk2r/pp1p1ppp/4pn2/1N6/1bP5/2N5/PP2PPPP/R1BQKB1R b KQkq - 2 6',
      expect: true},
     {pgn: ['1. e4 Qxd7 1/2-1/2'],
      expect: false},
-    {pgn: ['1. e4!! e5?! 2. d4?? d5!?'],
-     fen: 'rnbqkbnr/ppp2ppp/8/3pp3/3PP3/8/PPP2PPP/RNBQKBNR w KQkq d6 0 3',
-     expect: true},
-    {pgn: ['1. e4!+'],
-     expect: false},
-    {pgn: ['1.e4 e6 2.d4 d5 3.exd5 c6?? 4.dxe6 Nf6?! 5.exf7+!! Kd7!? 6.Nf3 Bd6 7.f8=N+!! Qxf8'],
-     fen: 'rnb2q1r/pp1k2pp/2pb1n2/8/3P4/5N2/PPP2PPP/RNBQKB1R w KQ - 0 8',
-     expect: true},
+    // variation test (with comments behind moves)
     {pgn: ['1. e4 ( 1. d4 { Queen\'s pawn } d5 ( 1... Nf6 ) ) e5'],
-     fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2',
+     fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR r KQkq e6 0 2',
      expect: true
     },
     {pgn: [
@@ -581,7 +743,7 @@ describe("Load PGN", function() {
       'The best move was h6. } (17... h6 18. Rd1 Re8 19. Qg3 Nh5 20. Qg4',
       'Nf6 21. Qh3 Bc6 22. Kg1 Qb8 23. Qg3 Nh5 24. Qf2 Bf6 25. Be2 Bxd4',
       '26. Rxd4 Nf6 27. g3) 18. f5 e5'],
-     fen: '3q1rk1/1b1rbp1p/p2p1np1/1p2pP2/3BP3/P1NB3Q/1PP3PP/4RR1K w - - 0 19',
+     fen: '3q1rk1/1b1rbp1p/p2p1np1/1p2pP2/3BP3/P1NB3Q/1PP3PP/4RR1K r - - 0 19',
      expect: true},
     {pgn: [
       '1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. b4 Bb6 5. a4 a6 6. c3 Nf6 7. d3 d6',
@@ -594,7 +756,7 @@ describe("Load PGN", function() {
     {pgn: [
       '1. d4 d5 2. Bf4 Nf6 3. e3 g6 4. Nf3 (4. Nc3 Bg7 5. Nf3 O-O 6. Be2 c5)',
       '4... Bg7 5. h3 { 5. Be2 O-O 6. O-O c5 7. c3 Nc6 } 5... O-O'],
-     fen: 'rnbq1rk1/ppp1ppbp/5np1/3p4/3P1B2/4PN1P/PPP2PP1/RN1QKB1R w KQ - 1 6',
+     fen: 'rnbq1rk1/ppp1ppbp/5np1/3p4/3P1B2/4PN1P/PPP2PP1/RN1QKB1R r KQ - 1 6',
      expect: true},
 
     // test the sloppy PGN parser
@@ -605,7 +767,7 @@ describe("Load PGN", function() {
       '20.Rac1 Ba3 21.Rb1 Rxc2 22.f4 Ng4 23.Rxd7+ Kc6 24.Rxf7 Bxb2 25.Rxg7',
       'Ne3 26.Rg3 Bd4 27.Kh1 Rxa2 28.Rc1+ Kb6 29.e5 Rf8 30.e6 Rxf4 31.e7 Re4',
       '32.Rg7 Bxg7'],
-      fen: '8/4P1bp/pk6/1p6/4r3/1P2n3/r5PP/2R4K w - - 0 33',
+      fen: '8/4P1bp/pk6/1p6/4r3/1P2n3/r5PP/2R4K r - - 0 33',
       expect: false,
       sloppy: false},
 
@@ -616,7 +778,7 @@ describe("Load PGN", function() {
       '20.Rac1 Ba3 21.Rb1 Rxc2 22.f4 Ng4 23.Rxd7+ Kc6 24.Rxf7 Bxb2 25.Rxg7',
       'Ne3 26.Rg3 Bd4 27.Kh1 Rxa2 28.Rc1+ Kb6 29.e5 Rf8 30.e6 Rxf4 31.e7 Re4',
       '32.Rg7 Bxg7'],
-      fen: '8/4P1bp/pk6/1p6/4r3/1P2n3/r5PP/2R4K w - - 0 33',
+      fen: '8/4P1bp/pk6/1p6/4r3/1P2n3/r5PP/2R4K r - - 0 33',
       expect: true,
       sloppy: true},
 
@@ -629,14 +791,14 @@ describe("Load PGN", function() {
       '20.Rac1 Ba3 21.Rb1 Rxc2 22.f4 Ng4 23.Rxd7+ Kc6 24.Rxf7 Bxb2 25.Rxg7',
       'Ne3 26.Rg3 Bd4 27.Kh1 Rxa2 28.Rc1+ Kb6 29.e5 Rf8 30.e6 Rxf4 31.e7 Re4',
       '32.Rg7 Bxg7'],
-      fen: '8/4P1bp/pk6/1p6/4r3/1P2n3/r5PP/2R4K w - - 0 33',
+      fen: '8/4P1bp/pk6/1p6/4r3/1P2n3/r5PP/2R4K r - - 0 33',
       expect: true,
       sloppy: true},
 
     {pgn: [
       '1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6 4.Ng5 d5 5.exd5 Nxd5 6.Nxf7 Kxf7 7.Qf3+',
       'Ke6 8.Nc3 Nb4'],
-      fen: 'r1bq1b1r/ppp3pp/4k3/3np3/1nB5/2N2Q2/PPPP1PPP/R1B1K2R w KQ - 4 9',
+      fen: 'r1bq1b1r/ppp3pp/4k3/3np3/1nB5/2N2Q2/PPPP1PPP/R1B1K2R r KQ - 4 9',
       expect: true,
       sloppy: true
     },
@@ -676,7 +838,7 @@ describe("Load PGN", function() {
       'c1c2 b7b5 29. c4b5 e6d5 30. f3d1 f7h5 31. c2h2 g4g3+ 32. f4g3 g8g3+ 33.',
       'g1f2 h5h2+ 34. f2e1 g3g2 35. d1d3 d5e4 36. d3d7+ h7g6 37. b5c6 g2e2+ 38.',
       'e1d1 e2a2 0-1'],
-      fen: '8/p2Q4/2P3kp/5p2/4b3/1P2P3/r6q/3K1R2 w - - 0 39',
+      fen: '8/p2Q4/2P3kp/5p2/4b3/1P2P3/r6q/3K1R2 r - - 0 39',
       expect: true,
       sloppy: true
     },
@@ -752,26 +914,25 @@ describe("Load PGN", function() {
     newline_chars.forEach(function(newline, j) {
       it(i + String.fromCharCode(97 + j), function() {
         var sloppy = t.sloppy || false;
-        var result = chess.load_pgn(t.pgn.join(newline), {sloppy: sloppy,
+        var result = xiangqi.load_pgn(t.pgn.join(newline), {sloppy: sloppy,
                                                           newline_char: newline});
         var should_pass = t.expect;
 
-        /* some tests are expected to fail */
+        // some tests are expected to fail
         if (should_pass) {
 
-        /* some PGN's tests contain comments which are stripped during parsing,
-         * so we'll need compare the results of the load against a FEN string
-         * (instead of the reconstructed PGN [e.g. test.pgn.join(newline)])
-         */
+        // some PGN's tests contain comments which are stripped during parsing,
+        // so we'll need compare the results of the load against a FEN string
+        // (instead of the reconstructed PGN [e.g. test.pgn.join(newline)])
           if ('fen' in t) {
-            assert(result && chess.fen() == t.fen);
+            assert(result && xiangqi.fen() === t.fen);
           } else {
-            assert(result && chess.pgn({ max_width: 65, newline_char: newline }) == t.pgn.join(newline));
+            assert(result && xiangqi.pgn({ max_width: 65, newline_char: newline }) === t.pgn.join(newline));
           }
 
         } else {
-          /* this test should fail, so make sure it does */
-          assert(result == should_pass);
+          // this test should fail, so make sure it does
+          assert(result === should_pass);
         }
       });
 
@@ -782,53 +943,59 @@ describe("Load PGN", function() {
   // special case dirty file containing a mix of \n and \r\n
   it('dirty pgn', function() {
     var pgn =
-         '[Event "Reykjavik WCh"]\n' +
-         '[Site "Reykjavik WCh"]\n' +
-         '[Date "1972.01.07"]\n' +
-         '[EventDate "?"]\n' +
-         '[Round "6"]\n' +
-         '[Result "1-0"]\n' +
-         '[White "Robert James Fischer"]\r\n' +
-         '[Black "Boris Spassky"]\n' +
-         '[ECO "D59"]\n' +
-         '[WhiteElo "?"]\n' +
-         '[BlackElo "?"]\n' +
-         '[PlyCount "81"]\n' +
+         '[Event "1982年全国赛"]\n' +
+         '[Date "1982.12.11"]\n' +
+         '[Result "1/2-1/2"]\n' +
+         '[Red "柳大华"]\r\n' +
+         '[Black "杨官璘"]\n' +
          '\r\n' +
-         '1. c4 e6 2. Nf3 d5 3. d4 Nf6 4. Nc3 Be7 5. Bg5 O-O 6. e3 h6\n' +
-         '7. Bh4 b6 8. cxd5 Nxd5 9. Bxe7 Qxe7 10. Nxd5 exd5 11. Rc1 Be6\n' +
-         '12. Qa4 c5 13. Qa3 Rc8 14. Bb5 a6 15. dxc5 bxc5 16. O-O Ra7\n' +
-         '17. Be2 Nd7 18. Nd4 Qf8 19. Nxe6 fxe6 20. e4 d4 21. f4 Qe7\r\n' +
-         '22. e5 Rb8 23. Bc4 Kh8 24. Qh3 Nf8 25. b3 a5 26. f5 exf5\n' +
-         '27. Rxf5 Nh7 28. Rcf1 Qd8 29. Qg3 Re7 30. h4 Rbb7 31. e6 Rbc7\n' +
-         '32. Qe5 Qe8 33. a4 Qd8 34. R1f2 Qe8 35. R2f3 Qd8 36. Bd3 Qe8\n' +
-         '37. Qe4 Nf6 38. Rxf6 gxf6 39. Rxf6 Kg8 40. Bc4 Kh8 41. Qf4 1-0\n';
+         '1.  炮八平五 马２进３ 2.  马八进七 车１平２ 3.  车九平八 马８进７\n' +
+         '4.  兵三进一 卒３进１ 5.  车八进六 炮２平１ 6.  车八平七 炮１退１\n' +
+         '7.  马二进三 士６进５ 8.  炮二平一 炮１平３ 9.  车七平六 马３进２\n' +
+         '10. 车一平二 车９平８ 11. 马七退五 卒３进１ 12. 车六退一 炮３进５\r\n' +
+         '13. 车二进六 马２进４ 14. 炮五平七 车２进２ 15. 炮七进二 车２平４\n' +
+         '16. 马三进四 炮８平９ 17. 车二平三 车８进７ 18. 兵三进一 炮３平２\n' +
+         '19. 兵三平四 炮２进３ 20. 马五进三 马４退６ 21. 仕四进五 车８退４\n' +
+         '22. 车六平七 象３进１ 23. 车三平二 象１进３ 24. 车二退三 炮２退３\n' +
+         '25. 兵五进一 炮２退１ 26. 相三进五 炮２平５ 27. 炮一退一 炮９退１\n' +
+         '28. 炮一平三 炮９平７ 29. 炮七退二 车４平６ 30. 炮七平八 象３退１\n' +
+         '31. 车二平七 车６平２ 32. 炮八平七 车２平６ 33. 炮七平八 车６平２\n' +
+         '34. 炮八平九 车２平６ 35. 炮九进四 马６进８ 36. 炮九平八 象７进５\r\n' +
+         '37. 炮三平四 马８进６ 38. 炮八退三 马６进７ 39. 帅五平四 后马进６\n' +
+         '40. 车七平五 卒５进１ 41. 炮八退二 车６进１ 42. 车五平三 炮７平６\n' +
+         '43. 炮四进一 马７进９ 44. 车三平二 炮６退１ 45. 炮八进四 马９退７\n' +
+         '46. 车二进二 象１进３ 47. 炮八平五 炮５平２ 48. 兵九进一 炮２进１\n' +
+         '49. 炮四进一 炮２进１ 50. 仕五进六 炮２进２ 51. 帅四进一 炮２平４\n' +
+         '52. 兵九进一 炮４平７ 53. 帅四平五 炮７退２ 54. 炮四进二 炮６进４\n' +
+         '55. 马四退三 车６平２ 56. 帅五平四 炮６退４ 57. 车二退四 车２平５\n' +
+         '58. 炮五平六 士５进６ 59. 帅四平五 车５平２ 60. 兵九平八 车２平１\r\n' +
+         '61. 兵八平九 车１平２ 62. 兵九平八 车２平１ 63. 兵八平九 1/2-1/2';
 
-    var result = chess.load_pgn(pgn, { newline_char: '\r?\n' });
+    var result = xiangqi.load_pgn(pgn, { newline_char: '\r?\n' });
     assert(result);
 
-    assert(chess.load_pgn(pgn));
-    assert(chess.pgn().match(/^\[\[/) === null);
+    assert(xiangqi.load_pgn(pgn));
+    assert(xiangqi.pgn().match(/^\[\[/) === null);
   });
 
 });
+*/
 
-
-describe("Make Move", function() {
+describe('Make Move', function() {
 
   var positions = [
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',
      legal: true,
      move: 'e4',
      next: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1'},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',
      legal: false,
      move: 'e5'},
-    {fen: '7k/3R4/3p2Q1/6Q1/2N1N3/8/8/3R3K w - - 0 1',
+    {fen: '7k/3R4/3p2Q1/6Q1/2N1N3/8/8/3R3K r - - 0 1',
      legal: true,
      move: 'Rd8#',
      next: '3R3k/8/3p2Q1/6Q1/2N1N3/8/8/3R3K b - - 1 1'},
-    {fen: 'rnbqkbnr/pp3ppp/2pp4/4pP2/4P3/8/PPPP2PP/RNBQKBNR w KQkq e6 0 1',
+    {fen: 'rnbqkbnr/pp3ppp/2pp4/4pP2/4P3/8/PPPP2PP/RNBQKBNR r KQkq e6 0 1',
      legal: true,
      move: 'fxe6',
      next: 'rnbqkbnr/pp3ppp/2ppP3/8/4P3/8/PPPP2PP/RNBQKBNR b KQkq - 0 1',
@@ -836,13 +1003,13 @@ describe("Make Move", function() {
     {fen: 'rnbqkbnr/pppp2pp/8/4p3/4Pp2/2PP4/PP3PPP/RNBQKBNR b KQkq e3 0 1',
      legal: true,
      move: 'fxe3',
-     next: 'rnbqkbnr/pppp2pp/8/4p3/8/2PPp3/PP3PPP/RNBQKBNR w KQkq - 0 2',
+     next: 'rnbqkbnr/pppp2pp/8/4p3/8/2PPp3/PP3PPP/RNBQKBNR r KQkq - 0 2',
      captured: 'p'},
 
      // strict move parser
     {fen: 'r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7',
      legal: true,
-     next: 'r2qkb1r/ppp1nppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R w KQkq - 4 8',
+     next: 'r2qkb1r/ppp1nppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R r KQkq - 4 8',
      move: 'Ne7'},
 
      // strict move parser should reject over disambiguation
@@ -855,26 +1022,26 @@ describe("Make Move", function() {
      legal: true,
      sloppy: true,
      move: 'Nge7',
-     next: 'r2qkb1r/ppp1nppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R w KQkq - 4 8'},
+     next: 'r2qkb1r/ppp1nppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R r KQkq - 4 8'},
 
      // the sloppy parser should still accept correctly disambiguated moves
     {fen: 'r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7',
      legal: true,
      sloppy: true,
      move: 'Ne7',
-     next: 'r2qkb1r/ppp1nppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R w KQkq - 4 8'}
+     next: 'r2qkb1r/ppp1nppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R r KQkq - 4 8'}
   ];
 
   positions.forEach(function(position) {
-    var chess = new Chess();
-    chess.load(position.fen);
+    var xiangqi = new Xiangqi();
+    xiangqi.load(position.fen);
     it(position.fen + ' (' + position.move + ' ' + position.legal + ')', function() {
       var sloppy = position.sloppy || false;
-      var result = chess.move(position.move, {sloppy: sloppy});
+      var result = xiangqi.move(position.move, {sloppy: sloppy});
       if (position.legal) {
         assert(result
-               && chess.fen() == position.next
-               && result.captured == position.captured);
+               && xiangqi.fen() === position.next
+               && result.captured === position.captured);
       } else {
         assert(!result);
       }
@@ -885,116 +1052,116 @@ describe("Make Move", function() {
 });
 
 
-describe("Validate FEN", function() {
+describe('Validate FEN', function() {
 
-  var chess = new Chess();
+  var xiangqi = new Xiangqi();
   var positions = [
     {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNRw KQkq - 0 1',   error_number: 1},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 x',  error_number: 2},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0',  error_number: 2},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 -1', error_number: 2},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - x 1',  error_number: 3},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - -1 1', error_number: 3},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq e2 0 1', error_number: 4},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq e7 0 1', error_number: 4},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq x 0 1',  error_number: 4},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQxkq - 0 1', error_number: 5},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1',  error_number: 5},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 x',  error_number: 2},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 0',  error_number: 2},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 -1', error_number: 2},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - x 1',  error_number: 3},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - -1 1', error_number: 3},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq e2 0 1', error_number: 4},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq e7 0 1', error_number: 4},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq x 0 1',  error_number: 4},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQxkq - 0 1', error_number: 5},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r kqKQ - 0 1',  error_number: 5},
     {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR ? KQkq - 0 1',  error_number: 6},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP w KQkq - 0 1',           error_number: 7},
-    {fen: 'rnbqkbnr/pppppppp/17/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', error_number: 8},
-    {fen: 'rnbqk?nr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',  error_number: 9},
-    {fen: 'rnbqkbnr/pppppppp/7/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',  error_number: 10},
-    {fen: 'rnbqkbnr/p1p1p1p1p/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', error_number: 10},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP r KQkq - 0 1',           error_number: 7},
+    {fen: 'rnbqkbnr/pppppppp/17/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1', error_number: 8},
+    {fen: 'rnbqk?nr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',  error_number: 9},
+    {fen: 'rnbqkbnr/pppppppp/7/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',  error_number: 10},
+    {fen: 'rnbqkbnr/p1p1p1p1p/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1', error_number: 10},
     {fen: 'r1bqkbnr/2pppppp/n7/1p6/8/4P3/PPPP1PPP/RNBQK1NR b KQkq b6 0 4', error_number: 11},
-    {fen: 'rnbqkbnr/1p1ppppp/B1p5/8/6P1/4P3/PPPP1P1P/RNBQK1NR w KQkq g3 0 3', error_number: 11},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',  error_number: 0},
-    {fen: 'rnbqkbnr/pppp1ppp/8/4p3/2P5/8/PP1PPPPP/RNBQKBNR w KQkq e6 0 2', error_number: 0},
+    {fen: 'rnbqkbnr/1p1ppppp/B1p5/8/6P1/4P3/PPPP1P1P/RNBQK1NR r KQkq g3 0 3', error_number: 11},
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',  error_number: 0},
+    {fen: 'rnbqkbnr/pppp1ppp/8/4p3/2P5/8/PP1PPPPP/RNBQKBNR r KQkq e6 0 2', error_number: 0},
     {fen: '3r2k1/p1q2pp1/2nr1n1p/2p1p3/4P2B/P1P2Q1P/B4PP1/1R2R1K1 b - - 3 20', error_number: 0},
-    {fen: 'r2q1rk1/3bbppp/p3pn2/1p1pB3/3P4/1QNBP3/PP3PPP/R4RK1 w - - 4 13', error_number: 0},
-    {fen: 'rnbqk2r/ppp1bppp/4pn2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 1 5', error_number: 0},
+    {fen: 'r2q1rk1/3bbppp/p3pn2/1p1pB3/3P4/1QNBP3/PP3PPP/R4RK1 r - - 4 13', error_number: 0},
+    {fen: 'rnbqk2r/ppp1bppp/4pn2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R r KQkq - 1 5', error_number: 0},
     {fen: '1k1rr3/1p5p/p1Pp2q1/3nppp1/PB6/3P4/3Q1PPP/1R3RK1 b - - 0 28', error_number: 0},
-    {fen: 'r3r1k1/3n1pp1/2q1p2p/2p5/p1p2P2/P3P2P/1PQ2BP1/1R2R1K1 w - - 0 27', error_number: 0},
+    {fen: 'r3r1k1/3n1pp1/2q1p2p/2p5/p1p2P2/P3P2P/1PQ2BP1/1R2R1K1 r - - 0 27', error_number: 0},
     {fen: 'r3rbk1/1R3p1p/3Pq1p1/6B1/p6P/5Q2/5PP1/3R2K1 b - - 3 26', error_number: 0},
-    {fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3', error_number: 0},
-    {fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3', error_number: 0},
-    {fen: 'r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 2 5', error_number: 0},
-    {fen: 'r1b2rk1/4bppp/p1np4/q3p1P1/1p2P2P/4BP2/PPP1N1Q1/1K1R1B1R w - - 0 17', error_number: 0},
-    {fen: 'r2q1rk1/ppp1bppp/2np1nb1/4p3/P1B1P1P1/3P1N1P/1PP2P2/RNBQR1K1 w - - 1 10', error_number: 0},
+    {fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R r KQkq - 2 3', error_number: 0},
+    {fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R r KQkq - 2 3', error_number: 0},
+    {fen: 'r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R r KQkq - 2 5', error_number: 0},
+    {fen: 'r1b2rk1/4bppp/p1np4/q3p1P1/1p2P2P/4BP2/PPP1N1Q1/1K1R1B1R r - - 0 17', error_number: 0},
+    {fen: 'r2q1rk1/ppp1bppp/2np1nb1/4p3/P1B1P1P1/3P1N1P/1PP2P2/RNBQR1K1 r - - 1 10', error_number: 0},
     {fen: 'r2qkb1r/pb1n1p2/4pP2/1ppP2B1/2p5/2N3P1/PP3P1P/R2QKB1R b KQkq - 0 13', error_number: 0},
-    {fen: '3k1b1r/p2n1p2/5P2/2pN4/P1p2B2/1p3qP1/1P2KP2/3R4 w - - 0 29', error_number: 0},
+    {fen: '3k1b1r/p2n1p2/5P2/2pN4/P1p2B2/1p3qP1/1P2KP2/3R4 r - - 0 29', error_number: 0},
     {fen: 'rnbq1rk1/1pp1ppbp/p2p1np1/8/2PPP3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 1 7', error_number: 0},
     {fen: 'rn1qkb1r/pb1p1ppp/1p2pn2/4P3/2Pp4/5NP1/PP1N1PBP/R1BQK2R b KQkq - 0 8', error_number: 0},
-    {fen: 'rnbqkbnr/pp1p1ppp/4p3/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3', error_number: 0},
-    {fen: 'r1bq1rk1/pp2ppbp/3p1np1/8/3pPP2/3B4/PPPPN1PP/R1BQ1RK1 w - - 4 10', error_number: 0},
+    {fen: 'rnbqkbnr/pp1p1ppp/4p3/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R r KQkq - 0 3', error_number: 0},
+    {fen: 'r1bq1rk1/pp2ppbp/3p1np1/8/3pPP2/3B4/PPPPN1PP/R1BQ1RK1 r - - 4 10', error_number: 0},
     {fen: 'r1b3k1/5pbp/2N1p1p1/p6q/2p2P2/2P1B3/PPQ3PP/3R2K1 b - - 0 22', error_number: 0},
-    {fen: 'rnbqkb1r/ppp1pppp/3p1n2/8/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 1 3', error_number: 0},
+    {fen: 'rnbqkb1r/ppp1pppp/3p1n2/8/3PP3/8/PPP2PPP/RNBQKBNR r KQkq - 1 3', error_number: 0},
     {fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq d3 0 4', error_number: 0},
-    {fen: 'r1bqk2r/ppp1bppp/2n5/3p4/3Pn3/3B1N2/PPP2PPP/RNBQ1RK1 w kq - 4 8', error_number: 0},
+    {fen: 'r1bqk2r/ppp1bppp/2n5/3p4/3Pn3/3B1N2/PPP2PPP/RNBQ1RK1 r kq - 4 8', error_number: 0},
     {fen: '4kb1r/1p3pp1/p3p3/4P1BN/1n1p1PPP/PR6/1P4r1/1KR5 b k - 0 24', error_number: 0},
-    {fen: 'r3kb1r/pbpp1ppp/1qp1n3/4P3/2P5/1N2Q3/PP1B1PPP/R3KB1R w KQkq - 7 13', error_number: 0},
+    {fen: 'r3kb1r/pbpp1ppp/1qp1n3/4P3/2P5/1N2Q3/PP1B1PPP/R3KB1R r KQkq - 7 13', error_number: 0},
     {fen: 'r1b1r1k1/p4p1p/2pb2p1/3pn3/N7/4BP2/PPP2KPP/3RRB2 b - - 3 18', error_number: 0},
     {fen: 'r1b2rk1/p2nqp1p/3P2p1/2p2p2/2B5/1PB3N1/P4PPP/R2Q2K1 b - - 0 18', error_number: 0},
     {fen: 'rnb1k2r/1p3ppp/p3Pn2/8/3N2P1/2q1B3/P1P1BP1P/R2Q1K1R b kq - 1 12', error_number: 0},
-    {fen: 'rnb1k2r/1pq1bppp/p2ppn2/8/3NPP2/2N1B3/PPP1B1PP/R2QK2R w KQkq - 1 9', error_number: 0},
+    {fen: 'rnb1k2r/1pq1bppp/p2ppn2/8/3NPP2/2N1B3/PPP1B1PP/R2QK2R r KQkq - 1 9', error_number: 0},
     {fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1', error_number: 0},
-    {fen: '4r3/1pr3pk/p2p2q1/3Pppbp/8/1NPQ1PP1/PP2R2P/1K1R4 w - - 8 28', error_number: 0},
+    {fen: '4r3/1pr3pk/p2p2q1/3Pppbp/8/1NPQ1PP1/PP2R2P/1K1R4 r - - 8 28', error_number: 0},
     {fen: 'b2r3r/4kp2/p3p1p1/1p2P3/1P1n1P2/P1NB4/KP4P1/3R2R1 b - - 2 26', error_number: 0},
     {fen: 'rnbqk2r/ppppppbp/5np1/8/2PPP3/2N5/PP3PPP/R1BQKBNR b KQkq e3 0 4', error_number: 0},
     {fen: 'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2', error_number: 0},
     {fen: 'rn1q1rk1/pbp2pp1/1p3b1p/3p4/3P4/2NBPN2/PP3PPP/2RQK2R b K - 1 11', error_number: 0},
     {fen: '2rq1rk1/pp1bppbp/3p1np1/8/2BNP3/2N1BP2/PPPQ2PP/1K1R3R b - - 0 13', error_number: 0},
     {fen: 'r2qkb1r/1p1bpppp/p1np4/6B1/B3P1n1/2PQ1N2/PP3PPP/RN2R1K1 b kq - 0 10', error_number: 0},
-    {fen: 'r1bq1rk1/1p2npb1/p6p/3p2p1/3P3B/2N5/PP2BPPP/R2QR1K1 w - - 0 15', error_number: 0},
+    {fen: 'r1bq1rk1/1p2npb1/p6p/3p2p1/3P3B/2N5/PP2BPPP/R2QR1K1 r - - 0 15', error_number: 0},
     {fen: 'r3r1k1/pbq1bppp/4pnn1/2p1B1N1/2P2P2/1P1B2N1/P3Q1PP/4RRK1 b - - 4 17', error_number: 0},
-    {fen: '4k3/5p2/p1q1pbp1/1pr1P3/3n1P2/1B2B2Q/PP3P2/3R3K w - - 1 28', error_number: 0},
+    {fen: '4k3/5p2/p1q1pbp1/1pr1P3/3n1P2/1B2B2Q/PP3P2/3R3K r - - 1 28', error_number: 0},
     {fen: '2k4r/pp1r1p1p/8/2Pq1p2/1Pn2P2/PQ3NP1/3p1NKP/R7 b - - 0 28', error_number: 0},
-    {fen: 'rnbqkb1r/ppp2ppp/3p1n2/4N3/4P3/8/PPPP1PPP/RNBQKB1R w KQkq - 0 4', error_number: 0},
+    {fen: 'rnbqkb1r/ppp2ppp/3p1n2/4N3/4P3/8/PPPP1PPP/RNBQKB1R r KQkq - 0 4', error_number: 0},
     {fen: '3r1rk1/Qpp2p1p/7q/1P2P1p1/2B1Rn2/6NP/P4P1P/5RK1 b - - 0 22', error_number: 0},
-    {fen: 'rn2kb1r/2qp1ppp/b3pn2/2pP2B1/1pN1P3/5P2/PP4PP/R2QKBNR w KQkq - 4 11', error_number: 0},
-    {fen: 'r3k2r/pp1nbp1p/2p2pb1/3p4/3P3N/2N1P3/PP3PPP/R3KB1R w KQkq - 4 12', error_number: 0},
+    {fen: 'rn2kb1r/2qp1ppp/b3pn2/2pP2B1/1pN1P3/5P2/PP4PP/R2QKBNR r KQkq - 4 11', error_number: 0},
+    {fen: 'r3k2r/pp1nbp1p/2p2pb1/3p4/3P3N/2N1P3/PP3PPP/R3KB1R r KQkq - 4 12', error_number: 0},
     {fen: 'rn1qr1k1/pbppbppp/1p3n2/3P4/8/P1N1P1P1/1P2NPBP/R1BQK2R b KQ - 2 10', error_number: 0},
-    {fen: 'r1bqk2r/pp1nbppp/2p2n2/3p2B1/3P4/2N1PN2/PP3PPP/R2QKB1R w KQkq - 1 8', error_number: 0},
+    {fen: 'r1bqk2r/pp1nbppp/2p2n2/3p2B1/3P4/2N1PN2/PP3PPP/R2QKB1R r KQkq - 1 8', error_number: 0},
     {fen: 'r1bqk2r/pppp1pp1/2n2n1p/8/1bPN3B/2N5/PP2PPPP/R2QKB1R b KQkq - 1 7', error_number: 0},
-    {fen: 'r1bqk2r/1pppbppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 4 6', error_number: 0},
+    {fen: 'r1bqk2r/1pppbppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 r kq - 4 6', error_number: 0},
     {fen: 'r1b1kb1r/p2p1ppp/1qp1p3/3nP3/2P1NP2/8/PP4PP/R1BQKB1R b KQkq c3 0 10', error_number: 0},
     {fen: '8/R7/2b5/3k2K1/P1p1r3/2B5/1P6/8 b - - 8 74', error_number: 0},
-    {fen: '2q5/5pk1/5p1p/4b3/1p1pP3/7P/1Pr3P1/R2Q1RK1 w - - 14 37', error_number: 0},
-    {fen: 'r4rk1/1bqnbppp/p2p4/1p2p3/3BPP2/P1NB4/1PP3PP/3RQR1K w - - 0 16', error_number: 0},
-    {fen: 'r1bqk2r/pp1n1ppp/2pbpn2/6N1/3P4/3B1N2/PPP2PPP/R1BQK2R w KQkq - 2 8', error_number: 0},
+    {fen: '2q5/5pk1/5p1p/4b3/1p1pP3/7P/1Pr3P1/R2Q1RK1 r - - 14 37', error_number: 0},
+    {fen: 'r4rk1/1bqnbppp/p2p4/1p2p3/3BPP2/P1NB4/1PP3PP/3RQR1K r - - 0 16', error_number: 0},
+    {fen: 'r1bqk2r/pp1n1ppp/2pbpn2/6N1/3P4/3B1N2/PPP2PPP/R1BQK2R r KQkq - 2 8', error_number: 0},
     {fen: 'r1b1kb1r/pp3ppp/1qnppn2/8/2B1PB2/1NN5/PPP2PPP/R2QK2R b KQkq - 1 8', error_number: 0},
     {fen: '1r3r1k/2q1n1pb/pn5p/1p2pP2/6B1/PPNRQ2P/2P1N1P1/3R3K b - - 0 28', error_number: 0},
     {fen: 'rnbqk2r/ppp1bppp/4pn2/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R b KQkq - 3 5', error_number: 0},
-    {fen: '2r3k1/5pp1/p2p3p/1p1Pp2P/5b2/8/qP1K2P1/3QRB1R w - - 0 26', error_number: 0},
-    {fen: '6k1/1Q3p2/2p1r3/B1Pn2p1/3P1b1p/5P1P/5P2/5K2 w - - 6 47', error_number: 0},
-    {fen: '8/k7/Pr2R3/7p/8/4n1P1/1r2p1P1/4R1K1 w - - 0 59', error_number: 0},
+    {fen: '2r3k1/5pp1/p2p3p/1p1Pp2P/5b2/8/qP1K2P1/3QRB1R r - - 0 26', error_number: 0},
+    {fen: '6k1/1Q3p2/2p1r3/B1Pn2p1/3P1b1p/5P1P/5P2/5K2 r - - 6 47', error_number: 0},
+    {fen: '8/k7/Pr2R3/7p/8/4n1P1/1r2p1P1/4R1K1 r - - 0 59', error_number: 0},
     {fen: '8/3k4/1nbPp2p/1pK2np1/p7/PP1R1P2/2P4P/4R3 b - - 7 34', error_number: 0},
     {fen: '4rbk1/rnR2p1p/pp2pnp1/3p4/3P4/1P2PB1P/P2BNPP1/R5K1 b - - 0 20', error_number: 0},
     {fen: '5r2/6pk/8/p3P1p1/1R6/7Q/1Pr2P1K/2q5 b - - 2 48', error_number: 0},
     {fen: '1br2rk1/2q2pp1/p3bnp1/1p1p4/8/1PN1PBPP/PB1Q1P2/R2R2K1 b - - 0 19', error_number: 0},
-    {fen: '4r1k1/b4p2/p4pp1/1p6/3p1N1P/1P2P1P1/P4P2/3R2K1 w - - 0 30', error_number: 0},
+    {fen: '4r1k1/b4p2/p4pp1/1p6/3p1N1P/1P2P1P1/P4P2/3R2K1 r - - 0 30', error_number: 0},
     {fen: '3rk3/1Q4p1/p3p3/4RPqp/4p2P/P7/KPP5/8 b - h3 0 33', error_number: 0},
     {fen: '6k1/1p1r1pp1/5qp1/p1pBP3/Pb3n2/1Q1RB2P/1P3PP1/6K1 b - - 0 28', error_number: 0},
-    {fen: '3r2k1/pp2bp2/1q4p1/3p1b1p/4PB1P/2P2PQ1/P2R2P1/3R2K1 w - - 1 28', error_number: 0},
-    {fen: '3r4/p1qn1pk1/1p1R3p/2P1pQpP/8/4B3/5PP1/6K1 w - - 0 35', error_number: 0},
-    {fen: 'rnb1k1nr/pp2q1pp/2pp4/4pp2/2PPP3/8/PP2NPPP/R1BQKB1R w KQkq f6 0 8', error_number: 0},
+    {fen: '3r2k1/pp2bp2/1q4p1/3p1b1p/4PB1P/2P2PQ1/P2R2P1/3R2K1 r - - 1 28', error_number: 0},
+    {fen: '3r4/p1qn1pk1/1p1R3p/2P1pQpP/8/4B3/5PP1/6K1 r - - 0 35', error_number: 0},
+    {fen: 'rnb1k1nr/pp2q1pp/2pp4/4pp2/2PPP3/8/PP2NPPP/R1BQKB1R r KQkq f6 0 8', error_number: 0},
     {fen: 'rnbqkbnr/pp1ppppp/2p5/8/3PP3/8/PPP2PPP/RNBQKBNR b KQkq d3 0 2', error_number: 0},
-    {fen: '4q1k1/6p1/p2rnpPp/1p2p3/7P/1BP5/PP3Q2/1K3R2 w - - 0 34', error_number: 0},
+    {fen: '4q1k1/6p1/p2rnpPp/1p2p3/7P/1BP5/PP3Q2/1K3R2 r - - 0 34', error_number: 0},
     {fen: '3r2k1/p1q2pp1/1n2rn1p/1B2p3/P1p1P3/2P3BP/4QPP1/1R2R1K1 b - - 1 25', error_number: 0},
     {fen: '8/p7/1b2BkR1/5P2/4K3/7r/P7/8 b - - 9 52', error_number: 0},
-    {fen: '2rq2k1/p4p1p/1p1prp2/1Ppb4/8/P1QPP1P1/1B3P1P/R3R1K1 w - - 2 20', error_number: 0},
-    {fen: '8/1pQ3bk/p2p1qp1/P2Pp2p/NP6/7P/5PP1/6K1 w - - 1 36', error_number: 0},
+    {fen: '2rq2k1/p4p1p/1p1prp2/1Ppb4/8/P1QPP1P1/1B3P1P/R3R1K1 r - - 2 20', error_number: 0},
+    {fen: '8/1pQ3bk/p2p1qp1/P2Pp2p/NP6/7P/5PP1/6K1 r - - 1 36', error_number: 0},
     {fen: '8/1pQ3bk/p2p2p1/P2Pp2p/1P5P/2N3P1/2q2PK1/8 b - - 0 39', error_number: 0},
-    {fen: 'r1bq1rk1/pp2n1bp/2pp1np1/3PppN1/1PP1P3/2N2B2/P4PPP/R1BQR1K1 w - - 0 13', error_number: 0},
-    {fen: '1r4k1/5p2/3P2pp/p3Pp2/5q2/2Q2P1P/5P2/4R1K1 w - - 0 29', error_number: 0},
-    {fen: 'rnbqkbnr/pp2pppp/3p4/8/3pP3/5N2/PPP2PPP/RNBQKB1R w KQkq - 0 4', error_number: 0},
+    {fen: 'r1bq1rk1/pp2n1bp/2pp1np1/3PppN1/1PP1P3/2N2B2/P4PPP/R1BQR1K1 r - - 0 13', error_number: 0},
+    {fen: '1r4k1/5p2/3P2pp/p3Pp2/5q2/2Q2P1P/5P2/4R1K1 r - - 0 29', error_number: 0},
+    {fen: 'rnbqkbnr/pp2pppp/3p4/8/3pP3/5N2/PPP2PPP/RNBQKB1R r KQkq - 0 4', error_number: 0},
     {fen: 'R2qk2r/2p2ppp/1bnp1n2/1p2p3/3PP1b1/1BP2N2/1P3PPP/1NBQ1RK1 b k - 0 11', error_number: 0},
     {fen: '6k1/4qp2/3p2p1/3Pp2p/7P/4Q1P1/5PBK/8 b - - 20 57', error_number: 0},
     {fen: '3k4/r3q3/3p1p2/2pB4/P7/7P/6P1/1Q4K1 b - - 6 43', error_number: 0},
     {fen: '5k2/1n4p1/2p2p2/p2q1B1P/P4PK1/6P1/1Q6/8 b - - 4 46', error_number: 0},
-    {fen: '6k1/pr2pb2/5pp1/1B1p4/P7/4QP2/1PP3Pq/2KR4 w - - 1 27', error_number: 0},
+    {fen: '6k1/pr2pb2/5pp1/1B1p4/P7/4QP2/1PP3Pq/2KR4 r - - 1 27', error_number: 0},
     {fen: '1rbqk2r/2pp1ppp/2n2n2/1pb1p3/4P3/1BP2N2/1P1P1PPP/RNBQ1RK1 b k - 0 9', error_number: 0},
-    {fen: '6r1/2p5/pbpp1k1r/5b2/3P1N1p/1PP2N1P/P4R2/2K1R3 w - - 4 33', error_number: 0},
+    {fen: '6r1/2p5/pbpp1k1r/5b2/3P1N1p/1PP2N1P/P4R2/2K1R3 r - - 4 33', error_number: 0},
     {fen: 'rnbqkb1r/pppppppp/5n2/8/3P4/5N2/PPP1PPPP/RNBQKB1R b KQkq - 2 2', error_number: 0},
     {fen: 'rnbqkb1r/pppppppp/5n2/8/2PP4/8/PP2PPPP/RNBQKBNR b KQkq c3 0 2', error_number: 0},
     {fen: '4b3/5p1k/r7/p3BNQp/4P1pP/1r1n4/1P3P1N/7K b - - 2 40', error_number: 0},
@@ -1003,31 +1170,32 @@ describe("Validate FEN", function() {
     {fen: '4rrk1/8/p1pR4/1p6/1PPKNq2/3P1p2/PB5n/R2Q4 b - - 6 40', error_number: 0},
     {fen: 'r1bqk1nr/1p2bppp/p1np4/4p3/2P1P3/N1N5/PP3PPP/R1BQKB1R b KQkq - 1 8', error_number: 0},
     {fen: 'r1bqk2r/pp2bppp/2n1p3/3n4/3P4/2NB1N2/PP3PPP/R1BQ1RK1 b kq - 3 9', error_number: 0},
-    {fen: 'r1bqkbnr/pppp2pp/2n5/1B2p3/3Pp3/5N2/PPP2PPP/RNBQK2R w KQkq - 0 5', error_number: 0},
+    {fen: 'r1bqkbnr/pppp2pp/2n5/1B2p3/3Pp3/5N2/PPP2PPP/RNBQK2R r KQkq - 0 5', error_number: 0},
     {fen: '2n1r3/p1k2pp1/B1p3b1/P7/5bP1/2N1B3/1P2KP2/2R5 b - - 4 25', error_number: 0},
-    {fen: 'r4rk1/2q3pp/4p3/p1Pn1p2/1p1P4/4PP2/1B1Q2PP/R3R1K1 w - - 0 22', error_number: 0},
-    {fen: '8/8/1p6/3b4/1P1k1p2/8/3KBP2/8 w - - 2 68', error_number: 0},
-    {fen: '2b2k2/1p5p/2p5/p1p1q3/2PbN3/1P5P/P5B1/3RR2K w - - 4 33', error_number: 0},
+    {fen: 'r4rk1/2q3pp/4p3/p1Pn1p2/1p1P4/4PP2/1B1Q2PP/R3R1K1 r - - 0 22', error_number: 0},
+    {fen: '8/8/1p6/3b4/1P1k1p2/8/3KBP2/8 r - - 2 68', error_number: 0},
+    {fen: '2b2k2/1p5p/2p5/p1p1q3/2PbN3/1P5P/P5B1/3RR2K r - - 4 33', error_number: 0},
     {fen: '1b6/5kp1/5p2/1b1p4/1P6/4PPq1/2Q2RNp/7K b - - 2 41', error_number: 0},
-    {fen: 'r3r1k1/p2nqpp1/bpp2n1p/3p4/B2P4/P1Q1PP2/1P2NBPP/R3K2R w KQ - 6 16', error_number: 0},
+    {fen: 'r3r1k1/p2nqpp1/bpp2n1p/3p4/B2P4/P1Q1PP2/1P2NBPP/R3K2R r KQ - 6 16', error_number: 0},
     {fen: 'r3k2r/8/p4p2/3p2p1/4b3/2R2PP1/P6P/4R1K1 b kq - 0 27', error_number: 0},
     {fen: 'r1rb2k1/5ppp/pqp5/3pPb2/QB1P4/2R2N2/P4PPP/2R3K1 b - - 7 23', error_number: 0},
-    {fen: '3r1r2/3P2pk/1p1R3p/1Bp2p2/6q1/4Q3/PP3P1P/7K w - - 4 30', error_number: 0},
+    {fen: '3r1r2/3P2pk/1p1R3p/1Bp2p2/6q1/4Q3/PP3P1P/7K r - - 4 30', error_number: 0},
   ];
 
   positions.forEach(function(position) {
 
-    it(position.fen + ' (valid: ' + (position.error_number  == 0) + ')', function() {
-      var result = chess.validate_fen(position.fen);
-      assert(result.error_number == position.error_number, result.error_number);
+    it(position.fen + ' (valid: ' + (position.error_number  === 0) + ')', function() {
+      var result = xiangqi.validate_fen(position.fen);
+      assert(result.error_number === position.error_number, result.error_number);
     });
 
   });
 });
 
-describe("History", function() {
 
-  var chess = new Chess();
+describe('History', function() {
+
+  var xiangqi = new Xiangqi();
   var tests = [
      {verbose: false,
       fen: '4q2k/2r1r3/4PR1p/p1p5/P1Bp1Q1P/1P6/6P1/6K1 b - - 4 41',
@@ -1128,29 +1296,30 @@ describe("History", function() {
 
   tests.forEach(function(t, i) {
     var passed = true;
+    var j;
 
-    it(i, function() {
-      chess.reset();
+    it(i.toString(), function() {
+      xiangqi.reset();
 
-      for (var j = 0; j < t.moves.length; j++) {
-        chess.move(t.moves[j])
+      for (j = 0; j < t.moves.length; j++) {
+        xiangqi.move(t.moves[j])
       }
 
-      var history = chess.history({verbose: t.verbose});
-      if (t.fen != chess.fen()) {
+      var history = xiangqi.history({verbose: t.verbose});
+      if (t.fen !== xiangqi.fen()) {
         passed = false;
-      } else if (history.length != t.moves.length) {
+      } else if (history.length !== t.moves.length) {
         passed = false;
       } else {
-        for (var j = 0; j < t.moves.length; j++) {
+        for (j = 0; j < t.moves.length; j++) {
           if (!t.verbose) {
-            if (history[j] != t.moves[j]) {
+            if (history[j] !== t.moves[j]) {
               passed = false;
               break;
             }
           } else {
             for (var key in history[j]) {
-              if (history[j][key] != t.moves[j][key]) {
+              if (history[j][key] !== t.moves[j][key]) {
                 passed = false;
                 break;
               }
@@ -1164,10 +1333,11 @@ describe("History", function() {
   });
 });
 
+
 describe('Board Tests', function() {
 
   var tests = [
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',
       board: [[{type: 'r', color: 'b'},
                {type: 'n', color: 'b'},
                {type: 'b', color: 'b'},
@@ -1205,7 +1375,7 @@ describe('Board Tests', function() {
                {type: 'n', color: 'w'},
                {type: 'r', color: 'w'}]]},
     // checkmate
-	{fen: 'r3k2r/ppp2p1p/2n1p1p1/8/2B2P1q/2NPb1n1/PP4PP/R2Q3K w kq - 0 8',
+	{fen: 'r3k2r/ppp2p1p/2n1p1p1/8/2B2P1q/2NPb1n1/PP4PP/R2Q3K r kq - 0 8',
 	  board:[[{type: 'r', color: 'b'},
 			  null,
 			  null,
@@ -1268,58 +1438,59 @@ describe('Board Tests', function() {
 
   tests.forEach(function(test) {
     it('Board - ' + test.fen, function() {
-      var chess = new Chess(test.fen);
-      assert(JSON.stringify(chess.board()) === JSON.stringify(test.board));
+      var xiangqi = new Xiangqi(test.fen);
+      assert(JSON.stringify(xiangqi.board()) === JSON.stringify(test.board));
     })
   })
 });
 
+/*
 describe('Regression Tests', function() {
   it('Github Issue #32 - castling flag reappearing', function() {
-    var chess = new Chess('b3k2r/5p2/4p3/1p5p/6p1/2PR2P1/BP3qNP/6QK b k - 2 28');
-    chess.move({from:'a8', to:'g2'});
-    assert(chess.fen() == '4k2r/5p2/4p3/1p5p/6p1/2PR2P1/BP3qbP/6QK w k - 0 29');
+    var xiangqi = new Xiangqi('b3k2r/5p2/4p3/1p5p/6p1/2PR2P1/BP3qNP/6QK b k - 2 28');
+    xiangqi.move({from:'a8', to:'g2'});
+    assert(xiangqi.fen() === '4k2r/5p2/4p3/1p5p/6p1/2PR2P1/BP3qbP/6QK r k - 0 29');
   });
 
   it('Github Issue #58 - placing more than one king', function() {
-    var chess = new Chess('N3k3/8/8/8/8/8/5b2/4K3 w - - 0 1');
-    assert(chess.put({type: 'k', color: 'w'}, 'a1') == false);
-    chess.put({type: 'q', color: 'w'}, 'a1');
-    chess.remove('a1');
-    assert(chess.moves().join(' ') == 'Kd2 Ke2 Kxf2 Kf1 Kd1');
+    var xiangqi = new Xiangqi('N3k3/8/8/8/8/8/5b2/4K3 r - - 0 1');
+    assert(xiangqi.put({type: 'k', color: 'w'}, 'a1') === false);
+    xiangqi.put({type: 'q', color: 'w'}, 'a1');
+    xiangqi.remove('a1');
+    assert(xiangqi.moves().join(' ') === 'Kd2 Ke2 Kxf2 Kf1 Kd1');
   });
 
   it('Github Issue #85 (white) - SetUp and FEN should be accepted in load_pgn', function() {
-       var chess = new Chess();
-       var pgn = ['[SetUp "1"]', '[FEN "7k/5K2/4R3/8/8/8/8/8 w KQkq - 0 1"]', "", '1. Rh6#'];
-       var result = chess.load_pgn(pgn.join("\n"));
+       var xiangqi = new Xiangqi();
+       var pgn = ['[SetUp "1"]', '[FEN "7k/5K2/4R3/8/8/8/8/8 r KQkq - 0 1"]', "", '1. Rh6#'];
+       var result = xiangqi.load_pgn(pgn.join('\n'));
        assert(result);
-       assert(chess.fen() === '7k/5K2/7R/8/8/8/8/8 b KQkq - 1 1');
+       assert(xiangqi.fen() === '7k/5K2/7R/8/8/8/8/8 b KQkq - 1 1');
   });
 
   it('Github Issue #85 (black) - SetUp and FEN should be accepted in load_pgn', function() {
-       var chess = new Chess();
-       var pgn = ['[SetUp "1"]', '[FEN "r4r1k/1p4b1/3p3p/5qp1/1RP5/6P1/3NP3/2Q2RKB b KQkq - 0 1"]', "", '1. ... Qc5+'];
-       var result = chess.load_pgn(pgn.join("\n"));
+       var xiangqi = new Xiangqi();
+       var pgn = ['[SetUp '1']', '[FEN 'r4r1k/1p4b1/3p3p/5qp1/1RP5/6P1/3NP3/2Q2RKB b KQkq - 0 1']', "", '1. ... Qc5+'];
+       var result = xiangqi.load_pgn(pgn.join('\n'));
        assert(result);
-       assert(chess.fen() === 'r4r1k/1p4b1/3p3p/2q3p1/1RP5/6P1/3NP3/2Q2RKB w KQkq - 1 2');
+       assert(xiangqi.fen() === 'r4r1k/1p4b1/3p3p/2q3p1/1RP5/6P1/3NP3/2Q2RKB r KQkq - 1 2');
   });
 
   it('Github Issue #98 (white) - Wrong movement number after setting a position via FEN', function () {
-    var chess = new Chess();
-    chess.load('4r3/8/2p2PPk/1p6/pP2p1R1/P1B5/2P2K2/3r4 w - - 1 45');
-    chess.move('f7');
-    var result = chess.pgn();
+    var xiangqi = new Xiangqi();
+    xiangqi.load('4r3/8/2p2PPk/1p6/pP2p1R1/P1B5/2P2K2/3r4 r - - 1 45');
+    xiangqi.move('f7');
+    var result = xiangqi.pgn();
     assert(result.match(/(45\. f7)$/));
-  })
+  });
 
   it('Github Issue #98 (black) - Wrong movement number after setting a position via FEN', function () {
-    var chess = new Chess();
-    chess.load('4r3/8/2p2PPk/1p6/pP2p1R1/P1B5/2P2K2/3r4 b - - 1 45');
-    chess.move('Rf1+');
-    var result = chess.pgn();
+    var xiangqi = new Xiangqi();
+    xiangqi.load('4r3/8/2p2PPk/1p6/pP2p1R1/P1B5/2P2K2/3r4 b - - 1 45');
+    xiangqi.move('Rf1+');
+    var result = xiangqi.pgn();
     assert(result.match(/(45\. \.\.\. Rf1\+)$/));
-  })
+  });
 
   it('Github Issue #129 load_pgn() should not clear headers if PGN contains SetUp and FEN tags', function () {
     var pgn = [
@@ -1327,30 +1498,30 @@ describe('Regression Tests', function() {
       '[Site "Earth"]',
       '[Date "????.??.??"]',
       '[Round "6"]',
-      '[White "Testy"]',
+      '[Red "Testy"]',
       '[Black "McTest"]',
       '[Result "*"]',
-      '[FEN "rnbqkb1r/1p3ppp/p2ppn2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R w KQkq - 0 1"]',
+      '[FEN "rnbqkb1r/1p3ppp/p2ppn2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R r KQkq - 0 1"]',
       '[SetUp "1"]',
       '',
       '1.Qd2 Be7 *'
     ];
 
-    var chess = new Chess();
-    var result = chess.load_pgn(pgn.join('\n'));
+    var xiangqi = new Xiangqi();
+    var result = xiangqi.load_pgn(pgn.join('\n'));
     var expected = {
       Event: 'Test Olympiad',
       Site: 'Earth',
       Date: '????.??.??',
       Round: '6',
-      White: 'Testy',
+      Red: 'Testy',
       Black: 'McTest',
       Result: '*',
-      FEN: 'rnbqkb1r/1p3ppp/p2ppn2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R w KQkq - 0 1',
+      FEN: 'rnbqkb1r/1p3ppp/p2ppn2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R r KQkq - 0 1',
       SetUp: '1'
-    }
-    assert.deepEqual(chess.header(), expected);
-  })
+    };
+    assert.deepEqual(xiangqi.header(), expected);
+  });
 
   it('Github Issue #129 clear() should clear the board and delete all headers with the exception of SetUp and FEN', function () {
     var pgn = [
@@ -1358,22 +1529,23 @@ describe('Regression Tests', function() {
       '[Site "Earth"]',
       '[Date "????.??.??"]',
       '[Round "6"]',
-      '[White "Testy"]',
+      '[Red "Testy"]',
       '[Black "McTest"]',
       '[Result "*"]',
-      '[FEN "rnbqkb1r/1p3ppp/p2ppn2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R w KQkq - 0 1"]',
+      '[FEN "rnbqkb1r/1p3ppp/p2ppn2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R r KQkq - 0 1"]',
       '[SetUp "1"]',
       '',
       '1.Qd2 Be7 *'
     ];
 
-    var chess = new Chess();
-    var result = chess.load_pgn(pgn.join('\n'));
-    chess.clear();
+    var xiangqi = new Xiangqi();
+    var result = xiangqi.load_pgn(pgn.join('\n'));
+    xiangqi.clear();
     var expected = {
-      FEN: '8/8/8/8/8/8/8/8 w - - 0 1',
+      FEN: '8/8/8/8/8/8/8/8 r - - 0 1',
       SetUp: '1'
     };
-    assert.deepEqual(chess.header(), expected);
+    assert.deepEqual(xiangqi.header(), expected);
   })
 });
+*/

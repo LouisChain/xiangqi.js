@@ -1,31 +1,31 @@
 {
-  "name": "chess.js",
-  "version": "0.10.3-dev",
-  "description": "A Javascript chess library for chess move generation/validation, piece placement/movement, and check/checkmate/draw detection",
-  "author": "Jeff Hlywa <jhlywa@gmail.com> (https://github.com/jhlywa)",
+  "name": "xiangqi.js",
+  "version": "0.1.0",
+  "description": "A Javascript xiangqi library for xiangqi move generation/validation, piece placement/movement, and check/checkmate/draw detection",
+  "author": "Jeff Hlywa <lengyanyu258@outlook.com> (https://github.com/lengyanyu258)",
   "license": "BSD-2-Clause",
-  "homepage": "https://github.com/jhlywa/chess.js",
-  "keywords": ["chess"],
-  "main": "chess.js",
-  "filename": "chess.min.js",
+  "homepage": "https://github.com/lengyanyu258/xiangqi.js",
+  "keywords": ["xiangqi"],
+  "main": "xiangqi.js",
+  "filename": "xiangqi.min.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jhlywa/chess.js.git"
+    "url": "https://github.com/lengyanyu258/xiangqi.js.git"
   },
-  "npmName": "chess.js",
+  "npmName": "xiangqi.js",
   "npmFileMap": [
     {
       "basePath": "",
-      "files": ["chess*.js"]
+      "files": ["xiangqi*.js"]
     }
   ],
   "devDependencies": {
-    "mocha": "^2.2.4",
-    "chai": "^2.3.0",
-    "uglify-js": "^2.4.21"
+    "chai": "4.2.0",
+    "mocha": "5.2.0",
+    "uglify-js": "3.4.9"
   },
   "scripts": {
     "test": "mocha",
-    "minify": "uglifyjs chess.js -c -m --comments 'license' > chess.min.js"
+    "minify": "uglifyjs xiangqi.js -c -m --comments -o xiangqi.min.js"
   }
 }
