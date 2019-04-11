@@ -36,30 +36,29 @@ describe('Perft', function() {
 describe('Single Square Move Generation', function() {
 
   var positions = [
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',
-      square: 'e2', verbose: false, moves: ['e3', 'e4']},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',
-      square: 'e9', verbose: false, moves: []},  // invalid square
-    {fen: 'rnbqk1nr/pppp1ppp/4p3/8/1b1P4/2N5/PPP1PPPP/R1BQKBNR r KQkq - 2 3',
-      square: 'c3', verbose: false, moves: []},  // pinned piece
-    {fen: '8/k7/8/8/8/8/7p/K7 b - - 0 1',
-      square: 'h2', verbose: false, moves: ['h1=Q+', 'h1=R+', 'h1=B', 'h1=N']},  // promotion
-    {fen: 'r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/2B1P3/2NP1N2/PPPBQPPP/R3K2R r KQ - 0 8',
-      square: 'e1', verbose: false, moves: ['Kf1', 'Kd1', 'O-O', 'O-O-O']},  // castling
-    {fen: 'r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/2B1P3/2NP1N2/PPPBQPPP/R3K2R r - - 0 8',
-      square: 'e1', verbose: false, moves: ['Kf1', 'Kd1']},  // no castling
-    {fen: '8/7K/8/8/1R6/k7/1R1p4/8 b - - 0 1',
-      square: 'a3', verbose: false, moves: []},  // trapped king
-    {fen: '8/7K/8/8/1R6/k7/1R1p4/8 b - - 0 1',
-      square: 'd2', verbose: true,
+    {fen: 'rnbakabnr/9/1c5c1/p1p1P1p1p/9/9/P1P3P1P/1C5C1/4A4/RNB1KABNR r - - 0 1',
+      square: 'e6', verbose: false, moves: ['e6e7', 'e6d6', 'e6f6']},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1',
+      square: 'j0', verbose: false, moves: []},  // invalid square
+    {fen: '2ba1k3/2R1a4/b8/9/9/9/9/9/9/4K4 r - - 0 1',
+      square: 'd9', verbose: false, moves: []},  // pinned piece
+    // {fen: '8/k7/8/8/8/8/7p/K7 b - - 0 1',
+    //   square: 'h2', verbose: false, moves: ['h1=Q+', 'h1=R+', 'h1=B', 'h1=N']},  // 
+    // {fen: 'r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/2B1P3/2NP1N2/PPPBQPPP/R3K2R r KQ - 0 8',
+    //   square: 'e1', verbose: false, moves: ['Kf1', 'Kd1', 'O-O', 'O-O-O']},  // castling
+    // {fen: 'r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/2B1P3/2NP1N2/PPPBQPPP/R3K2R r - - 0 8',
+    //   square: 'e1', verbose: false, moves: ['Kf1', 'Kd1']},  // no castling
+    {fen: '9/3R5/5k3/9/9/9/2p6/9/9/4K4 b - - 0 1',
+      square: 'f7', verbose: false, moves: []},  // trapped king
+    {fen: '9/3R5/5k3/9/9/9/2p6/9/9/4K4 b - - 0 1',
+      square: 'c3', verbose: true,
       moves:
-        [{color:'b', from:'d2', to:'d1', flags:'np', piece:'p', promotion:'q', san:'d1=Q'},
-         {color:'b', from:'d2', to:'d1', flags:'np', piece:'p', promotion:'r', san:'d1=R'},
-         {color:'b', from:'d2', to:'d1', flags:'np', piece:'p', promotion:'b', san:'d1=B'},
-         {color:'b', from:'d2', to:'d1', flags:'np', piece:'p', promotion:'n', san:'d1=N'}]
+        [{color:'b', from:'c3', to:'c2', flags:'n', piece:'p', iccs:'c3c2'},
+         {color:'b', from:'c3', to:'b3', flags:'n', piece:'p', iccs:'c3b3'},
+         {color:'b', from:'c3', to:'d3', flags:'n', piece:'p', iccs:'c3d3'}]
     }, // verbose
-    {fen: 'rnbqk2r/ppp1pp1p/5n1b/3p2pQ/1P2P3/B1N5/P1PP1PPP/R3KBNR b KQkq - 3 5',
-      square: 'f1', verbose: true, moves: []},  // issue #30
+    // {fen: 'rnbqk2r/ppp1pp1p/5n1b/3p2pQ/1P2P3/B1N5/P1PP1PPP/R3KBNR b KQkq - 3 5',
+    //   square: 'f1', verbose: true, moves: []},  // issue #30
   ];
 
   positions.forEach(function(position) {
@@ -93,10 +92,10 @@ describe('Checkmate', function() {
 
   var xiangqi = new Xiangqi();
   var checkmates = [
-    '8/5r2/4K1q1/4p3/3k4/8/8/8 r - - 0 7',
-    '4r2r/p6p/1pnN2p1/kQp5/3pPq2/3P4/PPP3PP/R5K1 b - - 0 2',
-    'r3k2r/ppp2p1p/2n1p1p1/8/2B2P1q/2NPb1n1/PP4PP/R2Q3K r kq - 0 8',
-    '8/6R1/pp1r3p/6p1/P3R1Pk/1P4P1/7K/8 b - - 0 4'
+    '4k4/9/9/9/9/9/9/9/4Ar3/2r1K4 r - - 0 7',
+    '1R2kab2/5R3/9/p3p2r1/3n5/4P3p/P8/9/4A4/4K4 b - - 0 2',
+    '5kC2/4a1N2/3a5/9/9/9/9/r3C4/4p4/2rK4R r - - 0 8',
+    '5a3/3R5/4k4/4P2Np/9/9/9/9/9/4K4 b - - 0 4'
   ];
 
   checkmates.forEach(function(checkmate) {
@@ -113,8 +112,8 @@ describe('Checkmate', function() {
 describe('Stalemate', function() {
 
   var stalemates = [
-    '1R6/8/8/8/8/8/7R/k6K b - - 0 1',
-    '8/8/5k2/p4p1p/P4K1P/1r6/8/8 r - - 0 2',
+    '3aca3/1Cnrk4/b3r4/2p1n4/2b6/9/9/9/4C4/ppppcK3 b - - 0 1',
+    '4k4/4a4/9/9/9/9/9/9/3r1r3/4K4 r - - 0 2',
   ];
 
   stalemates.forEach(function(stalemate) {
@@ -133,22 +132,23 @@ describe('Stalemate', function() {
 describe('Insufficient Material', function() {
 
   var positions = [
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1', draw: false},
-    {fen: '8/8/8/8/8/8/8/k6K r - - 0 1', draw: true},
-    {fen: '8/2p5/8/8/8/8/8/k6K r - - 0 1', draw: false},
-    {fen: '8/2N5/8/8/8/8/8/k6K r - - 0 1', draw: true},
-    {fen: '8/2b5/8/8/8/8/8/k6K r - - 0 1', draw: true},
-    {fen: '8/b7/3B4/8/8/8/8/k6K r - - 0 1', draw: true},
-    {fen: '8/b7/B7/8/8/8/8/k6K r - - 0 1', draw: false},
-    {fen: '8/b1B1b1B1/1b1B1b1B/8/8/8/8/1k5K r - - 0 1', draw: true},
-    {fen: '8/bB2b1B1/1b1B1b1B/8/8/8/8/1k5K r - - 0 1', draw: false}
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1', draw: false},
+    {fen: '4k4/4a4/9/9/9/9/9/9/9/4K4 r - - 0 1', draw: true},
+    {fen: '4k4/9/9/4p4/9/9/9/9/9/4K4 r - - 0 1', draw: false},
+    {fen: '4k4/9/9/9/9/9/9/4n4/9/4K4 r - - 0 1', draw: false},
+    {fen: '5a3/9/4k4/9/9/9/9/9/4A4/4K4 b - - 0 1', draw: true},
+    {fen: '4k4/9/b8/9/9/9/9/9/4A4/4K4 r - - 0 1', draw: true},
+    {fen: '4k4/9/4b4/9/9/9/9/4B4/9/4K4 r - - 0 1', draw: true},
+    {fen: '4k4/9/9/9/9/9/9/9/5r3/2r1K4 r - - 0 1', draw: false},
+    {fen: '4k1b2/9/4b4/9/9/9/9/4B4/9/4K1B2 r - - 0 1', draw: true},
+    {fen: '5kC2/4a1N2/3a5/9/9/9/9/r3C4/4p4/2rK4R r - - 0 1', draw: false}
   ];
 
   positions.forEach(function(position) {
     var xiangqi = new Xiangqi();
     xiangqi.load(position.fen);
 
-    it(position.fen, function() {
+    it(position.fen, function() {console.log(xiangqi.insufficient_material());
       if (position.draw) {
         assert(xiangqi.insufficient_material() && xiangqi.in_draw());
       } else {
@@ -167,9 +167,8 @@ describe('Threefold Repetition', function() {
     {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1',
      moves: ['h0g2', 'h9g7', 'g2h0', 'g7h9', 'h0g2', 'h9g7', 'g2h0', 'g7h9']},
 
-    /* Fischer - Petrosian, Buenos Aires, 1971 */
-    // {fen: '8/pp3p1k/2p2q1p/3r1P2/5R2/7P/P1P1QP2/7K b - - 2 30',
-    //  moves: ['Qe5', 'Qh5', 'Qf6', 'Qe2', 'Re5', 'Qd3', 'Rd5', 'Qe2']},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1',
+     moves: ['h0g2', 'h9g7', 'g2h0', 'g7h9', 'h0i2', 'h9i7', 'i2h0', 'i7h9']},
   ];
 
   positions.forEach(function(position) {
@@ -187,7 +186,7 @@ describe('Threefold Repetition', function() {
         xiangqi.move(position.moves[j]);
       }
 
-      assert(passed && xiangqi.in_threefold_repetition() && xiangqi.in_draw());
+      assert(passed && xiangqi.in_threefold_repetition() && !xiangqi.in_draw());
 
     });
 
@@ -266,18 +265,18 @@ describe('Get/Put/Remove', function() {
   var xiangqi = new Xiangqi();
   var passed = true;
   var positions = [
-    {pieces: {a7: {type: xiangqi.PAWN, color: xiangqi.RED},
-              b7: {type: xiangqi.PAWN, color: xiangqi.BLACK},
+    {pieces: {a9: {type: xiangqi.PAWN, color: xiangqi.RED},
+              b8: {type: xiangqi.PAWN, color: xiangqi.BLACK},
               c7: {type: xiangqi.KNIGHT, color: xiangqi.RED},
-              d7: {type: xiangqi.KNIGHT, color: xiangqi.BLACK},
-              e7: {type: xiangqi.BISHOP, color: xiangqi.RED},
-              f7: {type: xiangqi.BISHOP, color: xiangqi.BLACK},
-              g7: {type: xiangqi.ROOK, color: xiangqi.RED},
-              h7: {type: xiangqi.ROOK, color: xiangqi.BLACK},
-              a6: {type: xiangqi.QUEEN, color: xiangqi.RED},
-              b6: {type: xiangqi.QUEEN, color: xiangqi.BLACK},
-              a4: {type: xiangqi.KING, color: xiangqi.RED},
-              h4: {type: xiangqi.KING, color: xiangqi.BLACK}},
+              d6: {type: xiangqi.KNIGHT, color: xiangqi.BLACK},
+              e5: {type: xiangqi.ROOK, color: xiangqi.RED},
+              f4: {type: xiangqi.ROOK, color: xiangqi.BLACK},
+              g4: {type: xiangqi.BISHOP, color: xiangqi.RED},
+              g5: {type: xiangqi.BISHOP, color: xiangqi.BLACK},
+              d2: {type: xiangqi.ADVISER, color: xiangqi.RED},
+              f7: {type: xiangqi.ADVISER, color: xiangqi.BLACK},
+              e0: {type: xiangqi.KING, color: xiangqi.RED},
+              e7: {type: xiangqi.KING, color: xiangqi.BLACK}},
      should_pass: true},
 
     {pieces: {a7: {type: 'z', color: xiangqi.RDE}}, // bad piece
@@ -287,21 +286,21 @@ describe('Get/Put/Remove', function() {
      should_pass: false},
 
     /* disallow two kings (black) */
-    {pieces: {a7: {type: xiangqi.KING, color: xiangqi.BLACK},
-              h2: {type: xiangqi.KING, color: xiangqi.RED},
-              a8: {type: xiangqi.KING, color: xiangqi.BLACK}},
+    {pieces: {d7: {type: xiangqi.KING, color: xiangqi.BLACK},
+              f2: {type: xiangqi.KING, color: xiangqi.RED},
+              e8: {type: xiangqi.KING, color: xiangqi.BLACK}},
       should_pass: false},
 
     /* disallow two kings (white) */
-    {pieces: {a7: {type: xiangqi.KING, color: xiangqi.BLACK},
-              h2: {type: xiangqi.KING, color: xiangqi.RED},
-              h1: {type: xiangqi.KING, color: xiangqi.RED}},
+    {pieces: {d7: {type: xiangqi.KING, color: xiangqi.BLACK},
+              f2: {type: xiangqi.KING, color: xiangqi.RED},
+              e1: {type: xiangqi.KING, color: xiangqi.RED}},
       should_pass: false},
 
     /* allow two kings if overwriting the exact same square */
-    {pieces: {a7: {type: xiangqi.KING, color: xiangqi.BLACK},
-              h2: {type: xiangqi.KING, color: xiangqi.RED},
-              h2: {type: xiangqi.KING, color: xiangqi.RED}},
+    {pieces: {d7: {type: xiangqi.KING, color: xiangqi.BLACK},
+              f2: {type: xiangqi.KING, color: xiangqi.RED},
+              f2: {type: xiangqi.KING, color: xiangqi.RED}},
       should_pass: true},
   ];
 
@@ -315,7 +314,8 @@ describe('Get/Put/Remove', function() {
 
       /* places the pieces */
       for (square in position.pieces) {
-        passed &= xiangqi.put(position.pieces[square], square);
+        passed = xiangqi.put(position.pieces[square], square);
+        if (!passed) break;
       }
 
       /* iterate over every square to make sure get returns the proper
@@ -359,7 +359,7 @@ describe('Get/Put/Remove', function() {
       }
 
       /* finally, check for an empty board */
-      passed = passed && (xiangqi.fen() === '8/8/8/8/8/8/8/8 r - - 0 1');
+      passed = passed && (xiangqi.fen() === '9/9/9/9/9/9/9/9/9/9 r - - 0 1');
 
       /* some tests should fail, so make sure we're supposed to pass/fail each
        * test
@@ -377,19 +377,19 @@ describe('Get/Put/Remove', function() {
 describe('FEN', function() {
 
   var positions = [
-    {fen: '8/8/8/8/8/8/8/8 r - - 0 1', should_pass: true},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1', should_pass: true},
-    {fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1', should_pass: true},
-    {fen: '1nbqkbn1/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/1NBQKBN1 b - - 1 2', should_pass: true},
+    // {fen: '9/9/9/9/9/9/9/9/9/9 r - - 0 1', should_pass: true},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1', should_pass: true},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/4P4/P1P3P1P/1C5C1/9/RNBAKABNR b - - 0 1', should_pass: true},
+    {fen: '1nbakabn1/9/1c5c1/p1p3p1p/4p4/4P4/P1P3P1P/1C5C1/9/1NBAKABN1 b - - 1 2', should_pass: true},
 
     /* incomplete FEN string */
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBN r KQkq - 0 1', should_pass: false},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABN r - - 0 1', should_pass: false},
 
-    /* bad digit (9)*/
-    {fen: 'rnbqkbnr/pppppppp/9/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1', should_pass: false},
+    /* bad digit (8)*/
+    {fen: 'rnbakabnr/8/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1', should_pass: false},
 
     /* bad piece (X)*/
-    {fen: '1nbqkbn1/pppp1ppX/8/4p3/4P3/8/PPPP1PPP/1NBQKBN1 b - - 1 2', should_pass: false},
+    {fen: '1nbakabn1/9/1c5c1/p1p3p1X/4p4/4P4/P1P3P1P/1C5C1/9/1NBAKABN1 b - - 1 2', should_pass: false},
   ];
 
   positions.forEach(function(position) {
@@ -843,7 +843,7 @@ describe('Load PGN', function() {
       sloppy: true
     },
 
-    // sloppy parse should parse long algebraic notation w/ underpromotions
+    // sloppy parse should parse long algebraic notation w/ unders
     {pgn: [
       '1. e2e4 c7c5 2. g1f3 d7d6 3. d2d4 c5d4 4. f3d4 g8f6 5. f1d3 a7a6 6. c1e3',
       'e7e5 7. d4f5 c8f5 8. e4f5 d6d5 9. e3g5 f8e7 10. d1e2 e5e4 11. g5f6 e7f6 12.',
@@ -984,52 +984,58 @@ describe('Load PGN', function() {
 describe('Make Move', function() {
 
   var positions = [
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1',
      legal: true,
-     move: 'e4',
-     next: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1'},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',
+     move: 'e3e4',
+     next: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/4P4/P1P3P1P/1C5C1/9/RNBAKABNR b - - 1 1'},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1',
      legal: false,
-     move: 'e5'},
-    {fen: '7k/3R4/3p2Q1/6Q1/2N1N3/8/8/3R3K r - - 0 1',
+     move: 'e3e5'},
+    {fen: '2ba5/4a4/b4k3/2R6/9/9/9/9/9/4K4 r - - 0 1',
      legal: true,
-     move: 'Rd8#',
-     next: '3R3k/8/3p2Q1/6Q1/2N1N3/8/8/3R3K b - - 1 1'},
-    {fen: 'rnbqkbnr/pp3ppp/2pp4/4pP2/4P3/8/PPPP2PP/RNBQKBNR r KQkq e6 0 1',
+     move: 'c6f6',
+     next: '2ba5/4a4/b4k3/5R3/9/9/9/9/9/4K4 b - - 1 1'},
+    // Cannon
+    {fen: 'rn1akabr1/9/1c2b1n1c/pC2p1p1p/2p6/6P2/P1P1P3P/2N1C1N2/9/R1BAKAB1R r - - 0 1',
      legal: true,
-     move: 'fxe6',
-     next: 'rnbqkbnr/pp3ppp/2ppP3/8/4P3/8/PPPP2PP/RNBQKBNR b KQkq - 0 1',
+     move: 'b6g6',
+     next: 'rn1akabr1/9/1c2b1n1c/p3p1C1p/2p6/6P2/P1P1P3P/2N1C1N2/9/R1BAKAB1R b - - 0 1',
      captured: 'p'},
-    {fen: 'rnbqkbnr/pppp2pp/8/4p3/4Pp2/2PP4/PP3PPP/RNBQKBNR b KQkq e3 0 1',
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1',
      legal: true,
-     move: 'fxe3',
-     next: 'rnbqkbnr/pppp2pp/8/4p3/8/2PPp3/PP3PPP/RNBQKBNR r KQkq - 0 2',
-     captured: 'p'},
-
-     // strict move parser
-    {fen: 'r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7',
+     move: 'h2h9',
+     next: 'rnbakabCr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C7/9/RNBAKABNR b - - 0 1',
+     captured: 'n'},
+    {fen: 'rnbakabCr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C7/9/RNBAKABNR b - - 0 1',
      legal: true,
-     next: 'r2qkb1r/ppp1nppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R r KQkq - 4 8',
-     move: 'Ne7'},
+     move: 'b7b0',
+     next: 'rnbakabCr/9/7c1/p1p1p1p1p/9/9/P1P1P1P1P/1C7/9/RcBAKABNR r - - 0 2',
+     captured: 'n'},
 
-     // strict move parser should reject over disambiguation
-    {fen: 'r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7',
-     legal: false,
-     move: 'Nge7'},
-
-     // sloppy move parser
-    {fen: 'r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7',
-     legal: true,
-     sloppy: true,
-     move: 'Nge7',
-     next: 'r2qkb1r/ppp1nppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R r KQkq - 4 8'},
-
-     // the sloppy parser should still accept correctly disambiguated moves
-    {fen: 'r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7',
-     legal: true,
-     sloppy: true,
-     move: 'Ne7',
-     next: 'r2qkb1r/ppp1nppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R r KQkq - 4 8'}
+    //  // strict move parser
+    // {fen: 'r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7',
+    //  legal: true,
+    //  next: 'r2qkb1r/ppp1nppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R r KQkq - 4 8',
+    //  move: 'Ne7'},
+    //
+    //  // strict move parser should reject over disambiguation
+    // {fen: 'r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7',
+    //  legal: false,
+    //  move: 'Nge7'},
+    //
+    //  // sloppy move parser
+    // {fen: 'r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7',
+    //  legal: true,
+    //  sloppy: true,
+    //  move: 'Nge7',
+    //  next: 'r2qkb1r/ppp1nppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R r KQkq - 4 8'},
+    //
+    //  // the sloppy parser should still accept correctly disambiguated moves
+    // {fen: 'r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7',
+    //  legal: true,
+    //  sloppy: true,
+    //  move: 'Ne7',
+    //  next: 'r2qkb1r/ppp1nppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R r KQkq - 4 8'}
   ];
 
   positions.forEach(function(position) {
@@ -1056,23 +1062,22 @@ describe('Validate FEN', function() {
 
   var xiangqi = new Xiangqi();
   var positions = [
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNRw KQkq - 0 1',   error_number: 1},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 x',  error_number: 2},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 0',  error_number: 2},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 -1', error_number: 2},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - x 1',  error_number: 3},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - -1 1', error_number: 3},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq e2 0 1', error_number: 4},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq e7 0 1', error_number: 4},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq x 0 1',  error_number: 4},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQxkq - 0 1', error_number: 5},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r kqKQ - 0 1',  error_number: 5},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR ? KQkq - 0 1',  error_number: 6},
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP r KQkq - 0 1',           error_number: 7},
-    {fen: 'rnbqkbnr/pppppppp/17/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1', error_number: 8},
-    {fen: 'rnbqk?nr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',  error_number: 9},
-    {fen: 'rnbqkbnr/pppppppp/7/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',  error_number: 10},
-    {fen: 'rnbqkbnr/p1p1p1p1p/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1', error_number: 10},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNRr - - 0 1',   error_number: 1},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 x',  error_number: 2},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 0',  error_number: 2},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 -1', error_number: 2},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - x 1',  error_number: 3},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - -1 1', error_number: 3},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - x 0 1', error_number: 4},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - 0 0 1',  error_number: 4},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r x - 0 1', error_number: 5},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r 0 - 0 1',  error_number: 5},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR ? - - 0 1',  error_number: 6},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9 r - - 0 1',            error_number: 7},
+    {fen: 'rnbakabnr/17/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1', error_number: 8},
+    {fen: 'rnbaka?nr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1',  error_number: 9},
+    {fen: 'rnbakabnr/8/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1',  error_number: 10},
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1pp/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1', error_number: 10},/*
     {fen: 'r1bqkbnr/2pppppp/n7/1p6/8/4P3/PPPP1PPP/RNBQK1NR b KQkq b6 0 4', error_number: 11},
     {fen: 'rnbqkbnr/1p1ppppp/B1p5/8/6P1/4P3/PPPP1P1P/RNBQK1NR r KQkq g3 0 3', error_number: 11},
     {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',  error_number: 0},
@@ -1179,7 +1184,7 @@ describe('Validate FEN', function() {
     {fen: 'r3r1k1/p2nqpp1/bpp2n1p/3p4/B2P4/P1Q1PP2/1P2NBPP/R3K2R r KQ - 6 16', error_number: 0},
     {fen: 'r3k2r/8/p4p2/3p2p1/4b3/2R2PP1/P6P/4R1K1 b kq - 0 27', error_number: 0},
     {fen: 'r1rb2k1/5ppp/pqp5/3pPb2/QB1P4/2R2N2/P4PPP/2R3K1 b - - 7 23', error_number: 0},
-    {fen: '3r1r2/3P2pk/1p1R3p/1Bp2p2/6q1/4Q3/PP3P1P/7K r - - 4 30', error_number: 0},
+    {fen: '3r1r2/3P2pk/1p1R3p/1Bp2p2/6q1/4Q3/PP3P1P/7K r - - 4 30', error_number: 0},*/
   ];
 
   positions.forEach(function(position) {
@@ -1198,100 +1203,98 @@ describe('History', function() {
   var xiangqi = new Xiangqi();
   var tests = [
      {verbose: false,
-      fen: '4q2k/2r1r3/4PR1p/p1p5/P1Bp1Q1P/1P6/6P1/6K1 b - - 4 41',
-      moves: ['c4', 'e6', 'Nf3', 'd5', 'd4', 'Nf6', 'Nc3', 'Be7', 'Bg5', 'O-O', 'e3', 'h6',
-              'Bh4', 'b6', 'cxd5', 'Nxd5', 'Bxe7', 'Qxe7', 'Nxd5', 'exd5', 'Rc1', 'Be6',
-              'Qa4', 'c5', 'Qa3', 'Rc8', 'Bb5', 'a6', 'dxc5', 'bxc5', 'O-O', 'Ra7',
-              'Be2', 'Nd7', 'Nd4', 'Qf8', 'Nxe6', 'fxe6', 'e4', 'd4', 'f4', 'Qe7',
-              'e5', 'Rb8', 'Bc4', 'Kh8', 'Qh3', 'Nf8', 'b3', 'a5', 'f5', 'exf5',
-              'Rxf5', 'Nh7', 'Rcf1', 'Qd8', 'Qg3', 'Re7', 'h4', 'Rbb7', 'e6', 'Rbc7',
-              'Qe5', 'Qe8', 'a4', 'Qd8', 'R1f2', 'Qe8', 'R2f3', 'Qd8', 'Bd3', 'Qe8',
-              'Qe4', 'Nf6', 'Rxf6', 'gxf6', 'Rxf6', 'Kg8', 'Bc4', 'Kh8', 'Qf4']},
+      fen: '4k4/5R3/5a3/8p/p4r3/9/8P/4B1C2/4A4/3K1A3 b - - 1 40',
+      moves: ['h2e2', 'h9g7', 'g3g4', 'c6c5', 'b2b6', 'i9h9', 'h0g2', 'h7i7',
+        'b0c2', 'c9e7', 'b6g6', 'b9c7', 'a0b0', 'b7b5', 'b0b4', 'a6a5', 'c3c4',
+        'c5c4', 'b4c4', 'c7d5', 'c2d4', 'h9h6', 'g6g9', 'e7g9', 'c4c5', 'b5b2',
+        'c5d5', 'b2g2', 'i0i2', 'g2g3', 'i2g2', 'g3a3', 'g4g5', 'a9c9', 'g5g6',
+        'h6h1', 'd4f5', 'c9c0', 'f5g7', 'a3a0', 'g2f2', 'f9e8', 'e2e6', 'e8f7',
+        'f2d2', 'c0c9', 'd0e1', 'h1h7', 'e0d0', 'i7g7', 'd5d9', 'c9d9', 'd2d9',
+        'e9e8', 'd9d8', 'e8e9', 'g0e2', 'a0b0', 'd8d9', 'e9e8', 'd9g9', 'b0b7',
+        'g9g8', 'e8e9', 'g6f6', 'b7b5', 'e3e4', 'b5g5', 'g8f8', 'g5f5', 'e6e5',
+        'g7g5', 'e5g5', 'h7h6', 'e4e5', 'h6f6', 'e5f5', 'f6f5', 'g5g2' ]},
      {verbose: true,
-      fen: '4q2k/2r1r3/4PR1p/p1p5/P1Bp1Q1P/1P6/6P1/6K1 b - - 4 41',
+      fen: '4k4/5R3/5a3/8p/p4r3/9/8P/4B1C2/4A4/3K1A3 b - - 1 40',
       moves: [
-        {color: 'w', from: 'c2', to: 'c4', flags: 'b', piece: 'p', san: 'c4'},
-        {color: 'b', from: 'e7', to: 'e6', flags: 'n', piece: 'p', san: 'e6'},
-        {color: 'w', from: 'g1', to: 'f3', flags: 'n', piece: 'n', san: 'Nf3'},
-        {color: 'b', from: 'd7', to: 'd5', flags: 'b', piece: 'p', san: 'd5'},
-        {color: 'w', from: 'd2', to: 'd4', flags: 'b', piece: 'p', san: 'd4'},
-        {color: 'b', from: 'g8', to: 'f6', flags: 'n', piece: 'n', san: 'Nf6'},
-        {color: 'w', from: 'b1', to: 'c3', flags: 'n', piece: 'n', san: 'Nc3'},
-        {color: 'b', from: 'f8', to: 'e7', flags: 'n', piece: 'b', san: 'Be7'},
-        {color: 'w', from: 'c1', to: 'g5', flags: 'n', piece: 'b', san: 'Bg5'},
-        {color: 'b', from: 'e8', to: 'g8', flags: 'k', piece: 'k', san: 'O-O'},
-        {color: 'w', from: 'e2', to: 'e3', flags: 'n', piece: 'p', san: 'e3'},
-        {color: 'b', from: 'h7', to: 'h6', flags: 'n', piece: 'p', san: 'h6'},
-        {color: 'w', from: 'g5', to: 'h4', flags: 'n', piece: 'b', san: 'Bh4'},
-        {color: 'b', from: 'b7', to: 'b6', flags: 'n', piece: 'p', san: 'b6'},
-        {color: 'w', from: 'c4', to: 'd5', flags: 'c', piece: 'p', captured: 'p', san: 'cxd5'},
-        {color: 'b', from: 'f6', to: 'd5', flags: 'c', piece: 'n', captured: 'p', san: 'Nxd5'},
-        {color: 'w', from: 'h4', to: 'e7', flags: 'c', piece: 'b', captured: 'b', san: 'Bxe7'},
-        {color: 'b', from: 'd8', to: 'e7', flags: 'c', piece: 'q', captured: 'b', san: 'Qxe7'},
-        {color: 'w', from: 'c3', to: 'd5', flags: 'c', piece: 'n', captured: 'n', san: 'Nxd5'},
-        {color: 'b', from: 'e6', to: 'd5', flags: 'c', piece: 'p', captured: 'n', san: 'exd5'},
-        {color: 'w', from: 'a1', to: 'c1', flags: 'n', piece: 'r', san: 'Rc1'},
-        {color: 'b', from: 'c8', to: 'e6', flags: 'n', piece: 'b', san: 'Be6'},
-        {color: 'w', from: 'd1', to: 'a4', flags: 'n', piece: 'q', san: 'Qa4'},
-        {color: 'b', from: 'c7', to: 'c5', flags: 'b', piece: 'p', san: 'c5'},
-        {color: 'w', from: 'a4', to: 'a3', flags: 'n', piece: 'q', san: 'Qa3'},
-        {color: 'b', from: 'f8', to: 'c8', flags: 'n', piece: 'r', san: 'Rc8'},
-        {color: 'w', from: 'f1', to: 'b5', flags: 'n', piece: 'b', san: 'Bb5'},
-        {color: 'b', from: 'a7', to: 'a6', flags: 'n', piece: 'p', san: 'a6'},
-        {color: 'w', from: 'd4', to: 'c5', flags: 'c', piece: 'p', captured: 'p', san: 'dxc5'},
-        {color: 'b', from: 'b6', to: 'c5', flags: 'c', piece: 'p', captured: 'p', san: 'bxc5'},
-        {color: 'w', from: 'e1', to: 'g1', flags: 'k', piece: 'k', san: 'O-O'},
-        {color: 'b', from: 'a8', to: 'a7', flags: 'n', piece: 'r', san: 'Ra7'},
-        {color: 'w', from: 'b5', to: 'e2', flags: 'n', piece: 'b', san: 'Be2'},
-        {color: 'b', from: 'b8', to: 'd7', flags: 'n', piece: 'n', san: 'Nd7'},
-        {color: 'w', from: 'f3', to: 'd4', flags: 'n', piece: 'n', san: 'Nd4'},
-        {color: 'b', from: 'e7', to: 'f8', flags: 'n', piece: 'q', san: 'Qf8'},
-        {color: 'w', from: 'd4', to: 'e6', flags: 'c', piece: 'n', captured: 'b', san: 'Nxe6'},
-        {color: 'b', from: 'f7', to: 'e6', flags: 'c', piece: 'p', captured: 'n', san: 'fxe6'},
-        {color: 'w', from: 'e3', to: 'e4', flags: 'n', piece: 'p', san: 'e4'},
-        {color: 'b', from: 'd5', to: 'd4', flags: 'n', piece: 'p', san: 'd4'},
-        {color: 'w', from: 'f2', to: 'f4', flags: 'b', piece: 'p', san: 'f4'},
-        {color: 'b', from: 'f8', to: 'e7', flags: 'n', piece: 'q', san: 'Qe7'},
-        {color: 'w', from: 'e4', to: 'e5', flags: 'n', piece: 'p', san: 'e5'},
-        {color: 'b', from: 'c8', to: 'b8', flags: 'n', piece: 'r', san: 'Rb8'},
-        {color: 'w', from: 'e2', to: 'c4', flags: 'n', piece: 'b', san: 'Bc4'},
-        {color: 'b', from: 'g8', to: 'h8', flags: 'n', piece: 'k', san: 'Kh8'},
-        {color: 'w', from: 'a3', to: 'h3', flags: 'n', piece: 'q', san: 'Qh3'},
-        {color: 'b', from: 'd7', to: 'f8', flags: 'n', piece: 'n', san: 'Nf8'},
-        {color: 'w', from: 'b2', to: 'b3', flags: 'n', piece: 'p', san: 'b3'},
-        {color: 'b', from: 'a6', to: 'a5', flags: 'n', piece: 'p', san: 'a5'},
-        {color: 'w', from: 'f4', to: 'f5', flags: 'n', piece: 'p', san: 'f5'},
-        {color: 'b', from: 'e6', to: 'f5', flags: 'c', piece: 'p', captured: 'p', san: 'exf5'},
-        {color: 'w', from: 'f1', to: 'f5', flags: 'c', piece: 'r', captured: 'p', san: 'Rxf5'},
-        {color: 'b', from: 'f8', to: 'h7', flags: 'n', piece: 'n', san: 'Nh7'},
-        {color: 'w', from: 'c1', to: 'f1', flags: 'n', piece: 'r', san: 'Rcf1'},
-        {color: 'b', from: 'e7', to: 'd8', flags: 'n', piece: 'q', san: 'Qd8'},
-        {color: 'w', from: 'h3', to: 'g3', flags: 'n', piece: 'q', san: 'Qg3'},
-        {color: 'b', from: 'a7', to: 'e7', flags: 'n', piece: 'r', san: 'Re7'},
-        {color: 'w', from: 'h2', to: 'h4', flags: 'b', piece: 'p', san: 'h4'},
-        {color: 'b', from: 'b8', to: 'b7', flags: 'n', piece: 'r', san: 'Rbb7'},
-        {color: 'w', from: 'e5', to: 'e6', flags: 'n', piece: 'p', san: 'e6'},
-        {color: 'b', from: 'b7', to: 'c7', flags: 'n', piece: 'r', san: 'Rbc7'},
-        {color: 'w', from: 'g3', to: 'e5', flags: 'n', piece: 'q', san: 'Qe5'},
-        {color: 'b', from: 'd8', to: 'e8', flags: 'n', piece: 'q', san: 'Qe8'},
-        {color: 'w', from: 'a2', to: 'a4', flags: 'b', piece: 'p', san: 'a4'},
-        {color: 'b', from: 'e8', to: 'd8', flags: 'n', piece: 'q', san: 'Qd8'},
-        {color: 'w', from: 'f1', to: 'f2', flags: 'n', piece: 'r', san: 'R1f2'},
-        {color: 'b', from: 'd8', to: 'e8', flags: 'n', piece: 'q', san: 'Qe8'},
-        {color: 'w', from: 'f2', to: 'f3', flags: 'n', piece: 'r', san: 'R2f3'},
-        {color: 'b', from: 'e8', to: 'd8', flags: 'n', piece: 'q', san: 'Qd8'},
-        {color: 'w', from: 'c4', to: 'd3', flags: 'n', piece: 'b', san: 'Bd3'},
-        {color: 'b', from: 'd8', to: 'e8', flags: 'n', piece: 'q', san: 'Qe8'},
-        {color: 'w', from: 'e5', to: 'e4', flags: 'n', piece: 'q', san: 'Qe4'},
-        {color: 'b', from: 'h7', to: 'f6', flags: 'n', piece: 'n', san: 'Nf6'},
-        {color: 'w', from: 'f5', to: 'f6', flags: 'c', piece: 'r', captured: 'n', san: 'Rxf6'},
-        {color: 'b', from: 'g7', to: 'f6', flags: 'c', piece: 'p', captured: 'r', san: 'gxf6'},
-        {color: 'w', from: 'f3', to: 'f6', flags: 'c', piece: 'r', captured: 'p', san: 'Rxf6'},
-        {color: 'b', from: 'h8', to: 'g8', flags: 'n', piece: 'k', san: 'Kg8'},
-        {color: 'w', from: 'd3', to: 'c4', flags: 'n', piece: 'b', san: 'Bc4'},
-        {color: 'b', from: 'g8', to: 'h8', flags: 'n', piece: 'k', san: 'Kh8'},
-        {color: 'w', from: 'e4', to: 'f4', flags: 'n', piece: 'q', san: 'Qf4'}],
-      fen: '4q2k/2r1r3/4PR1p/p1p5/P1Bp1Q1P/1P6/6P1/6K1 b - - 4 41'}
+        {color: 'r', from: 'h2', to: 'e2', flags: 'n', piece: 'c', iccs: 'h2e2' },
+        {color: 'b', from: 'h9', to: 'g7', flags: 'n', piece: 'n', iccs: 'h9g7' },
+        {color: 'r', from: 'g3', to: 'g4', flags: 'n', piece: 'p', iccs: 'g3g4' },
+        {color: 'b', from: 'c6', to: 'c5', flags: 'n', piece: 'p', iccs: 'c6c5' },
+        {color: 'r', from: 'b2', to: 'b6', flags: 'n', piece: 'c', iccs: 'b2b6' },
+        {color: 'b', from: 'i9', to: 'h9', flags: 'n', piece: 'r', iccs: 'i9h9' },
+        {color: 'r', from: 'h0', to: 'g2', flags: 'n', piece: 'n', iccs: 'h0g2' },
+        {color: 'b', from: 'h7', to: 'i7', flags: 'n', piece: 'c', iccs: 'h7i7' },
+        {color: 'r', from: 'b0', to: 'c2', flags: 'n', piece: 'n', iccs: 'b0c2' },
+        {color: 'b', from: 'c9', to: 'e7', flags: 'n', piece: 'b', iccs: 'c9e7' },
+        {color: 'r', from: 'b6', to: 'g6', flags: 'c', piece: 'c', captured: 'p', iccs: 'b6g6' },
+        {color: 'b', from: 'b9', to: 'c7', flags: 'n', piece: 'n', iccs: 'b9c7' },
+        {color: 'r', from: 'a0', to: 'b0', flags: 'n', piece: 'r', iccs: 'a0b0' },
+        {color: 'b', from: 'b7', to: 'b5', flags: 'n', piece: 'c', iccs: 'b7b5' },
+        {color: 'r', from: 'b0', to: 'b4', flags: 'n', piece: 'r', iccs: 'b0b4' },
+        {color: 'b', from: 'a6', to: 'a5', flags: 'n', piece: 'p', iccs: 'a6a5' },
+        {color: 'r', from: 'c3', to: 'c4', flags: 'n', piece: 'p', iccs: 'c3c4' },
+        {color: 'b', from: 'c5', to: 'c4', flags: 'c', piece: 'p', captured: 'p', iccs: 'c5c4' },
+        {color: 'r', from: 'b4', to: 'c4', flags: 'c', piece: 'r', captured: 'p', iccs: 'b4c4' },
+        {color: 'b', from: 'c7', to: 'd5', flags: 'n', piece: 'n', iccs: 'c7d5' },
+        {color: 'r', from: 'c2', to: 'd4', flags: 'n', piece: 'n', iccs: 'c2d4' },
+        {color: 'b', from: 'h9', to: 'h6', flags: 'n', piece: 'r', iccs: 'h9h6' },
+        {color: 'r', from: 'g6', to: 'g9', flags: 'c', piece: 'c', captured: 'b', iccs: 'g6g9' },
+        {color: 'b', from: 'e7', to: 'g9', flags: 'c', piece: 'b', captured: 'c', iccs: 'e7g9' },
+        {color: 'r', from: 'c4', to: 'c5', flags: 'n', piece: 'r', iccs: 'c4c5' },
+        {color: 'b', from: 'b5', to: 'b2', flags: 'n', piece: 'c', iccs: 'b5b2' },
+        {color: 'r', from: 'c5', to: 'd5', flags: 'c', piece: 'r', captured: 'n', iccs: 'c5d5' },
+        {color: 'b', from: 'b2', to: 'g2', flags: 'c', piece: 'c', captured: 'n', iccs: 'b2g2' },
+        {color: 'r', from: 'i0', to: 'i2', flags: 'n', piece: 'r', iccs: 'i0i2' },
+        {color: 'b', from: 'g2', to: 'g3', flags: 'n', piece: 'c', iccs: 'g2g3' },
+        {color: 'r', from: 'i2', to: 'g2', flags: 'n', piece: 'r', iccs: 'i2g2' },
+        {color: 'b', from: 'g3', to: 'a3', flags: 'c', piece: 'c', captured: 'p', iccs: 'g3a3' },
+        {color: 'r', from: 'g4', to: 'g5', flags: 'n', piece: 'p', iccs: 'g4g5' },
+        {color: 'b', from: 'a9', to: 'c9', flags: 'n', piece: 'r', iccs: 'a9c9' },
+        {color: 'r', from: 'g5', to: 'g6', flags: 'n', piece: 'p', iccs: 'g5g6' },
+        {color: 'b', from: 'h6', to: 'h1', flags: 'n', piece: 'r', iccs: 'h6h1' },
+        {color: 'r', from: 'd4', to: 'f5', flags: 'n', piece: 'n', iccs: 'd4f5' },
+        {color: 'b', from: 'c9', to: 'c0', flags: 'c', piece: 'r', captured: 'b', iccs: 'c9c0' },
+        {color: 'r', from: 'f5', to: 'g7', flags: 'c', piece: 'n', captured: 'n', iccs: 'f5g7' },
+        {color: 'b', from: 'a3', to: 'a0', flags: 'n', piece: 'c', iccs: 'a3a0' },
+        {color: 'r', from: 'g2', to: 'f2', flags: 'n', piece: 'r', iccs: 'g2f2' },
+        {color: 'b', from: 'f9', to: 'e8', flags: 'n', piece: 'a', iccs: 'f9e8' },
+        {color: 'r', from: 'e2', to: 'e6', flags: 'c', piece: 'c', captured: 'p', iccs: 'e2e6' },
+        {color: 'b', from: 'e8', to: 'f7', flags: 'n', piece: 'a', iccs: 'e8f7' },
+        {color: 'r', from: 'f2', to: 'd2', flags: 'n', piece: 'r', iccs: 'f2d2' },
+        {color: 'b', from: 'c0', to: 'c9', flags: 'n', piece: 'r', iccs: 'c0c9' },
+        {color: 'r', from: 'd0', to: 'e1', flags: 'n', piece: 'a', iccs: 'd0e1' },
+        {color: 'b', from: 'h1', to: 'h7', flags: 'n', piece: 'r', iccs: 'h1h7' },
+        {color: 'r', from: 'e0', to: 'd0', flags: 'n', piece: 'k', iccs: 'e0d0' },
+        {color: 'b', from: 'i7', to: 'g7', flags: 'c', piece: 'c', captured: 'n', iccs: 'i7g7' },
+        {color: 'r', from: 'd5', to: 'd9', flags: 'c', piece: 'r', captured: 'a', iccs: 'd5d9' },
+        {color: 'b', from: 'c9', to: 'd9', flags: 'c', piece: 'r', captured: 'r', iccs: 'c9d9' },
+        {color: 'r', from: 'd2', to: 'd9', flags: 'c', piece: 'r', captured: 'r', iccs: 'd2d9' },
+        {color: 'b', from: 'e9', to: 'e8', flags: 'n', piece: 'k', iccs: 'e9e8' },
+        {color: 'r', from: 'd9', to: 'd8', flags: 'n', piece: 'r', iccs: 'd9d8' },
+        {color: 'b', from: 'e8', to: 'e9', flags: 'n', piece: 'k', iccs: 'e8e9' },
+        {color: 'r', from: 'g0', to: 'e2', flags: 'n', piece: 'b', iccs: 'g0e2' },
+        {color: 'b', from: 'a0', to: 'b0', flags: 'n', piece: 'c', iccs: 'a0b0' },
+        {color: 'r', from: 'd8', to: 'd9', flags: 'n', piece: 'r', iccs: 'd8d9' },
+        {color: 'b', from: 'e9', to: 'e8', flags: 'n', piece: 'k', iccs: 'e9e8' },
+        {color: 'r', from: 'd9', to: 'g9', flags: 'c', piece: 'r', captured: 'b', iccs: 'd9g9' },
+        {color: 'b', from: 'b0', to: 'b7', flags: 'n', piece: 'c', iccs: 'b0b7' },
+        {color: 'r', from: 'g9', to: 'g8', flags: 'n', piece: 'r', iccs: 'g9g8' },
+        {color: 'b', from: 'e8', to: 'e9', flags: 'n', piece: 'k', iccs: 'e8e9' },
+        {color: 'r', from: 'g6', to: 'f6', flags: 'n', piece: 'p', iccs: 'g6f6' },
+        {color: 'b', from: 'b7', to: 'b5', flags: 'n', piece: 'c', iccs: 'b7b5' },
+        {color: 'r', from: 'e3', to: 'e4', flags: 'n', piece: 'p', iccs: 'e3e4' },
+        {color: 'b', from: 'b5', to: 'g5', flags: 'n', piece: 'c', iccs: 'b5g5' },
+        {color: 'r', from: 'g8', to: 'f8', flags: 'n', piece: 'r', iccs: 'g8f8' },
+        {color: 'b', from: 'g5', to: 'f5', flags: 'n', piece: 'c', iccs: 'g5f5' },
+        {color: 'r', from: 'e6', to: 'e5', flags: 'n', piece: 'c', iccs: 'e6e5' },
+        {color: 'b', from: 'g7', to: 'g5', flags: 'n', piece: 'c', iccs: 'g7g5' },
+        {color: 'r', from: 'e5', to: 'g5', flags: 'c', piece: 'c', captured: 'c', iccs: 'e5g5' },
+        {color: 'b', from: 'h7', to: 'h6', flags: 'n', piece: 'r', iccs: 'h7h6' },
+        {color: 'r', from: 'e4', to: 'e5', flags: 'n', piece: 'p', iccs: 'e4e5' },
+        {color: 'b', from: 'h6', to: 'f6', flags: 'c', piece: 'r', captured: 'p', iccs: 'h6f6' },
+        {color: 'r', from: 'e5', to: 'f5', flags: 'c', piece: 'p', captured: 'c', iccs: 'e5f5' },
+        {color: 'b', from: 'f6', to: 'f5', flags: 'c', piece: 'r', captured: 'p', iccs: 'f6f5' },
+        {color: 'r', from: 'g5', to: 'g2', flags: 'n', piece: 'c', iccs: 'g5g2' }]}
   ];
 
   tests.forEach(function(t, i) {
@@ -1302,7 +1305,7 @@ describe('History', function() {
       xiangqi.reset();
 
       for (j = 0; j < t.moves.length; j++) {
-        xiangqi.move(t.moves[j])
+        xiangqi.move(t.moves[j]);
       }
 
       var history = xiangqi.history({verbose: t.verbose});
@@ -1337,102 +1340,54 @@ describe('History', function() {
 describe('Board Tests', function() {
 
   var tests = [
-    {fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR r KQkq - 0 1',
+    {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1',
       board: [[{type: 'r', color: 'b'},
-               {type: 'n', color: 'b'},
-               {type: 'b', color: 'b'},
-               {type: 'q', color: 'b'},
-               {type: 'k', color: 'b'},
-               {type: 'b', color: 'b'},
-               {type: 'n', color: 'b'},
-               {type: 'r', color: 'b'}],
-              [{type: 'p', color: 'b'},
-               {type: 'p', color: 'b'},
-               {type: 'p', color: 'b'},
-               {type: 'p', color: 'b'},
-               {type: 'p', color: 'b'},
-               {type: 'p', color: 'b'},
-               {type: 'p', color: 'b'},
-               {type: 'p', color: 'b'}],
-              [null, null, null, null, null, null, null, null],
-              [null, null, null, null, null, null, null, null],
-              [null, null, null, null, null, null, null, null],
-              [null, null, null, null, null, null, null, null],
-              [{type: 'p', color: 'w'},
-               {type: 'p', color: 'w'},
-               {type: 'p', color: 'w'},
-               {type: 'p', color: 'w'},
-               {type: 'p', color: 'w'},
-               {type: 'p', color: 'w'},
-               {type: 'p', color: 'w'},
-               {type: 'p', color: 'w'}],
-              [{type: 'r', color: 'w'},
-               {type: 'n', color: 'w'},
-               {type: 'b', color: 'w'},
-               {type: 'q', color: 'w'},
-               {type: 'k', color: 'w'},
-               {type: 'b', color: 'w'},
-               {type: 'n', color: 'w'},
-               {type: 'r', color: 'w'}]]},
+        {type: 'n', color: 'b'},
+        {type: 'b', color: 'b'},
+        {type: 'a', color: 'b'},
+        {type: 'k', color: 'b'},
+        {type: 'a', color: 'b'},
+        {type: 'b', color: 'b'},
+        {type: 'n', color: 'b'},
+        {type: 'r', color: 'b'}],
+        [null, null, null, null, null, null, null, null, null],
+        [null,{type: 'c', color: 'b'},null, null, null, null, null,{type: 'c', color: 'b'}, null],
+        [{type: 'p', color: 'b'}, null,
+          {type: 'p', color: 'b'}, null,
+          {type: 'p', color: 'b'}, null,
+          {type: 'p', color: 'b'}, null,
+          {type: 'p', color: 'b'}],
+        [null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null],
+        [{type: 'p', color: 'r'}, null,
+          {type: 'p', color: 'r'}, null,
+          {type: 'p', color: 'r'}, null,
+          {type: 'p', color: 'r'}, null,
+          {type: 'p', color: 'r'}],
+        [null,{type: 'c', color: 'r'},null, null, null, null, null,{type: 'c', color: 'r'}, null],
+        [null, null, null, null, null, null, null, null, null],
+        [{type: 'r', color: 'r'},
+          {type: 'n', color: 'r'},
+          {type: 'b', color: 'r'},
+          {type: 'a', color: 'r'},
+          {type: 'k', color: 'r'},
+          {type: 'a', color: 'r'},
+          {type: 'b', color: 'r'},
+          {type: 'n', color: 'r'},
+          {type: 'r', color: 'r'}]]},
     // checkmate
-	{fen: 'r3k2r/ppp2p1p/2n1p1p1/8/2B2P1q/2NPb1n1/PP4PP/R2Q3K r kq - 0 8',
-	  board:[[{type: 'r', color: 'b'},
-			  null,
-			  null,
-			  null,
-			  {type: 'k', color: 'b'},
-			  null,
-			  null,
-			  {type: 'r', color: 'b'}],
-		     [{type: 'p', color: 'b'},
-		      {type: 'p', color: 'b'},
-		      {type: 'p', color: 'b'},
-		      null,
-		      null,
-		      {type: 'p', color: 'b'},
-		      null,
-		      {type: 'p', color: 'b'}],
-		     [null,
-		      null,
-		      {type: 'n', color: 'b'},
-		      null,
-		      {type: 'p', color: 'b'},
-		      null,
-		      {type: 'p', color: 'b'},
-		      null],
-		     [null, null, null, null, null, null, null, null],
-		     [null,
-		      null,
-		      {type: 'b', color: 'w'},
-		      null,
-		      null,
-		      {type: 'p', color: 'w'},
-		      null,
-		      {type: 'q', color: 'b'}],
-		     [null,
-		      null,
-		      {type: 'n', color: 'w'},
-		      {type: 'p', color: 'w'},
-		      {type: 'b', color: 'b'},
-		      null,
-		      {type: 'n', color: 'b'},
-		      null],
-		     [{type: 'p', color: 'w'},
-		      {type: 'p', color: 'w'},
-		      null,
-		      null,
-		      null,
-		      null,
-		      {type: 'p', color: 'w'},
-		      {type: 'p', color: 'w'}],
-		     [{type: 'r', color: 'w'},
-		      null,
-		      null,
-		      {type: 'q', color: 'w'},
-		      null,
-		      null,
-		      null,
-		      {type: 'k', color: 'w'}]]}
+    {fen: '5kC2/4a1N2/3a5/9/9/9/9/r3C4/4p4/2rK4R r - - 0 8',
+      board:[[null, null, null, null, null, {type: 'k', color: 'b'}, {type: 'c', color: 'r'}, null, null],
+        [null, null, null, null, {type: 'a', color: 'b'}, null, {type: 'n', color: 'r'}, null, null],
+        [null, null, null, {type: 'a', color: 'b'}, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null],
+        [{type: 'r', color: 'b'}, null, null, null, {type: 'c', color: 'r'}, null, null, null, null],
+        [null, null, null, null, {type: 'p', color: 'b'}, null, null, null, null],
+        [null, null, {type: 'r', color: 'b'}, {type: 'k', color: 'r'}, null, null, null, null, {type: 'r', color: 'r'}]
+      ]}
   ];
 
 
@@ -1454,8 +1409,8 @@ describe('Regression Tests', function() {
 
   it('Github Issue #58 - placing more than one king', function() {
     var xiangqi = new Xiangqi('N3k3/8/8/8/8/8/5b2/4K3 r - - 0 1');
-    assert(xiangqi.put({type: 'k', color: 'w'}, 'a1') === false);
-    xiangqi.put({type: 'q', color: 'w'}, 'a1');
+    assert(xiangqi.put({type: 'k', color: 'r'}, 'a1') === false);
+    xiangqi.put({type: 'q', color: 'r'}, 'a1');
     xiangqi.remove('a1');
     assert(xiangqi.moves().join(' ') === 'Kd2 Ke2 Kxf2 Kf1 Kd1');
   });

@@ -142,7 +142,7 @@ var Xiangqi = function(fen) {
 
     clear(keep_headers);
 
-    for (var i = 0; i < position.length; i++) {
+    for (var i = 0; i < position.length; ++i) {
       var piece = position.charAt(i);
 
       if (piece === '/') {
@@ -341,7 +341,7 @@ var Xiangqi = function(fen) {
     var empty = 0;
     var fen = '';
 
-    for (var i = SQUARES.a9; i <= SQUARES.i0;) {
+    for (var i = SQUARES.a9; i <= SQUARES.i0; ++i) {
       if (board[i] == null) {
         empty++;
       } else {
@@ -365,9 +365,7 @@ var Xiangqi = function(fen) {
         }
 
         empty = 0;
-        i += 0x10 & 0xf0;
-      } else {
-        i += 0x01;
+        i += 0x07;
       }
     }
 
@@ -571,32 +569,23 @@ var Xiangqi = function(fen) {
    * 4. ... Nge7 is overly disambiguated because the knight on c6 is pinned
    * 4. ... Ne7 is technically the valid SAN
    */
-  function move_to_san(move, sloppy) {
+  function move_to_iccs(move, sloppy) {
     var output = '';
 
-    var disambiguator = get_disambiguator(move, sloppy);
+    // var disambiguator = get_disambiguator(move, sloppy);
 
-    if (move.piece !== PAWN) {
-      output += move.piece.toUpperCase() + disambiguator;
-    }
+    // if (move.piece !== PAWN) {
+    //   output += move.piece.toUpperCase() + disambiguator;
+    // }
 
-    output += algebraic(move.to);
-
-    make_move(move);
-    if (in_check()) {
-      if (in_checkmate()) {
-        output += '#';
-      } else {
-        output += '+';
-      }
-    }
-    undo_move();
+    // output += algebraic(move.to);
+    output = algebraic(move.from) + algebraic(move.to);
 
     return output;
   }
 
   // parses all of the decorators out of a SAN string
-  function stripped_san(move) {
+  function stripped_iccs(move) {
     return move.replace(/=/, '').replace(/[+#]?[?!]*$/, '');
   }
 
@@ -667,8 +656,10 @@ var Xiangqi = function(fen) {
 
     /* k vs. k */
     if (num_pieces === 2) return true;
-    else if (pieces[KNIGHT] === 0 && pieces[ROOK] === 0 &&
-      pieces[CANNON] === 0 && pieces[PAWN] === 0) return true;
+    else if (typeof pieces[KNIGHT] === 'undefined' &&
+      typeof pieces[ROOK] === 'undefined' &&
+      typeof pieces[CANNON] === 'undefined' &&
+      typeof pieces[PAWN] === 'undefined') return true;
 
     return false;
   }
@@ -734,7 +725,11 @@ var Xiangqi = function(fen) {
     }
 
     /* reset the 60 move counter if a piece is captured */
-    half_moves++;
+    if (move.flags & BITS.CAPTURE) {
+      half_moves = 0
+    } else {
+      half_moves++;
+    }
 
     if (turn === BLACK) {
       move_number++;
@@ -757,7 +752,7 @@ var Xiangqi = function(fen) {
     var them = swap_color(turn);
 
     board[move.from] = board[move.to];
-    board[move.from].type = move.piece; // to undo any promotions
+    board[move.from].type = move.piece; // to undo any s
     board[move.to] = null;
 
     if ((move.flags & BITS.CAPTURE) > 0) {
@@ -821,11 +816,11 @@ var Xiangqi = function(fen) {
   }
 
   function ascii() {
-    var s = '   +--------------------------+\n';
+    var s = '   +---------------------------+\n';
     for (var i = SQUARES.a9; i <= SQUARES.i0; i++) {
       /* display the rank */
       if (file(i) === 0) {
-        s += ' ' + '987654321'[rank(i)] + ' |';
+        s += ' ' + '9876543210'[rank(i)] + ' |';
       }
 
       /* empty piece */
@@ -844,30 +839,29 @@ var Xiangqi = function(fen) {
         i += 7;
       }
     }
-    s += '   +--------------------------+\n';
-    s += '     a  b  c  d  e  f  g  h i\n';
+    s += '   +---------------------------+\n';
+    s += '     a  b  c  d  e  f  g  h  i\n';
 
     return s;
   }
 
-  // convert a move from Standard Algebraic Notation (SAN) to 0xa9 coordinates
-  function move_from_san(move, sloppy) {
+  // convert a move from Internet Chinese Chess Server (ICCS) to 0xa9 coordinates
+  function move_from_iccs(move, sloppy) {
     // strip off any move decorations: e.g Nf3+?!
-    var clean_move = stripped_san(move);
+    var clean_move = stripped_iccs(move);
 
     // if we're using the sloppy parser run a regex to grab piece, to, and from
     // this should parse invalid SAN like: Pe2-e4, Rc1c4, Qf3xf7
     var matches = clean_move.match(
-      /([pnbrqkPNBRQK])?([a-h][1-8])x?-?([a-h][1-8])([qrbnQRBN])?/
+      /([a-i][0-9])-?([a-i][0-9])/
     );
-    var piece, from, to, promotion;
+    var piece, from, to;
     // TODO: support sloppy
     if (sloppy) {
       if (matches) {
         piece = matches[1];
         from = matches[2];
         to = matches[3];
-        promotion = matches[4];
       }
     }
 
@@ -876,8 +870,8 @@ var Xiangqi = function(fen) {
       // try the strict parser first, then the sloppy parser if requested
       // by the user
       if (
-        clean_move === stripped_san(move_to_san(moves[i])) ||
-        (sloppy && clean_move === stripped_san(move_to_san(moves[i], true)))
+        clean_move === stripped_iccs(move_to_iccs(moves[i])) ||
+        (sloppy && clean_move === stripped_iccs(move_to_iccs(moves[i], true)))
       ) {
         return moves[i];
       } else {
@@ -885,8 +879,7 @@ var Xiangqi = function(fen) {
           matches &&
           (!piece || piece.toLowerCase() === moves[i].piece) &&
           SQUARES[from] === moves[i].from &&
-          SQUARES[to] === moves[i].to &&
-          (!promotion || promotion.toLowerCase() === moves[i].promotion)
+          SQUARES[to] === moves[i].to
         ) {
           return moves[i];
         }
@@ -967,7 +960,7 @@ var Xiangqi = function(fen) {
   /* pretty = external move object */
   function make_pretty(ugly_move) {
     var move = clone(ugly_move);
-    move.san = move_to_san(move, false);
+    move.iccs = move_to_iccs(move, false);
     move.to = algebraic(move.to);
     move.from = algebraic(move.from);
 
@@ -1088,7 +1081,7 @@ var Xiangqi = function(fen) {
         ) {
           moves.push(make_pretty(ugly_moves[i]));
         } else {
-          moves.push(move_to_san(ugly_moves[i], false));
+          moves.push(move_to_iccs(ugly_moves[i], false));
         }
       }
 
@@ -1110,9 +1103,7 @@ var Xiangqi = function(fen) {
     in_draw: function() {
       return (
         half_moves >= 120 ||
-        in_stalemate() ||
-        insufficient_material() ||
-        in_threefold_repetition()
+        insufficient_material()
       );
     },
 
@@ -1203,7 +1194,7 @@ var Xiangqi = function(fen) {
         /* if the position started with black to move, start PGN with 1. ... */
         if (!history.length && move.color === 'b') {
           move_string = move_number + '. ...';
-        } else if (move.color === 'r') {
+        } else if (move.color !== 'b') {
           /* store the previous generated move_string if we have one */
           if (move_string.length) {
             moves.push(move_string);
@@ -1211,7 +1202,7 @@ var Xiangqi = function(fen) {
           move_string = move_number + '.';
         }
 
-        move_string = move_string + ' ' + move_to_san(move, false);
+        move_string = move_string + ' ' + move_to_iccs(move, false);
         make_move(move);
       }
 
@@ -1365,7 +1356,7 @@ var Xiangqi = function(fen) {
       var move = '';
 
       for (var half_move = 0; half_move < moves.length - 1; half_move++) {
-        move = move_from_san(moves[half_move], sloppy);
+        move = move_from_iccs(moves[half_move], sloppy);
 
         /* move not possible! (don't clear the board to examine to show the
          * latest valid position)
@@ -1384,7 +1375,7 @@ var Xiangqi = function(fen) {
           set_header(['Result', move]);
         }
       } else {
-        move = move_from_san(move, sloppy);
+        move = move_from_iccs(move, sloppy);
         if (move == null) {
           return false;
         } else {
@@ -1413,7 +1404,6 @@ var Xiangqi = function(fen) {
        *
        * .move({ from: 'h7', <- where the 'move' is a move object (additional
        *         to :'h8',      fields are ignored)
-       *         promotion: 'q',
        *      })
        */
 
@@ -1427,7 +1417,7 @@ var Xiangqi = function(fen) {
       function move_from_simple_iccs(move) {
         var moves = generate_moves();
         for (var i = 0, len = moves.length; i < len; i++) {
-          if (move === algebraic(moves[i].from) + algebraic(moves[i].to)) {
+          if (move === move_to_iccs(moves[i])) {
             return moves[i];
           }
         }
@@ -1435,7 +1425,7 @@ var Xiangqi = function(fen) {
       }
 
       if (typeof move === 'string') {
-        // move_obj = move_from_san(move, sloppy);
+        // move_obj = move_from_iccs(move, sloppy);
         move_obj = move_from_simple_iccs(move);
       } else if (typeof move === 'object') {
         var moves = generate_moves();
@@ -1445,8 +1435,7 @@ var Xiangqi = function(fen) {
           if (
             move.from === algebraic(moves[i].from) &&
             move.to === algebraic(moves[i].to) &&
-            (!('promotion' in moves[i]) ||
-              move.promotion === moves[i].promotion)
+            !('' in moves[i])
           ) {
             move_obj = moves[i];
             break;
@@ -1494,15 +1483,6 @@ var Xiangqi = function(fen) {
       return perft(depth);
     },
 
-    square_color: function(square) {
-      if (square in SQUARES) {
-        var sq_0x88 = SQUARES[square];
-        return (rank(sq_0x88) + file(sq_0x88)) % 2 === 0 ? 'light' : 'dark';
-      }
-
-      return null;
-    },
-
     history: function(options) {
       var reversed_history = [];
       var move_history = [];
@@ -1520,7 +1500,7 @@ var Xiangqi = function(fen) {
         if (verbose) {
           move_history.push(make_pretty(move));
         } else {
-          move_history.push(move_to_san(move));
+          move_history.push(move_to_iccs(move));
         }
         make_move(move);
       }

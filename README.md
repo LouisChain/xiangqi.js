@@ -1,90 +1,59 @@
 # xiangqi.js
 
-[![Build Status](https://travis-ci.org/jhlywa/chess.js.svg?branch=master)](https://travis-ci.org/jhlywa/chess.js)
+[![Build Status](https://travis-ci.org/jhlywa/xiangqi.js.svg?branch=master)](https://travis-ci.org/jhlywa/xiangqi.js)
 
-xiangqi.js is a Javascript chess library that is used for chess move
+xiangqi.js is a Javascript xiangqi library that is used for xiangqi move
 generation/validation, piece placement/movement, and check/checkmate/stalemate
 detection - basically everything but the AI.
 
 xiangqi.js has been extensively tested in node.js and most modern browsers.
 
-## Installation
-
-To install the stable version:
-
-```sh
-npm install --save xiangqi.js
-```
-
-xiangqi.js is also available via [CDNJS](https://cdnjs.com/libraries/chess.js):
-
-```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xiangqi.js/0.10.2/xiangqi.js"></script>
-```
-
 ## Example Code
-The code below plays a complete game of chess ... randomly.
+The code below plays a complete game of xiangqi ... randomly.
 
 ```js
-var Chess = require('./chess').Chess;
-var chess = new Chess();
+var Xiangqi = require('./xiangqi').Xiangqi;
+var xiangqi = new Xiangqi();
 
-while (!chess.game_over()) {
-  var moves = chess.moves();
+while (!xiangqi.game_over()) {
+  var moves = xiangqi.moves();
   var move = moves[Math.floor(Math.random() * moves.length)];
-  chess.move(move);
+  xiangqi.move(move);
 }
-console.log(chess.pgn());
+console.log(xiangqi.pgn());
 ```
 
-## Sites Using xiangqi.js
-
-- [chess.com](http://www.chess.com/)
-- [The Internet Chess Club (ICC)](http://www.chessclub.com/)
-- [lichess](http://lichess.org/tv)
-- [Redbull - Battle for the Queen](http://battleforthequeen.redbull.com/)
-- [Asm.js Chess Battle](https://developer.microsoft.com/en-us/microsoft-edge/testdrive/demos/chess/)
-- [3D Hartwig Chess](http://creativejs.com/2012/12/3d-hartwig-chess/)
-- [Scene VR](http://client.scenevr.com/?connect=chess.scenevr.hosting/chess.xml)
-- [Multiplayer Chess](http://chessapp.com/)
-- [Reti Chess](http://retichess.nodejitsu.com/)
-- [Chess Fork](http://www.chessfork.com/)
-- [Lozza](http://op12no2.me/posts/1641)
-- [angular-chess](http://theborakompanioni.github.io/angular-chess)
-- [Chessable](https://www.chessable.com)
-- [SlimChess](https://slimchess.com/now)
-
 Need a user interface?  Try Chris Oakman's excellent
-[chessboard.js](http://chessboardjs.com) library.  See
-[chessboard.js - Random vs Random](http://chessboardjs.com/examples#5002) for
-an example integration of xiangqi.js with chessboard.js.
+[xiangqiboard.js](http://chessboardjs.com) library.  See
+[xiangqiboard.js - Random vs Random](http://chessboardjs.com/examples#5002) for
+an example integration of xiangqi.js with xiangqiboard.js.
 
 ## API
 
-### Constructor: Chess([ fen ])
-The Chess() constructor takes an optional parameter which specifies the board configuration
+### Constructor: Xiangqi([ fen ])
+The Xiangqi() constructor takes an optional parameter which specifies the board configuration
 in [Forsyth-Edwards Notation](http://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation).
 
 ```js
 // board defaults to the starting position when called with no parameters
-var chess = new Chess();
+var xiangqi = new Xiangqi();
 
 // pass in a FEN string to load a particular position
-var chess = new Chess('r1k4r/p2nb1p1/2b4p/1p1n1p2/2PP4/3Q1NB1/1P3PPP/R5K1 b - c3 0 19');
+var xiangqi = new Xiangqi('r1k4r/p2nb1p1/2b4p/1p1n1p2/2PP4/3Q1NB1/1P3PPP/R5K1 b - c3 0 19');
 ```
 
 ### .ascii()
 Returns a string containing an ASCII diagram of the current position.
 
 ```js
-var chess = new Chess();
+var xiangqi = new Xiangqi();
 
 // make some moves
-chess.move('e4');
-chess.move('e5');
-chess.move('f4');
+xiangqi.move('e4');
+xiangqi.move('e5');
+xiangqi.move('f4');
 
-chess.ascii();
+xiangqi.ascii();
 // -> '   +------------------------+
 //      8 | r  n  b  q  k  b  n  r |
 //      7 | p  p  p  p  .  p  p  p |
@@ -104,9 +73,9 @@ Returns an 2D array representation of the current position.  Empty squares are
 represented by `null`.
 
 ```js
-var chess = new Chess();
+var xiangqi = new Xiangqi();
 
-chess.board();
+xiangqi.board();
 // -> [[{type: 'r', color: 'b'},
         {type: 'n', color: 'b'},
         {type: 'b', color: 'b'},
@@ -135,8 +104,8 @@ chess.board();
 Clears the board.
 
 ```js
-chess.clear();
-chess.fen();
+xiangqi.clear();
+xiangqi.fen();
 // -> '8/8/8/8/8/8/8/8 w - - 0 1' <- empty board
 ```
 
@@ -144,14 +113,14 @@ chess.fen();
 Returns the FEN string for the current position.
 
 ```js
-var chess = new Chess();
+var xiangqi = new Xiangqi();
 
 // make some moves
-chess.move('e4');
-chess.move('e5');
-chess.move('f4');
+xiangqi.move('e4');
+xiangqi.move('e5');
+xiangqi.move('f4');
 
-chess.fen();
+xiangqi.fen();
 // -> 'rnbqkbnr/pppp1ppp/8/4p3/4PP2/8/PPPP2PP/RNBQKBNR b KQkq f3 0 2'
 ```
 
@@ -159,16 +128,16 @@ chess.fen();
 Returns true if the game has ended via checkmate, stalemate, draw, threefold repetition, or insufficient material. Otherwise, returns false.
 
 ```js
-var chess = new Chess();
-chess.game_over();
+var xiangqi = new Xiangqi();
+xiangqi.game_over();
 // -> false
 
-chess.load('4k3/4P3/4K3/8/8/8/8/8 b - - 0 78');
-chess.game_over();
+xiangqi.load('4k3/4P3/4K3/8/8/8/8/8 b - - 0 78');
+xiangqi.game_over();
 // -> true (stalemate)
 
-chess.load('rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3');
-chess.game_over();
+xiangqi.load('rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3');
+xiangqi.game_over();
 // -> true (checkmate)
 ```
 
@@ -176,12 +145,12 @@ chess.game_over();
 Returns the piece on the square:
 
 ```js
-chess.clear();
-chess.put({ type: chess.PAWN, color: chess.BLACK }, 'a5') // put a black pawn on a5
+xiangqi.clear();
+xiangqi.put({ type: xiangqi.PAWN, color: xiangqi.BLACK }, 'a5') // put a black pawn on a5
 
-chess.get('a5');
+xiangqi.get('a5');
 // -> { type: 'p', color: 'b' },
-chess.get('a6');
+xiangqi.get('a6');
 // -> null
 ```
 
@@ -191,16 +160,16 @@ parameter which may contain a 'verbose' flag.  See .moves() for a description of
 verbose move fields.
 
 ```js
-var chess = new Chess();
-chess.move('e4');
-chess.move('e5');
-chess.move('f4');
-chess.move('exf4');
+var xiangqi = new Xiangqi();
+xiangqi.move('e4');
+xiangqi.move('e5');
+xiangqi.move('f4');
+xiangqi.move('exf4');
 
-chess.history();
+xiangqi.history();
 // -> ['e4', 'e5', 'f4', 'exf4']
 
-chess.history({ verbose: true });
+xiangqi.history({ verbose: true });
 // -> [{ color: 'w', from: 'e2', to: 'e4', flags: 'b', piece: 'p', san: 'e4' },
 //     { color: 'b', from: 'e7', to: 'e5', flags: 'b', piece: 'p', san: 'e5' },
 //     { color: 'w', from: 'f2', to: 'f4', flags: 'b', piece: 'p', san: 'f4' },
@@ -211,8 +180,8 @@ chess.history({ verbose: true });
 Returns true or false if the side to move is in check.
 
 ```js
-var chess = new Chess('rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3');
-chess.in_check();
+var xiangqi = new Xiangqi('rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3');
+xiangqi.in_check();
 // -> true
 ```
 
@@ -220,8 +189,8 @@ chess.in_check();
 Returns true or false if the side to move has been checkmated.
 
 ```js
-var chess = new Chess('rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3');
-chess.in_checkmate();
+var xiangqi = new Xiangqi('rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3');
+xiangqi.in_checkmate();
 // -> true
 ```
 
@@ -229,8 +198,8 @@ chess.in_checkmate();
 Returns true or false if the game is drawn (50-move rule or insufficient material).
 
 ```js
-var chess = new Chess('4k3/4P3/4K3/8/8/8/8/8 b - - 0 78');
-chess.in_draw();
+var xiangqi = new Xiangqi('4k3/4P3/4K3/8/8/8/8/8 b - - 0 78');
+xiangqi.in_draw();
 // -> true
 ```
 
@@ -238,8 +207,8 @@ chess.in_draw();
 Returns true or false if the side to move has been stalemated.
 
 ```js
-var chess = new Chess('4k3/4P3/4K3/8/8/8/8/8 b - - 0 78');
-chess.in_stalemate();
+var xiangqi = new Xiangqi('4k3/4P3/4K3/8/8/8/8/8 b - - 0 78');
+xiangqi.in_stalemate();
 // -> true
 ```
 
@@ -248,20 +217,20 @@ Returns true or false if the current board position has occurred three or more
 times.
 
 ```js
-var chess = new Chess('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+var xiangqi = new Xiangqi('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
 // -> true
 // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq occurs 1st time
-chess.in_threefold_repetition();
+xiangqi.in_threefold_repetition();
 // -> false
 
-chess.move('Nf3'); chess.move('Nf6'); chess.move('Ng1'); chess.move('Ng8');
+xiangqi.move('Nf3'); xiangqi.move('Nf6'); xiangqi.move('Ng1'); xiangqi.move('Ng8');
 // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq occurs 2nd time
-chess.in_threefold_repetition();
+xiangqi.in_threefold_repetition();
 // -> false
 
-chess.move('Nf3'); chess.move('Nf6'); chess.move('Ng1'); chess.move('Ng8');
+xiangqi.move('Nf3'); xiangqi.move('Nf6'); xiangqi.move('Ng1'); xiangqi.move('Ng8');
 // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq occurs 3rd time
-chess.in_threefold_repetition();
+xiangqi.in_threefold_repetition();
 // -> true
 ```
 
@@ -270,18 +239,18 @@ Allows header information to be added to PGN output. Any number of key/value
 pairs can be passed to .header().
 
 ```js
-chess.header('White', 'Robert James Fischer');
-chess.header('Black', 'Mikhail Tal');
+xiangqi.header('White', 'Robert James Fischer');
+xiangqi.header('Black', 'Mikhail Tal');
 
 // or
 
-chess.header('White', 'Morphy', 'Black', 'Anderssen', 'Date', '1858-??-??');
+xiangqi.header('White', 'Morphy', 'Black', 'Anderssen', 'Date', '1858-??-??');
 ```
 
 Calling .header() without any arguments returns the header information as an object.
 
 ```js
-chess.header();
+xiangqi.header();
 // -> { White: 'Morphy', Black: 'Anderssen', Date: '1858-??-??' }
 ```
 
@@ -290,8 +259,8 @@ Returns true if the game is drawn due to insufficient material (K vs. K,
 K vs. KB, or K vs. KN); otherwise false.
 
 ```js
-var chess = new Chess('k7/8/n7/8/8/8/8/7K b - - 0 1');
-chess.insufficient_material()
+var xiangqi = new Xiangqi('k7/8/n7/8/8/8/8/7K b - - 0 1');
+xiangqi.insufficient_material()
 // -> true
 ```
 
@@ -300,11 +269,11 @@ The board is cleared, and the FEN string is loaded.  Returns true if the positio
 successfully loaded, otherwise false.
 
 ```js
-var chess = new Chess();
-chess.load('4r3/8/2p2PPk/1p6/pP2p1R1/P1B5/2P2K2/3r4 w - - 1 45');
+var xiangqi = new Xiangqi();
+xiangqi.load('4r3/8/2p2PPk/1p6/pP2p1R1/P1B5/2P2K2/3r4 w - - 1 45');
 // -> true
 
-chess.load('4r3/8/X12XPk/1p6/pP2p1R1/P1B5/2P2K2/3r4 w - - 1 45');
+xiangqi.load('4r3/8/X12XPk/1p6/pP2p1R1/P1B5/2P2K2/3r4 w - - 1 45');
 // -> false, bad piece X
 ```
 
@@ -329,7 +298,7 @@ non-SAN notations.
 The method will return `true` if the PGN was parsed successfully, otherwise `false`.
 
 ```js
-var chess = new Chess();
+var xiangqi = new Xiangqi();
 pgn = ['[Event "Casual Game"]',
        '[Site "Berlin GER"]',
        '[Date "1852.??.??"]',
@@ -349,13 +318,13 @@ pgn = ['[Event "Casual Game"]',
        'Rg8 19.Rad1 Qxf3 20.Rxe7+ Nxe7 21.Qxd7+ Kxd7 22.Bf5+ Ke8',
        '23.Bd7+ Kf8 24.Bxe7# 1-0'];
 
-chess.load_pgn(pgn.join('\n'));
+xiangqi.load_pgn(pgn.join('\n'));
 // -> true
 
-chess.fen();
+xiangqi.fen();
 // -> 1r3kr1/pbpBBp1p/1b3P2/8/8/2P2q2/P4PPP/3R2K1 b - - 0 24
 
-chess.ascii();
+xiangqi.ascii();
 // -> '  +------------------------+
 //     8 | .  r  .  .  .  k  r  . |
 //     7 | p  b  p  B  B  p  .  p |
@@ -392,13 +361,13 @@ var options = {
   sloppy: true
 };
 
-chess.load_pgn(sloppy_pgn);
+xiangqi.load_pgn(sloppy_pgn);
 // -> false
 
-chess.load_pgn(sloppy_pgn, options);
+xiangqi.load_pgn(sloppy_pgn, options);
 // -> true
 
-chess.fen();
+xiangqi.fen();
 // -> 'r1bqk2r/pppp1ppp/2P5/8/1b6/1Q3pP1/PP1PPP1P/R1B1KB1R b KQkq - 1 8'
 ```
 
@@ -408,15 +377,15 @@ legal, otherwise null.  The .move function can be called two ways, by passing
 a string in Standard Algebraic Notation (SAN):
 
 ```js
-var chess = new Chess();
+var xiangqi = new Xiangqi();
 
-chess.move('e4')
+xiangqi.move('e4')
 // -> { color: 'w', from: 'e2', to: 'e4', flags: 'b', piece: 'p', san: 'e4' }
 
-chess.move('nf6') // SAN is case sensitive!!
+xiangqi.move('nf6') // SAN is case sensitive!!
 // -> null
 
-chess.move('Nf6')
+xiangqi.move('Nf6')
 // -> { color: 'b', from: 'g8', to: 'f6', flags: 'n', piece: 'n', san: 'Nf6' }
 ```
 
@@ -424,9 +393,9 @@ Or by passing .move() a move object (only the 'to', 'from', and when necessary
 'promotion', fields are needed):
 
 ```js
-var chess = new Chess();
+var xiangqi = new Xiangqi();
 
-chess.move({ from: 'g2', to: 'g3' });
+xiangqi.move({ from: 'g2', to: 'g3' });
 // -> { color: 'w', from: 'g2', to: 'g3', flags: 'n', piece: 'p', san: 'g3' }
 ```
 
@@ -435,44 +404,44 @@ notations:
 
 ```js
 
-var chess = new Chess();
+var xiangqi = new Xiangqi();
 
 // various forms of Long Algebraic Notation
-chess.move('e2e4', {sloppy: true});
+xiangqi.move('e2e4', {sloppy: true});
 // -> { color: 'w', from: 'e2', to: 'e4', flags: 'b', piece: 'p', san: 'e4' }
-chess.move('e7-e5', {sloppy: true});
+xiangqi.move('e7-e5', {sloppy: true});
 // -> { color: 'b', from: 'e7', to: 'e5', flags: 'b', piece: 'p', san: 'e5' }
-chess.move('Pf2f4', {sloppy: true});
+xiangqi.move('Pf2f4', {sloppy: true});
 // -> { color: 'w', from: 'f2', to: 'f4', flags: 'b', piece: 'p', san: 'f4' }
-chess.move('Pe5xf4', {sloppy: true});
+xiangqi.move('Pe5xf4', {sloppy: true});
 // -> { color: 'b', from: 'e5', to: 'f4', flags: 'c', piece: 'p', captured: 'p', san: 'exf4' }
 
 
 // correctly parses incorrectly disambiguated moves
-chess = new Chess('r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7');
+xiangqi = new Xiangqi('r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7');
 
-chess.move('Nge7');  // Ne7 is unambiguous because the knight on c6 is pinned
+xiangqi.move('Nge7');  // Ne7 is unambiguous because the knight on c6 is pinned
 // -> null
 
-chess.move('Nge7', {sloppy: true});
+xiangqi.move('Nge7', {sloppy: true});
 // -> { color: 'b', from: 'g8', to: 'e7', flags: 'n', piece: 'n', san: 'Ne7' }
 ```
 ### .moves([ options ])
 Returns a list of legal moves from the current position.  The function takes an optional parameter which controls the single-square move generation and verbosity.
 
 ```js
-var chess = new Chess();
-chess.moves();
+var xiangqi = new Xiangqi();
+xiangqi.moves();
 // -> ['a3', 'a4', 'b3', 'b4', 'c3', 'c4', 'd3', 'd4', 'e3', 'e4',
 //     'f3', 'f4', 'g3', 'g4', 'h3', 'h4', 'Na3', 'Nc3', 'Nf3', 'Nh3']
 
-chess.moves({square: 'e2'});
+xiangqi.moves({square: 'e2'});
 // -> ['e3', 'e4']
 
-chess.moves({square: 'e9'}); // invalid square
+xiangqi.moves({square: 'e9'}); // invalid square
 // -> []
 
-chess.moves({ verbose: true });
+xiangqi.moves({ verbose: true });
 // -> [{ color: 'w', from: 'a2', to: 'a3',
 //       flags: 'n', piece: 'p', san 'a3'
 //       # a captured: key is included when the move is a capture
@@ -502,14 +471,14 @@ Returns the game in PGN format. Options is an optional parameter which may inclu
 max width and/or a newline character settings.
 
 ```js
-var chess = new Chess();
-chess.header('White', 'Plunky', 'Black', 'Plinkie');
-chess.move('e4');
-chess.move('e5');
-chess.move('Nc3');
-chess.move('Nc6');
+var xiangqi = new Xiangqi();
+xiangqi.header('White', 'Plunky', 'Black', 'Plinkie');
+xiangqi.move('e4');
+xiangqi.move('e5');
+xiangqi.move('Nc3');
+xiangqi.move('Nc6');
 
-chess.pgn({ max_width: 5, newline_char: '<br />' });
+xiangqi.pgn({ max_width: 5, newline_char: '<br />' });
 // -> '[White "Plunky"]<br />[Black "Plinkie"]<br /><br />1. e4 e5<br />2. Nc3 Nc6'
 ```
 
@@ -521,25 +490,25 @@ when passed an invalid piece or square, or when two or more kings of the
 same color are placed.
 
 ```js
-chess.clear();
+xiangqi.clear();
 
-chess.put({ type: chess.PAWN, color: chess.BLACK }, 'a5') // put a black pawn on a5
+xiangqi.put({ type: xiangqi.PAWN, color: xiangqi.BLACK }, 'a5') // put a black pawn on a5
 // -> true
-chess.put({ type: 'k', color: 'w' }, 'h1') // shorthand
+xiangqi.put({ type: 'k', color: 'w' }, 'h1') // shorthand
 // -> true
 
-chess.fen();
+xiangqi.fen();
 // -> '8/8/8/p7/8/8/8/7K w - - 0 0'
 
-chess.put({ type: 'z', color: 'w' }, 'a1') // invalid piece
+xiangqi.put({ type: 'z', color: 'w' }, 'a1') // invalid piece
 // -> false
 
-chess.clear();
+xiangqi.clear();
 
-chess.put({ type: 'k', color: 'w' }, 'a1')
+xiangqi.put({ type: 'k', color: 'w' }, 'a1')
 // -> true
 
-chess.put({ type: 'k', color: 'w' }, 'h1') // fail - two kings
+xiangqi.put({ type: 'k', color: 'w' }, 'h1') // fail - two kings
 // -> false
 
 ```
@@ -548,40 +517,27 @@ chess.put({ type: 'k', color: 'w' }, 'h1') // fail - two kings
 Remove and return the piece on _square_.
 
 ```js
-chess.clear();
-chess.put({ type: chess.PAWN, color: chess.BLACK }, 'a5') // put a black pawn on a5
-chess.put({ type: chess.KING, color: chess.WHITE }, 'h1') // put a white king on h1
+xiangqi.clear();
+xiangqi.put({ type: xiangqi.PAWN, color: xiangqi.BLACK }, 'a5') // put a black pawn on a5
+xiangqi.put({ type: xiangqi.KING, color: xiangqi.WHITE }, 'h1') // put a white king on h1
 
-chess.remove('a5');
+xiangqi.remove('a5');
 // -> { type: 'p', color: 'b' },
-chess.remove('h1');
+xiangqi.remove('h1');
 // -> { type: 'k', color: 'w' },
-chess.remove('e1');
+xiangqi.remove('e1');
 // -> null
 ```
 
 ### .reset()
 Reset the board to the initial starting position.
 
-### .square_color(square)
-Returns the color of the square ('light' or 'dark').
-
-```js
-var chess = Chess();
-chess.square_color('h1')
-// -> 'light'
-chess.square_color('a7')
-// -> 'dark'
-chess.square_color('bogus square')
-// -> null
-```
-
 ### .turn()
 Returns the current side to move.
 
 ```js
-chess.load('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1')
-chess.turn()
+xiangqi.load('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1')
+xiangqi.turn()
 // -> 'b'
 ```
 
@@ -589,19 +545,19 @@ chess.turn()
 Takeback the last half-move, returning a move object if successful, otherwise null.
 
 ```js
-var chess = new Chess();
+var xiangqi = new Xiangqi();
 
-chess.fen();
+xiangqi.fen();
 // -> 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
-chess.move('e4');
-chess.fen();
+xiangqi.move('e4');
+xiangqi.fen();
 // -> 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1'
 
-chess.undo();
+xiangqi.undo();
 // -> { color: 'w', from: 'e2', to: 'e4', flags: 'b', piece: 'p', san: 'e4' }
-chess.fen();
+xiangqi.fen();
 // -> 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
-chess.undo();
+xiangqi.undo();
 // -> null
 ```
 
@@ -610,10 +566,10 @@ Returns a validation object specifying validity or the errors found within the
 FEN string.
 
 ```js
-chess.validate_fen('2n1r3/p1k2pp1/B1p3b1/P7/5bP1/2N1B3/1P2KP2/2R5 b - - 4 25');
+xiangqi.validate_fen('2n1r3/p1k2pp1/B1p3b1/P7/5bP1/2N1B3/1P2KP2/2R5 b - - 4 25');
 // -> { valid: true, error_number: 0, error: 'No errors.' }
 
-chess.validate_fen('4r3/8/X12XPk/1p6/pP2p1R1/P1B5/2P2K2/3r4 w - - 1 45');
+xiangqi.validate_fen('4r3/8/X12XPk/1p6/pP2p1R1/P1B5/2P2K2/3r4 w - - 1 45');
 // -> { valid: false, error_number: 9,
 //     error: '1st field (piece positions) is invalid [invalid piece].' }
 ```
@@ -631,6 +587,7 @@ Musical support provided by:
 
 ## TODO
 
+- Support PGN
 - Investigate the use of piece lists (this may shave a few cycles off
   generate_moves() and attacked()).
 - Refactor API to use camelCase - yuck.
