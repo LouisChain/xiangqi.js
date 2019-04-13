@@ -90,15 +90,15 @@ describe('Single Square Move Generation', function() {
 
 describe('Checkmate', function() {
 
-  var xiangqi = new Xiangqi();
   var checkmates = [
     '4k4/9/9/9/9/9/9/9/4Ar3/2r1K4 r - - 0 7',
     '1R2kab2/5R3/9/p3p2r1/3n5/4P3p/P8/9/4A4/4K4 b - - 0 2',
     '5kC2/4a1N2/3a5/9/9/9/9/r3C4/4p4/2rK4R r - - 0 8',
-    '5a3/3R5/4k4/4P2Np/9/9/9/9/9/4K4 b - - 0 4'
+    '5a3/3R5/4k4/4P2Np/9/9/9/9/9/5K3 b - - 0 1'
   ];
 
   checkmates.forEach(function(checkmate) {
+    var xiangqi = new Xiangqi();
     xiangqi.load(checkmate);
 
     it(checkmate, function() {
@@ -1011,6 +1011,13 @@ describe('Make Move', function() {
      move: 'b7b0',
      next: 'rnbakabCr/9/7c1/p1p1p1p1p/9/9/P1P1P1P1P/1C7/9/RcBAKABNR r - - 0 2',
      captured: 'n'},
+    // Knight
+    {fen: 'rnbakabCr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C7/9/RNBAKABNR b - - 0 1',
+     legal: false,
+     move: 'b9d8'},
+    {fen: 'rnbakabCr/9/7c1/p1p1p1p1p/9/9/P1P1P1P1P/1C7/9/RcBAKABNR r - - 0 2',
+      legal: false,
+      move: 'h0f1'},
 
     //  // strict move parser
     // {fen: 'r2qkbnr/ppp2ppp/2n5/1B2pQ2/4P3/8/PPP2PPP/RNB1K2R b KQkq - 3 7',

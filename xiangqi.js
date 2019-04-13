@@ -949,7 +949,7 @@ var Xiangqi = function(fen) {
 
   function hobbling_horse_leg(square, index) {
     var orientation = [-0x10, 0x10, -0x01, 0x01];
-    return board[square + orientation[index / 2]] != null;
+    return board[square + orientation[Math.floor(index / 2)]] != null;
   }
 
   function blocking_elephant_eye(square, index) {

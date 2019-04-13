@@ -1,6 +1,6 @@
 {
   "name": "xiangqi.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Javascript xiangqi library for xiangqi move generation/validation, piece placement/movement, and check/checkmate/draw detection",
   "author": "Jeff Hlywa <lengyanyu258@outlook.com> (https://github.com/lengyanyu258)",
   "license": "BSD-2-Clause",
