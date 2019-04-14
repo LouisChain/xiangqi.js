@@ -94,7 +94,8 @@ describe('Checkmate', function() {
     '4k4/9/9/9/9/9/9/9/4Ar3/2r1K4 r - - 0 7',
     '1R2kab2/5R3/9/p3p2r1/3n5/4P3p/P8/9/4A4/4K4 b - - 0 2',
     '5kC2/4a1N2/3a5/9/9/9/9/r3C4/4p4/2rK4R r - - 0 8',
-    '5a3/3R5/4k4/4P2Np/9/9/9/9/9/5K3 b - - 0 1'
+    '5a3/3R5/4k4/4P2Np/9/9/9/9/9/5K3 b - - 0 1',
+    'rnbakab1r/9/1c5c1/p1p5p/4p1p2/4P1P2/P1P3nCP/1C3A3/4NK3/RNB2AB1R r - - 0 1'
   ];
 
   checkmates.forEach(function(checkmate) {

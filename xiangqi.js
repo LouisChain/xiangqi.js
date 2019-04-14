@@ -598,7 +598,7 @@ var Xiangqi = function(fen) {
     for (i = 0, len = PIECE_OFFSETS[KNIGHT].length; i < len; ++i) {
       sq = square + PIECE_OFFSETS[KNIGHT][i];
       if (board[sq] != null && !out_of_board(sq) && board[sq].color === them &&
-        board[sq].type === KNIGHT && !hobbling_horse_leg(sq, i)) return true;
+        board[sq].type === KNIGHT && !hobbling_horse_leg(sq, i < 4 ? 3 - i : 3 - i + 8)) return true;
     }
     // king, rook, cannon
     for (i = 0, len = PIECE_OFFSETS[ROOK].length; i < len; ++i) {
