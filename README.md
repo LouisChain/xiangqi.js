@@ -1,6 +1,6 @@
 # xiangqi.js
 
-[![Build Status](https://travis-ci.org/jhlywa/xiangqi.js.svg?branch=master)](https://travis-ci.org/jhlywa/xiangqi.js)
+[![Build Status](https://travis-ci.org/lengyanyu258/xiangqi.js.svg?branch=master)](https://travis-ci.org/lengyanyu258/xiangqi.js)
 
 xiangqi.js is a Javascript xiangqi library that is used for xiangqi move
 generation/validation, piece placement/movement, and check/checkmate/stalemate

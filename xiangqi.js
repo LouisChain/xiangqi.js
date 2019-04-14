@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Jeff Hlywa (jhlywa@gmail.com)
+ * Copyright (c) 2019, lengyanyu258 (lengyanyu258@outlook.com)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,9 +28,9 @@
 /* minified license below  */
 
 /* @license
- * Copyright (c) 2018, Jeff Hlywa (jhlywa@gmail.com)
+ * Copyright (c) 2019, lengyanyu258 (lengyanyu258@outlook.com)
  * Released under the BSD license
- * https://github.com/jhlywa/xiangqi.js/blob/master/LICENSE
+ * https://github.com/lengyanyu258/xiangqi.js/blob/master/LICENSE
  */
 
 'use strict';
@@ -716,6 +716,10 @@ var Xiangqi = function(fen) {
   function make_move(move) {
     push(move);
 
+    // if king was captured
+    if (board[move.to] != null && board[move.to].type === KING)
+      kings[board[move.to].color] = EMPTY;
+
     board[move.to] = board[move.from];
     board[move.from] = null;
 
@@ -1121,7 +1125,8 @@ var Xiangqi = function(fen) {
         in_checkmate() ||
         in_stalemate() ||
         insufficient_material() ||
-        in_threefold_repetition()
+        in_threefold_repetition() ||
+        kings[swap_color(turn)] === EMPTY
       );
     },
 
