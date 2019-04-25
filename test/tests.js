@@ -267,11 +267,11 @@ describe('Get/Put/Remove', function() {
   var passed = true;
   var positions = [
     {pieces: {a9: {type: xiangqi.PAWN, color: xiangqi.RED},
-              b8: {type: xiangqi.PAWN, color: xiangqi.BLACK},
-              c7: {type: xiangqi.KNIGHT, color: xiangqi.RED},
-              d6: {type: xiangqi.KNIGHT, color: xiangqi.BLACK},
-              e5: {type: xiangqi.ROOK, color: xiangqi.RED},
-              f4: {type: xiangqi.ROOK, color: xiangqi.BLACK},
+              b0: {type: xiangqi.PAWN, color: xiangqi.BLACK},
+              c8: {type: xiangqi.KNIGHT, color: xiangqi.RED},
+              d7: {type: xiangqi.KNIGHT, color: xiangqi.BLACK},
+              e6: {type: xiangqi.ROOK, color: xiangqi.RED},
+              f5: {type: xiangqi.ROOK, color: xiangqi.BLACK},
               g4: {type: xiangqi.BISHOP, color: xiangqi.RED},
               g5: {type: xiangqi.BISHOP, color: xiangqi.BLACK},
               d2: {type: xiangqi.ADVISER, color: xiangqi.RED},

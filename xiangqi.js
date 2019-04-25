@@ -428,6 +428,10 @@ var Xiangqi = function(fen) {
       return false;
     }
 
+    if (out_of_place(piece.type, sq, piece.color)) {
+      return false;
+    }
+
     board[sq] = { type: piece.type, color: piece.color };
     if (piece.type === KING) {
       kings[piece.color] = sq;
@@ -598,7 +602,7 @@ var Xiangqi = function(fen) {
     for (i = 0, len = PIECE_OFFSETS[KNIGHT].length; i < len; ++i) {
       sq = square + PIECE_OFFSETS[KNIGHT][i];
       if (board[sq] != null && !out_of_board(sq) && board[sq].color === them &&
-        board[sq].type === KNIGHT && !hobbling_horse_leg(sq, i < 4 ? 3 - i : 3 - i + 8)) return true;
+        board[sq].type === KNIGHT && !hobbling_horse_leg(sq, i < 4 ? 3 - i : 11 - i)) return true;
     }
     // king, rook, cannon
     for (i = 0, len = PIECE_OFFSETS[ROOK].length; i < len; ++i) {
@@ -946,6 +950,9 @@ var Xiangqi = function(fen) {
     } else if (piece === KING) {
       side[RED]   = [0x93, 0x94, 0x95, 0x83, 0x84, 0x85, 0x73, 0x74, 0x75];
       side[BLACK] = [0x03, 0x04, 0x05, 0x13, 0x14, 0x15, 0x23, 0x24, 0x25];
+    } else {
+      // C, R, N
+      return out_of_board(square);
     }
 
     return side[color].indexOf(square) === -1;
