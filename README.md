@@ -80,26 +80,31 @@ var xiangqi = new Xiangqi();
 
 xiangqi.board();
 // -> [[{type: 'r', color: 'b'},
-        {type: 'n', color: 'b'},
-        {type: 'b', color: 'b'},
-        {type: 'a', color: 'b'},
-        {type: 'k', color: 'b'},
-        {type: 'a', color: 'b'},
-        {type: 'b', color: 'b'},
-        {type: 'n', color: 'b'}],
-        [...],
-        [...],
-        [...],
-        [...],
-        [...],
-        [{type: 'n', color: 'r'},
-         {type: 'b', color: 'r'},
-         {type: 'a', color: 'r'},
-         {type: 'k', color: 'r'},
-         {type: 'a', color: 'r'},
-         {type: 'b', color: 'r'},
-         {type: 'n', color: 'r'},
-         {type: 'r', color: 'r'}]]
+//      {type: 'n', color: 'b'},
+//      {type: 'b', color: 'b'},
+//      {type: 'a', color: 'b'},
+//      {type: 'k', color: 'b'},
+//      {type: 'a', color: 'b'},
+//      {type: 'b', color: 'b'},
+//      {type: 'n', color: 'b'},
+//      {type: 'r', color: 'b'}],
+//      [...],
+//      [...],
+//      [...],
+//      [...],
+//      [...],
+//      [...],
+//      [...],
+//      [...],
+//      [{type: 'r', color: 'r'},
+//       {type: 'n', color: 'r'},
+//       {type: 'b', color: 'r'},
+//       {type: 'a', color: 'r'},
+//       {type: 'k', color: 'r'},
+//       {type: 'a', color: 'r'},
+//       {type: 'b', color: 'r'},
+//       {type: 'n', color: 'r'},
+//       {type: 'r', color: 'r'}]]
 ```
 
 
@@ -435,11 +440,10 @@ Returns a list of legal moves from the current position.  The function takes an 
 ```js
 var xiangqi = new Xiangqi();
 xiangqi.moves();
-// -> [ 'a3a4', 'c3c4', 'e3e4', 'g3g4', 'i3i4', 'b2b3', 'b2b4', 'b2b5', 'b2b6', 'b2b9',
-//      'b2b1', 'b2a2', 'b2c2', 'b2d2', 'b2e2', 'b2f2', 'b2g2', 'h2h3', 'h2h4', 'h2h5',
-//      'h2h6', 'h2h9', 'h2h1', 'h2g2', 'h2f2', 'h2e2', 'h2d2', 'h2c2', 'h2i2', 'a0a1',
-//      'a0a2', 'b0a2', 'b0c2', 'c0a2', 'c0e2', 'd0e1', 'e0e1', 'f0e1', 'g0e2', 'g0i2',
-//      'h0g2', 'h0i2', 'i0i1', 'i0i2' ]
+// -> [ 'a3a4', 'c3c4', 'e3e4', 'g3g4', 'i3i4', 'b2b3', 'b2b4', 'b2b5', 'b2b6', 'b2b9', 'b2b1',
+//      'b2a2', 'b2c2', 'b2d2', 'b2e2', 'b2f2', 'b2g2', 'h2h3', 'h2h4', 'h2h5', 'h2h6', 'h2h9',
+//      'h2h1', 'h2g2', 'h2f2', 'h2e2', 'h2d2', 'h2c2', 'h2i2', 'a0a1', 'a0a2', 'b0a2', 'b0c2',
+//      'c0a2', 'c0e2', 'd0e1', 'e0e1', 'f0e1', 'g0e2', 'g0i2', 'h0g2', 'h0i2', 'i0i1', 'i0i2' ]
 
 xiangqi.moves({square: 'b0'});
 // -> [ 'b0a2', 'b0c2' ]
@@ -450,6 +454,14 @@ xiangqi.moves({square: 'e9'}); // invalid square
 xiangqi.moves({ verbose: true });
 // -> [{ color: 'r', from: 'a3', to: 'a4',
 //       flags: 'n', piece: 'p', iccs 'a3a4'
+//       # a captured: key is included when the move is a capture
+//     },
+//     ...
+//     ]
+
+xiangqi.moves({ verbose: true, opponent: true });
+// -> [{ color: 'b', from: 'a9', to: 'a8',
+//       flags: 'n', piece: 'r', iccs 'a9a8'
 //       # a captured: key is included when the move is a capture
 //     },
 //     ...
