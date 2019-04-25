@@ -494,6 +494,13 @@ var Xiangqi = function(fen) {
       }
     }
 
+    // do we need opponent moves?
+    if (typeof options !== 'undefined' && 'opponent' in options && options.opponent) {
+      turn = swap_color(turn);
+      us = turn;
+      them = swap_color(us);
+    }
+
     var i, j, len;
     for (i = first_sq; i <= last_sq; ++i) {
       var piece = board[i];
@@ -559,6 +566,11 @@ var Xiangqi = function(fen) {
         legal_moves.push(moves[i]);
       }
       undo_move();
+    }
+
+    // do we needed opponent moves?
+    if (typeof options !== 'undefined' && 'opponent' in options && options.opponent) {
+      turn = swap_color(turn);
     }
 
     return legal_moves;
@@ -1082,9 +1094,7 @@ var Xiangqi = function(fen) {
       var moves = [];
 
       for (var i = 0, len = ugly_moves.length; i < len; i++) {
-        /* does the user want a full move object (most likely not), or just
-         * SAN
-         */
+        // does the user want a full move object (most likely not), or just ICCS
         if (
           typeof options !== 'undefined' &&
           'verbose' in options &&
