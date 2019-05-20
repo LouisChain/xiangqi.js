@@ -170,6 +170,15 @@ describe('Threefold Repetition', function() {
 
     {fen: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r - - 0 1',
      moves: ['h0g2', 'h9g7', 'g2h0', 'g7h9', 'h0i2', 'h9i7', 'i2h0', 'i7h9']},
+
+    {fen: '2ba1k3/4a1P2/9/p7p/5n3/4p4/3r5/4p4/5K3/3r5 r - - 0 27',
+     moves: [  'g8h8', 'f9e9', 'h8g8', 'c9e7', 'g8f8', 'f5d4', 'f8g8', 'd4b3',
+       'g8f8', 'e4e3', 'f8g8', 'd0d2', 'f1f0', 'e2e1', 'g8f8', 'e3e2', 'f8g8',
+       'd2d1', 'g8f8', 'a6a5', 'f8g8', 'a5a4', 'g8f8', 'a4a3', 'f8g8', 'i6i5',
+       'g8f8', 'i5i4', 'f8g8', 'i4i3', 'g8f8', 'i3h3', 'f8g8', 'h3g3', 'g8f8',
+       'g3g2', 'f8g8', 'g2f2', 'g8f8', 'a3a2', 'f8g8', 'a2b2', 'g8f8', 'b2c2',
+       'f8g8', 'c2d2', 'g8f8', 'd3e3', 'f8g8', 'e3d3', 'g8f8', 'd3e3', 'f8g8',
+       'e3d3']},
   ];
 
   positions.forEach(function(position) {
