@@ -576,9 +576,9 @@ var Xiangqi = function(fen) {
     return legal_moves;
   }
 
-  /* convert a move from 0xa9 coordinates to Standard Algebraic Notation (SAN)
+  /* convert a move from 0x9a coordinates to Internet Chinese Chess Server (ICCS)
    *
-   * @param {boolean} sloppy Use the sloppy SAN generator to work around over
+   * @param {boolean} sloppy Use the sloppy ICCS generator to work around over
    * disambiguation bugs in Fritz and Chessbase.  See below:
    *
    * r1bqkbnr/ppp2ppp/2n5/1B1pP3/4P3/8/PPPP2PP/RNBQK1NR b KQkq - 2 4
@@ -865,18 +865,18 @@ var Xiangqi = function(fen) {
     return s;
   }
 
-  // convert a move from Internet Chinese Chess Server (ICCS) to 0xa9 coordinates
+  // convert a move from Internet Chinese Chess Server (ICCS) to 0x9a coordinates
   function move_from_iccs(move, sloppy) {
     // strip off any move decorations: e.g Nf3+?!
     var clean_move = stripped_iccs(move);
 
     // if we're using the sloppy parser run a regex to grab piece, to, and from
-    // this should parse invalid SAN like: Pe2-e4, Rc1c4, Qf3xf7
+    // this should parse invalid ICCS like: h2e2, H7-E7
     var matches = clean_move.match(
-      /([a-i][0-9])-?([a-i][0-9])/
+      /([a-iA-I][0-9])-?([a-iA-I][0-9])/
     );
     var piece, from, to;
-    // TODO: support sloppy
+    // TODO: support sloppy (must integrate with WXF)
     if (sloppy) {
       if (matches) {
         piece = matches[1];
@@ -887,8 +887,7 @@ var Xiangqi = function(fen) {
 
     var moves = generate_moves();
     for (var i = 0, len = moves.length; i < len; i++) {
-      // try the strict parser first, then the sloppy parser if requested
-      // by the user
+      // try the strict parser first, then the sloppy parser if requested by the user
       if (
         clean_move === stripped_iccs(move_to_iccs(moves[i])) ||
         (sloppy && clean_move === stripped_iccs(move_to_iccs(moves[i], true)))
@@ -1084,8 +1083,8 @@ var Xiangqi = function(fen) {
     },
 
     moves: function(options) {
-      /* The internal representation of a xiangqi move is in 0xa9 format, and
-       * not meant to be human-readable.  The code below converts the 0xa9
+      /* The internal representation of a xiangqi move is in 0x9a format, and
+       * not meant to be human-readable.  The code below converts the 0x9a
        * square coordinates to algebraic coordinates.  It also prunes an
        * unnecessary move keys resulting from a verbose call.
        */
@@ -1124,6 +1123,8 @@ var Xiangqi = function(fen) {
     in_draw: function() {
       return (
         half_moves >= 120 ||
+        // Just a temporary workaround, should be refined in the future.
+        in_threefold_repetition() ||
         insufficient_material()
       );
     },
@@ -1436,19 +1437,8 @@ var Xiangqi = function(fen) {
 
       var move_obj = null;
 
-      function move_from_simple_iccs(move) {
-        var moves = generate_moves();
-        for (var i = 0, len = moves.length; i < len; i++) {
-          if (move === move_to_iccs(moves[i])) {
-            return moves[i];
-          }
-        }
-        return null;
-      }
-
       if (typeof move === 'string') {
-        // move_obj = move_from_iccs(move, sloppy);
-        move_obj = move_from_simple_iccs(move);
+        move_obj = move_from_iccs(move, sloppy);
       } else if (typeof move === 'object') {
         var moves = generate_moves();
 

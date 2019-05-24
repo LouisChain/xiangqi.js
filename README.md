@@ -1,6 +1,6 @@
 # xiangqi.js
 
-[![Build Status](https://travis-ci.org/lengyanyu258/xiangqi.js.svg?branch=master)](https://travis-ci.org/lengyanyu258/xiangqi.js)
+[![Build Status](https://travis-ci.com/lengyanyu258/xiangqi.js.svg?branch=dev)](https://travis-ci.com/lengyanyu258/xiangqi.js)
 
 xiangqi.js is a Javascript xiangqi library that is used for xiangqi move
 generation/validation, piece placement/movement, and check/checkmate/stalemate
@@ -91,8 +91,8 @@ xiangqi.board();
 //      [...],
 //      [...],
 //      [...],
-//      [...],
-//      [...],
+//      [null, null, null, null, null, null, null, null, null],
+//      [null, null, null, null, null, null, null, null, null],
 //      [...],
 //      [...],
 //      [...],
@@ -164,7 +164,7 @@ xiangqi.get('a6');
 
 ### .history([ options ])
 Returns a list containing the moves of the current game.  Options is an optional
-parameter which may contain a 'verbose' flag.  See .moves() for a description of the
+parameter which may contain a `verbose` flag.  See .moves() for a description of the
 verbose move fields.
 
 ```js
@@ -203,7 +203,7 @@ xiangqi.in_checkmate();
 ```
 
 ### .in_draw()
-Returns true or false if the game is drawn (50-move rule or insufficient material).
+Returns true or false if the game is drawn (60-move rule or insufficient material).
 
 ```js
 var xiangqi = new Xiangqi('4k1b2/9/4b4/9/9/9/9/4B4/9/4K1B2 r - - 0 1');
@@ -263,8 +263,7 @@ xiangqi.header();
 ```
 
 ### .insufficient_material()
-Returns true if the game is drawn due to insufficient material (K vs. K,
-K vs. KB, or K vs. KN); otherwise false.
+Returns true if the game is drawn due to insufficient material (K vs. K or KBA vs. KBA); otherwise false.
 
 ```js
 var xiangqi = new Xiangqi('4k1b2/9/4b4/9/9/9/9/4B4/9/4K1B2 r - - 0 1');
@@ -382,7 +381,7 @@ xiangqi.fen();
 ### .move(move, [ options ])
 Attempts to make a move on the board, returning a move object if the move was
 legal, otherwise null.  The .move function can be called two ways, by passing
-a string in Standard Algebraic Notation (SAN):
+a string in Internet Chinese Chess Server (ICCS):
 
 ```js
 var xiangqi = new Xiangqi();
@@ -390,10 +389,10 @@ var xiangqi = new Xiangqi();
 xiangqi.move('e3e4');
 // -> { color: 'r', from: 'e3', to: 'e4', flags: 'n', piece: 'p', iccs: 'e3e4' }
 
-xiangqi.move('nf6'); // SAN is case sensitive!!
+xiangqi.move('E6E5'); // ICCS is case sensitive!!
 // -> null
 
-xiangqi.move('Nf6');
+xiangqi.move('E6-E5');
 // -> { color: 'b', from: 'g8', to: 'f6', flags: 'n', piece: 'n', san: 'Nf6' }
 ```
 
@@ -510,7 +509,7 @@ xiangqi.put({ type: 'k', color: 'r' }, 'e1'); // shorthand
 xiangqi.fen();
 // -> '9/9/9/9/p8/9/9/9/4K4/9 r - - 0 1'
 
-xiangqi.put({ type: 'z', color: 'w' }, 'a1'); // invalid piece
+xiangqi.put({ type: 'z', color: 'r' }, 'a1'); // invalid piece
 // -> false
 
 xiangqi.clear();
