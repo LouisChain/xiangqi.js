@@ -483,6 +483,8 @@ var Xiangqi = function(fen) {
 
     /* do we want legal moves? */
     var legal = typeof options !== 'undefined' && 'legal' in options ? options.legal : true;
+    // do we need opponent moves?
+    var opponent = typeof options !== 'undefined' && 'opponent' in options ? options.opponent : false;
 
     /* are we generating moves for a single square? */
     if (typeof options !== 'undefined' && 'square' in options) {
@@ -494,8 +496,7 @@ var Xiangqi = function(fen) {
       }
     }
 
-    // do we need opponent moves?
-    if (typeof options !== 'undefined' && 'opponent' in options && options.opponent) {
+    if (opponent) {
       turn = swap_color(turn);
       us = turn;
       them = swap_color(us);
@@ -568,8 +569,8 @@ var Xiangqi = function(fen) {
       undo_move();
     }
 
-    // do we needed opponent moves?
-    if (typeof options !== 'undefined' && 'opponent' in options && options.opponent) {
+    // DID we need opponent moves?
+    if (opponent) {
       turn = swap_color(turn);
     }
 
