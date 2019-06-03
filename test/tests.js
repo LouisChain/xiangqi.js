@@ -1070,9 +1070,9 @@ describe('Make Move', function() {
       var sloppy = position.sloppy || false;
       var result = xiangqi.move(position.move, {sloppy: sloppy});
       if (position.legal) {
-        assert(result
-               && xiangqi.fen() === position.next
-               && result.captured === position.captured);
+        assert(result &&
+          xiangqi.fen() === position.next &&
+          result.captured === position.captured);
       } else {
         assert(!result);
       }
@@ -1420,8 +1420,8 @@ describe('Board Tests', function() {
     it('Board - ' + test.fen, function() {
       var xiangqi = new Xiangqi(test.fen);
       assert(JSON.stringify(xiangqi.board()) === JSON.stringify(test.board));
-    })
-  })
+    });
+  });
 });
 
 /*

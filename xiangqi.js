@@ -64,7 +64,7 @@ var Xiangqi = function(fen) {
     c: [-0x10, 0x10, -0x01, 0x01],
     r: [-0x10, 0x10, -0x01, 0x01],
     n: [-0x20 - 0x01, -0x20 + 0x01, 0x20 - 0x01, 0x20 + 0x01,
-        -0x10 - 0x02, 0x10 - 0x02, -0x10 + 0x02, 0x10 + 0x02],
+      -0x10 - 0x02, 0x10 - 0x02, -0x10 + 0x02, 0x10 + 0x02],
     b: [-0x20 - 0x02, 0x20 + 0x02, 0x20 - 0x02, -0x20 + 0x02],
     a: [-0x10 - 0x01, 0x10 + 0x01, 0x10 - 0x01, -0x10 + 0x01],
     k: [-0x10, 0x10, -0x01, 0x01]
@@ -238,14 +238,14 @@ var Xiangqi = function(fen) {
 
     /* 8th criterion: every row is valid? */
     var pieces = {
-      'p': {number: 0, squares: []}, 'P': {number: 0, squares: []},
-      'c': {number: 0, squares: []}, 'C': {number: 0, squares: []},
-      'r': {number: 0, squares: []}, 'R': {number: 0, squares: []},
-      'n': {number: 0, squares: []}, 'N': {number: 0, squares: []},
-      'b': {number: 0, squares: []}, 'B': {number: 0, squares: []},
-      'a': {number: 0, squares: []}, 'A': {number: 0, squares: []},
-      'k': {number: 0, squares: []}, 'K': {number: 0, squares: []}
-    }, i;
+        'p': {number: 0, squares: []}, 'P': {number: 0, squares: []},
+        'c': {number: 0, squares: []}, 'C': {number: 0, squares: []},
+        'r': {number: 0, squares: []}, 'R': {number: 0, squares: []},
+        'n': {number: 0, squares: []}, 'N': {number: 0, squares: []},
+        'b': {number: 0, squares: []}, 'B': {number: 0, squares: []},
+        'a': {number: 0, squares: []}, 'A': {number: 0, squares: []},
+        'k': {number: 0, squares: []}, 'K': {number: 0, squares: []}
+      }, i;
     for (i = 0; i < rows.length; i++) {
       /* check for right sum of fields AND not two numbers in succession */
       var sum_fields = 0;
@@ -275,60 +275,60 @@ var Xiangqi = function(fen) {
     }
 
     /* 9th criterion: every piece's number is valid? */
-    if (pieces['k'].number !== 1 || pieces['K'].number !== 1) {
+    if (pieces.k.number !== 1 || pieces.K.number !== 1) {
       return result(11);
     }
-    if (pieces['a'].number > 2 || pieces['A'].number > 2) {
+    if (pieces.a.number > 2 || pieces.A.number > 2) {
       return result(12);
     }
-    if (pieces['b'].number > 2 || pieces['B'].number > 2) {
+    if (pieces.b.number > 2 || pieces.B.number > 2) {
       return result(13);
     }
-    if (pieces['n'].number > 2 || pieces['N'].number > 2) {
+    if (pieces.n.number > 2 || pieces.N.number > 2) {
       return result(14);
     }
-    if (pieces['r'].number > 2 || pieces['R'].number > 2) {
+    if (pieces.r.number > 2 || pieces.R.number > 2) {
       return result(15);
     }
-    if (pieces['c'].number > 2 || pieces['C'].number > 2) {
+    if (pieces.c.number > 2 || pieces.C.number > 2) {
       return result(16);
     }
-    if (pieces['p'].number > 5 || pieces['P'].number > 5) {
+    if (pieces.p.number > 5 || pieces.P.number > 5) {
       return result(17);
     }
 
     /* 10th criterion: every piece's place is valid? */
-    if (out_of_place(KING, pieces['k'].squares[0], RED) ||
-        out_of_place(KING, pieces['K'].squares[0], BLACK)) {
+    if (out_of_place(KING, pieces.k.squares[0], RED) ||
+        out_of_place(KING, pieces.K.squares[0], BLACK)) {
       return result(18);
     }
-    for (i in pieces['a'].squares) {
-      if (out_of_place(ADVISER, pieces['a'].squares[i], RED)) {
+    for (i in pieces.a.squares) {
+      if (out_of_place(ADVISER, pieces.a.squares[i], RED)) {
         return result(19);
       }
     }
-    for (i in pieces['A'].squares) {
-      if (out_of_place(ADVISER, pieces['A'].squares[i], BLACK)) {
+    for (i in pieces.A.squares) {
+      if (out_of_place(ADVISER, pieces.A.squares[i], BLACK)) {
         return result(20);
       }
     }
-    for (i in pieces['b'].squares) {
-      if (out_of_place(BISHOP, pieces['b'].squares[i], RED)) {
+    for (i in pieces.b.squares) {
+      if (out_of_place(BISHOP, pieces.b.squares[i], RED)) {
         return result(21);
       }
     }
-    for (i in pieces['B'].squares) {
-      if (out_of_place(BISHOP, pieces['B'].squares[i], BLACK)) {
+    for (i in pieces.B.squares) {
+      if (out_of_place(BISHOP, pieces.B.squares[i], BLACK)) {
         return result(22);
       }
     }
-    for (i in pieces['p'].squares) {
-      if (out_of_place(PAWN, pieces['p'].squares[i], RED)) {
+    for (i in pieces.p.squares) {
+      if (out_of_place(PAWN, pieces.p.squares[i], RED)) {
         return result(23);
       }
     }
-    for (i in pieces['P'].squares) {
-      if (out_of_place(PAWN, pieces['P'].squares[i], BLACK)) {
+    for (i in pieces.P.squares) {
+      if (out_of_place(PAWN, pieces.P.squares[i], BLACK)) {
         return result(24);
       }
     }
@@ -391,11 +391,11 @@ var Xiangqi = function(fen) {
     if (history.length > 0) return;
 
     if (fen !== DEFAULT_POSITION) {
-      header['SetUp'] = '1';
-      header['FEN'] = fen;
+      header.SetUp = '1';
+      header.FEN = fen;
     } else {
-      delete header['SetUp'];
-      delete header['FEN'];
+      delete header.SetUp;
+      delete header.FEN;
     }
   }
 
@@ -746,7 +746,7 @@ var Xiangqi = function(fen) {
 
     /* reset the 60 move counter if a piece is captured */
     if (move.flags & BITS.CAPTURE) {
-      half_moves = 0
+      half_moves = 0;
     } else {
       half_moves++;
     }
@@ -1068,7 +1068,7 @@ var Xiangqi = function(fen) {
         keys.push(algebraic(i));
       }
       return keys;
-    })(),
+    }()),
     FLAGS: FLAGS,
 
     /***************************************************************************
@@ -1297,8 +1297,8 @@ var Xiangqi = function(fen) {
         var value = '';
 
         for (var i = 0; i < headers.length; i++) {
-          key = headers[i].replace(/^\[([A-Z][A-Za-z]*)\s.*\]$/, '$1');
-          value = headers[i].replace(/^\[[A-Za-z]+\s"(.*)"\]$/, '$1');
+          key = headers[i].replace(/^\[([A-Z][A-Za-z]*)\s.*]$/, '$1');
+          value = headers[i].replace(/^\[[A-Za-z]+\s"(.*)"]$/, '$1');
           if (trim(key).length > 0) {
             header_obj[key] = value;
           }
@@ -1338,8 +1338,8 @@ var Xiangqi = function(fen) {
 
       /* load the starting position indicated by [Setup '1'] and
       * [FEN position] */
-      if (headers['SetUp'] === '1') {
-        if (!('FEN' in headers && load(headers['FEN'], true))) {
+      if (headers.SetUp === '1') {
+        if (!('FEN' in headers && load(headers.FEN, true))) {
           // second argument to load: don't clear the headers
           return false;
         }
