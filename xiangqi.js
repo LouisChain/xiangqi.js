@@ -382,19 +382,16 @@ var Xiangqi = function(fen) {
   }
 
   /* called when the initial board setup is changed with put() or remove().
-   * modifies the SetUp and FEN properties of the header object.  if the FEN is
-   * equal to the default position, the SetUp and FEN are deleted
-   * the setup is only updated if history.length is zero, ie moves haven't been
-   * made.
+   * modifies the FEN properties of the header object.  if the FEN is equal to
+   * the default position, the FEN are deleted the setup is only updated if history.
+   * length is zero, ie moves haven't been made.
    */
   function update_setup(fen) {
     if (history.length > 0) return;
 
     if (fen !== DEFAULT_POSITION) {
-      header.SetUp = '1';
       header.FEN = fen;
     } else {
-      delete header.SetUp;
       delete header.FEN;
     }
   }
@@ -1178,7 +1175,7 @@ var Xiangqi = function(fen) {
     },
 
     pgn: function(options) {
-      /* using the specification from http://www.chessclub.com/help/PGN-spec
+      /* using the specification from http://www.xqbase.com/protocol/cchess_pgn.htm
        * example for html usage: .pgn({ max_width: 72, newline_char: "<br />" })
        */
       var newline = typeof options === 'object' &&
@@ -1191,8 +1188,8 @@ var Xiangqi = function(fen) {
 
       /* add the PGN header headerrmation */
       for (i in header) {
-        /* TODO: order of enumerated properties in header object is not
-         * guaranteed, see ECMA-262 spec (section 12.6.4)
+        /* TODO: order of enumerated properties in header object is not guaranteed,
+             see ECMA-262 spec (section 12.6.4)
          */
         result.push('[' + i + ' "' + header[i] + '"]' + newline);
         header_exists = true;
@@ -1211,7 +1208,7 @@ var Xiangqi = function(fen) {
       var moves = [];
       var move_string = '';
 
-      /* build the list of moves.  a move_string looks like: "3. e3 e6" */
+      /* build the list of moves.  a move_string looks like: "3. b2b6 b9c7" */
       while (reversed_history.length > 0) {
         var move = reversed_history.pop();
 
@@ -1337,10 +1334,9 @@ var Xiangqi = function(fen) {
           set_header([key, headers[key]]);
       }
 
-      /* load the starting position indicated by [Setup '1'] and
-      * [FEN position] */
-      if (headers.SetUp === '1') {
-        if (!('FEN' in headers && load(headers.FEN, true))) {
+      /* load the starting position indicated by [FEN position] */
+      if ('FEN' in headers) {
+        if (!load(headers.FEN, true)) {
           // second argument to load: don't clear the headers
           return false;
         }

@@ -149,7 +149,7 @@ describe('Insufficient Material', function() {
     var xiangqi = new Xiangqi();
     xiangqi.load(position.fen);
 
-    it(position.fen, function() {console.log(xiangqi.insufficient_material());
+    it(position.fen, function() {
       if (position.draw) {
         assert(xiangqi.insufficient_material() && xiangqi.in_draw());
       } else {
@@ -282,6 +282,7 @@ describe('Get/Put/Remove', function() {
 
   var xiangqi = new Xiangqi();
   var passed = true;
+  // noinspection JSDuplicatedDeclaration,JSHint
   var positions = [
     {pieces: {a9: {type: xiangqi.PAWN, color: xiangqi.RED},
               b0: {type: xiangqi.PAWN, color: xiangqi.BLACK},
@@ -423,7 +424,7 @@ describe('FEN', function() {
 });
 
 /*
-describe('PGN', function() {
+describe('PGN (Chinese Format)', function() {
 
   var passed = true;
   var error_message;
@@ -492,7 +493,7 @@ describe('PGN', function() {
 });
 
 
-describe('Load PGN', function() {
+describe('Load PGN (Chinese Format)', function() {
 
   var xiangqi = new Xiangqi();
   var tests = [
@@ -998,6 +999,397 @@ describe('Load PGN', function() {
 
 });
 */
+
+describe('PGN (ICCS Format)', function() {
+
+  var passed = true;
+  var error_message;
+  var positions = [
+    {
+      moves: [  'h2e2', 'h9g7', 'h0g2', 'i9h9', 'g3g4', 'h7i7', 'b0c2', 'c6c5', 'b2b6', 'b9c7', 'b6c6', 'a9b9', 'a0b0',
+        'c9e7', 'b0b4', 'h9h5', 'c6g6', 'b7a7', 'b4b9', 'c7b9', 'i0i1', 'b9c7', 'i1b1', 'c7d5', 'b1b4', 'd5c3', 'g6a6',
+        'h5d5', 'd0e1', 'd5d6', 'a6a5', 'd6c6', 'c0a2', 'a7c7', 'a5a9', 'c7c9', 'g2f4', 'c6a6', 'a9b9', 'c3e2', 'g0e2',
+        'i7i3', 'f4d5', 'a6a8', 'a2c0', 'a8d8', 'd5f6', 'd8f8', 'b4f4', 'g7e8', 'g4g5', 'e8c7', 'b9a9', 'c7b9', 'a9c9',
+        'e7c9', 'g5g6', 'b9c7', 'f4d4', 'f8f7', 'a3a4', 'f9e8', 'e2g0', 'c5c4', 'd4c4', 'c7d5', 'f6g4', 'i3g3', 'g4h6',
+        'd5f4', 'c0e2', 'g9e7', 'c4e4', 'g3h3', 'g6g7', 'f7f6', 'h6g4', 'f6f5', 'e4e6', 'f5g5', 'e6h6', 'h3g3', 'e1d2',
+        'g5g7', 'h6h3', 'g3g1', 'e3e4', 'g1f1', 'h3e3', 'g7g5', 'e4e5', 'i6i5', 'c2d4', 'i5i4', 'g4h2', 'f4g2', 'e3f3',
+        'f1d1', 'd4f5', 'i4h4', 'f3f1', 'h4h3', 'h2i0', 'g2h4', 'f1d1', 'h4f5', 'e5f5', 'g5f5', 'i0g1', 'h3g3', 'g1i2',
+        'g3h3', 'd1a1', 'f5f4', 'i2g1', 'h3g3', 'e2c0', 'f4e4', 'g1e2', 'g3f3', 'd2e1', 'f3e3', 'e2g3', 'e4g4', 'g3f1',
+        'e3f3', 'f1h2', 'g4f4', 'a1a3', 'f3g3', 'c0e2', 'g3h3', 'h2f3', 'h3g3', 'f3d2', 'f4f3', 'a3a1', 'f3d3', 'a4a5',
+        'g3f3', 'a1a4', 'f3e3', 'a4e4'],
+      header: ['Game', 'Chinese Chess', 'Event', '第24届“五羊杯”全国冠军邀请赛', 'Site', '广州', 'Date', '2004.01.05',
+        'Round', '决赛(加赛)', 'RedTeam', '广州', 'Red', '吕钦', 'BlackTeam', '广州', 'Black', '许银川', 'Result', '1-0',
+        'Opening', '中炮过河炮对左三步虎', 'ECCO', 'B24', 'Format', 'ICCS'],
+      max_width:15,
+      newline_char:'<br />',
+      pgn: '[Game "Chinese Chess"]<br />[Event "第24届“五羊杯”全国冠军邀请赛"]<br />[Site "广州"]<br />[Date "2004.01.05"]<br />' +
+        '[Round "决赛(加赛)"]<br />[RedTeam "广州"]<br />[Red "吕钦"]<br />[BlackTeam "广州"]<br />[Black "许银川"]<br />' +
+        '[Result "1-0"]<br />[Opening "中炮过河炮对左三步虎"]<br />[ECCO "B24"]<br />[Format "ICCS"]<br /><br />' +
+        '1. h2e2 h9g7<br />2. h0g2 i9h9<br />3. g3g4 h7i7<br />4. b0c2 c6c5<br />5. b2b6 b9c7<br />6. b6c6 a9b9<br />' +
+        '7. a0b0 c9e7<br />8. b0b4 h9h5<br />9. c6g6 b7a7<br />10. b4b9 c7b9<br />11. i0i1 b9c7<br />12. i1b1 c7d5<br />' +
+        '13. b1b4 d5c3<br />14. g6a6 h5d5<br />15. d0e1 d5d6<br />16. a6a5 d6c6<br />17. c0a2 a7c7<br />18. a5a9 c7c9<br />' +
+        '19. g2f4 c6a6<br />20. a9b9 c3e2<br />21. g0e2 i7i3<br />22. f4d5 a6a8<br />23. a2c0 a8d8<br />24. d5f6 d8f8<br />' +
+        '25. b4f4 g7e8<br />26. g4g5 e8c7<br />27. b9a9 c7b9<br />28. a9c9 e7c9<br />29. g5g6 b9c7<br />30. f4d4 f8f7<br />' +
+        '31. a3a4 f9e8<br />32. e2g0 c5c4<br />33. d4c4 c7d5<br />34. f6g4 i3g3<br />35. g4h6 d5f4<br />36. c0e2 g9e7<br />' +
+        '37. c4e4 g3h3<br />38. g6g7 f7f6<br />39. h6g4 f6f5<br />40. e4e6 f5g5<br />41. e6h6 h3g3<br />42. e1d2 g5g7<br />' +
+        '43. h6h3 g3g1<br />44. e3e4 g1f1<br />45. h3e3 g7g5<br />46. e4e5 i6i5<br />47. c2d4 i5i4<br />48. g4h2 f4g2<br />' +
+        '49. e3f3 f1d1<br />50. d4f5 i4h4<br />51. f3f1 h4h3<br />52. h2i0 g2h4<br />53. f1d1 h4f5<br />54. e5f5 g5f5<br />' +
+        '55. i0g1 h3g3<br />56. g1i2 g3h3<br />57. d1a1 f5f4<br />58. i2g1 h3g3<br />59. e2c0 f4e4<br />60. g1e2 g3f3<br />' +
+        '61. d2e1 f3e3<br />62. e2g3 e4g4<br />63. g3f1 e3f3<br />64. f1h2 g4f4<br />65. a1a3 f3g3<br />66. c0e2 g3h3<br />' +
+        '67. h2f3 h3g3<br />68. f3d2 f4f3<br />69. a3a1 f3d3<br />70. a4a5 g3f3<br />71. a1a4 f3e3<br />72. a4e4 1-0',
+      fen: '2bak4/4a4/4b4/9/P8/4R4/3rp4/3NB4/4A4/4KAB2 b - - 35 72'
+    },
+    {
+      moves: [  'b2e2', 'b9c7', 'b0c2', 'a9b9', 'a0b0', 'h9g7', 'g3g4', 'c6c5', 'b0b6', 'b7a7', 'b6c6', 'a7a8', 'h0g2',
+        'f9e8', 'h2i2', 'a8c8', 'c6d6', 'c7b5', 'i0h0', 'i9h9', 'c2e1', 'c5c4', 'd6d5', 'c8c3', 'h0h6', 'b5d4', 'e2c2',
+        'b9b7', 'c2c4', 'b7d7', 'g2f4', 'h7i7', 'h6g6', 'h9h2', 'g4g5', 'c3b3', 'g5f5', 'b3b0', 'e1g2', 'd4f5', 'f0e1',
+        'h2h6', 'd5c5', 'c9a7', 'g6h6', 'a7c5', 'h6h3', 'b0b3', 'e3e4', 'b3b4', 'g0e2', 'b4e4', 'i2i1', 'i7i8', 'i1g1',
+        'i8g8', 'c4c2', 'd7f7', 'c2b2', 'c5a7', 'h3c3', 'f7b7', 'b2c2', 'b7f7', 'c2b2', 'f7b7', 'b2a2', 'b7f7', 'a2a6',
+        'f5h4', 'a6b6', 'g9e7', 'g1f1', 'h4f3', 'b6b3', 'f3g1', 'e0f0', 'g7f5', 'c3e3', 'e6e5', 'b3b1', 'f7f6', 'e3g3',
+        'g8f8', 'f1f2', 'g1i0', 'g3h3', 'f8f9', 'b1b5', 'i0g1', 'h3h5', 'a7c5', 'b5e5', 'e4b4', 'a3a4', 'b4b3', 'f2f3',
+        'b3b2', 'e1d2', 'b2b0', 'f0f1', 'b0d0', 'a4a5', 'd0g0', 'f1e1', 'g0g2', 'f3f5', 'f9f5', 'f4g2', 'f6b6', 'e1f1',
+        'f5f9', 'h5h1', 'b6e6', 'e5d5', 'e8f7', 'f1e1', 'e6b6', 'a5b5', 'b6a6', 'b5a5', 'a6b6', 'a5b5', 'b6a6', 'b5a5'],
+      header: ['Game', 'Chinese Chess', 'Event', '1982年全国赛', 'Date', '1982.12.11',
+        'Red', '柳大华', 'Black', '杨官璘', 'Result', '1/2-1/2', 'Format', 'ICCS'],
+      max_width:45,
+      pgn: '[Game "Chinese Chess"]\n[Event "1982年全国赛"]\n[Date "1982.12.11"]\n' +
+        '[Red "柳大华"]\n[Black "杨官璘"]\n[Result "1/2-1/2"]\n[Format "ICCS"]\n\n' +
+        '1. b2e2 b9c7 2. b0c2 a9b9 3. a0b0 h9g7\n4. g3g4 c6c5 5. b0b6 b7a7 6. b6c6 a7a8\n' +
+        '7. h0g2 f9e8 8. h2i2 a8c8 9. c6d6 c7b5\n10. i0h0 i9h9 11. c2e1 c5c4 12. d6d5 c8c3\n' +
+        '13. h0h6 b5d4 14. e2c2 b9b7 15. c2c4 b7d7\n16. g2f4 h7i7 17. h6g6 h9h2 18. g4g5 c3b3\n' +
+        '19. g5f5 b3b0 20. e1g2 d4f5 21. f0e1 h2h6\n22. d5c5 c9a7 23. g6h6 a7c5 24. h6h3 b0b3\n' +
+        '25. e3e4 b3b4 26. g0e2 b4e4 27. i2i1 i7i8\n28. i1g1 i8g8 29. c4c2 d7f7 30. c2b2 c5a7\n' +
+        '31. h3c3 f7b7 32. b2c2 b7f7 33. c2b2 f7b7\n34. b2a2 b7f7 35. a2a6 f5h4 36. a6b6 g9e7\n' +
+        '37. g1f1 h4f3 38. b6b3 f3g1 39. e0f0 g7f5\n40. c3e3 e6e5 41. b3b1 f7f6 42. e3g3 g8f8\n' +
+        '43. f1f2 g1i0 44. g3h3 f8f9 45. b1b5 i0g1\n46. h3h5 a7c5 47. b5e5 e4b4 48. a3a4 b4b3\n' +
+        '49. f2f3 b3b2 50. e1d2 b2b0 51. f0f1 b0d0\n52. a4a5 d0g0 53. f1e1 g0g2 54. f3f5 f9f5\n' +
+        '55. f4g2 f6b6 56. e1f1 f5f9 57. h5h1 b6e6\n58. e5d5 e8f7 59. f1e1 e6b6 60. a5b5 b6a6\n' +
+        '61. b5a5 a6b6 62. a5b5 b6a6 63. b5a5 1/2-1/2',
+      fen: '3akc3/9/4ba3/r7p/P1bC5/9/8P/3AB1N2/4K1nR1/2B6 b - - 16 63'
+    },
+    {
+      moves: ['h2e2', 'h9g7', 'h0g2', 'i9h9'],     // testing max_width being small and having no comments
+      header: [],
+      max_width:1,
+      pgn: '1. h2e2 h9g7\n2. h0g2 i9h9',
+      fen: 'rnbakabr1/9/1c4nc1/p1p1p1p1p/9/9/P1P1P1P1P/1C2C1N2/9/RNBAKAB1R r - - 4 3'
+    },
+    {
+      moves: ['h7i7', 'b0c2', 'c6c5', 'b2b6'],     // testing a non-starting position
+      header: [],
+      max_width:25,
+      pgn: '[FEN "rnbakabr1/9/1c4nc1/p1p1p1p1p/9/6P2/P1P1P3P/1C2C1N2/9/RNBAKAB1R b - - 5 3"]\n\n3. ... h7i7 4. b0c2 c6c5\n5. b2b6',
+      starting_position: 'rnbakabr1/9/1c4nc1/p1p1p1p1p/9/6P2/P1P1P3P/1C2C1N2/9/RNBAKAB1R b - - 5 3',
+      fen: 'rnbakabr1/9/1c4n1c/pC2p1p1p/2p6/6P2/P1P1P3P/2N1C1N2/9/R1BAKAB1R b - - 9 5'
+    }
+  ];
+
+  positions.forEach(function(position, i) {
+
+    it(i.toString(), function() {
+      var xiangqi = ('starting_position' in position) ? new Xiangqi(position.starting_position) : new Xiangqi();
+      passed = true;
+      error_message = '';
+      for (var j = 0; j < position.moves.length; j++) {
+        if (xiangqi.move(position.moves[j]) === null) {
+          error_message = 'move() did not accept ' + position.moves[j] + ' : ';
+          break;
+        }
+      }
+
+      xiangqi.header.apply(null, position.header);
+      var pgn = xiangqi.pgn({max_width:position.max_width, newline_char:position.newline_char});
+      var fen = xiangqi.fen();
+      passed = pgn === position.pgn && fen === position.fen;
+      assert(passed && error_message.length === 0);
+    });
+
+  });
+
+});
+
+
+describe('Load PGN (ICCS Format)', function() {
+
+  var xiangqi = new Xiangqi();
+  var tests = [
+    {
+      pgn: [
+        '[Game "Chinese Chess"]',
+        '[Event "第24届“五羊杯”全国冠军邀请赛"]',
+        '[Site "广州"]',
+        '[Date "2004.01.05"]',
+        '[Round "决赛(加赛)"]',
+        '[RedTeam "广州"]',
+        '[Red "吕钦"]',
+        '[BlackTeam "广州"]',
+        '[Black "许银川"]',
+        '[Result "1-0"]',
+        '[Opening "中炮过河炮对左三步虎"]',
+        '[ECCO "B24"]',
+        '[Format "ICCS"]',
+        '',
+        '1. h2e2 h9g7 2. h0g2 i9h9 3. g3g4 h7i7',
+        '4. b0c2 c6c5 5. b2b6 b9c7 6. b6c6 a9b9',
+        '7. a0b0 c9e7 8. b0b4 h9h5 9. c6g6 b7a7',
+        '10. b4b9 c7b9 11. i0i1 b9c7 12. i1b1 c7d5',
+        '13. b1b4 d5c3 14. g6a6 h5d5 15. d0e1 d5d6',
+        '16. a6a5 d6c6 17. c0a2 a7c7 18. a5a9 c7c9',
+        '19. g2f4 c6a6 20. a9b9 c3e2 21. g0e2 i7i3',
+        '22. f4d5 a6a8 23. a2c0 a8d8 24. d5f6 d8f8',
+        '25. b4f4 g7e8 26. g4g5 e8c7 27. b9a9 c7b9',
+        '28. a9c9 e7c9 29. g5g6 b9c7 30. f4d4 f8f7',
+        '31. a3a4 f9e8 32. e2g0 c5c4 33. d4c4 c7d5',
+        '34. f6g4 i3g3 35. g4h6 d5f4 36. c0e2 g9e7',
+        '37. c4e4 g3h3 38. g6g7 f7f6 39. h6g4 f6f5',
+        '40. e4e6 f5g5 41. e6h6 h3g3 42. e1d2 g5g7',
+        '43. h6h3 g3g1 44. e3e4 g1f1 45. h3e3 g7g5',
+        '46. e4e5 i6i5 47. c2d4 i5i4 48. g4h2 f4g2',
+        '49. e3f3 f1d1 50. d4f5 i4h4 51. f3f1 h4h3',
+        '52. h2i0 g2h4 53. f1d1 h4f5 54. e5f5 g5f5',
+        '55. i0g1 h3g3 56. g1i2 g3h3 57. d1a1 f5f4',
+        '58. i2g1 h3g3 59. e2c0 f4e4 60. g1e2 g3f3',
+        '61. d2e1 f3e3 62. e2g3 e4g4 63. g3f1 e3f3',
+        '64. f1h2 g4f4 65. a1a3 f3g3 66. c0e2 g3h3',
+        '67. h2f3 h3g3 68. f3d2 f4f3 69. a3a1 f3d3',
+        '70. a4a5 g3f3 71. a1a4 f3e3 72. a4e4 1-0'
+      ],
+      expect: true
+    },
+    {
+      fen: '3akc3/9/4ba3/r7p/P1bC5/9/8P/3AB1N2/4K1nR1/2B6 b - - 16 63',
+      pgn: [
+        '[Game "Chinese Chess"]',
+        '[Event "1982年全国赛"]',
+        '[Date "1982.12.11"]',
+        '[Red "柳大华"]',
+        '[Black "杨官璘"]',
+        '[Result "1/2-1/2"]',
+        '[Format "ICCS"]',
+        '',
+        '1. b2e2 b9c7 2. b0c2 a9b9 3. a0b0 h9g7',
+        '4. g3g4 c6c5 5. b0b6 b7a7 6. b6c6 a7a8',
+        '7. h0g2 f9e8 8. h2i2 a8c8 9. c6d6 c7b5',
+        '10. i0h0 i9h9 11. c2e1 c5c4 12. d6d5 c8c3',
+        '13. h0h6 b5d4 14. e2c2 b9b7 15. c2c4 b7d7',
+        '16. g2f4 h7i7 17. h6g6 h9h2 18. g4g5 c3b3',
+        '19. g5f5 b3b0 20. e1g2 d4f5 21. f0e1 h2h6',
+        '22. d5c5 c9a7 23. g6h6 a7c5 24. h6h3 b0b3',
+        '25. e3e4 b3b4 26. g0e2 b4e4 27. i2i1 i7i8',
+        '28. i1g1 i8g8 29. c4c2 d7f7 30. c2b2 c5a7',
+        '31. h3c3 f7b7 32. b2c2 b7f7 33. c2b2 f7b7',
+        '34. b2a2 b7f7 35. a2a6 f5h4 36. a6b6 g9e7',
+        '37. g1f1 h4f3 38. b6b3 f3g1 39. e0f0 g7f5',
+        '40. c3e3 e6e5 41. b3b1 f7f6 42. e3g3 g8f8',
+        '43. f1f2 g1i0 44. g3h3 f8f9 45. b1b5 i0g1',
+        '46. h3h5 a7c5 47. b5e5 e4b4 48. a3a4 b4b3',
+        '49. f2f3 b3b2 50. e1d2 b2b0 51. f0f1 b0d0',
+        '52. a4a5 d0g0 53. f1e1 g0g2 54. f3f5 f9f5',
+        '55. f4g2 f6b6 56. e1f1 f5f9 57. h5h1 b6e6',
+        '58. e5d5 e8f7 59. f1e1 e6b6 60. a5b5 b6a6',
+        '61. b5a5 a6b6 62. a5b5 b6a6 63. b5a5 1/2-1/2'
+      ],
+      expect: true
+    },
+    /*
+    {
+      // pgn without comments behind moves.
+      fen: '2b2a3/3ka4/4b4/N8/8p/P5p2/4p4/9/4A4/4KAB2 b - - 0 43',
+      pgn: [
+        '[Game "Chinese Chess"]',
+        '[Event "第一届全运会象棋决赛"]',
+        '[Date "1959.??.??"]',
+        '[Red "李义庭"]',
+        '[Black "王嘉良"]',
+        '[Result "1/2-1/2"]',
+        '[Opening "五六炮对屏风马先进3卒"]',
+        '[ECCO "C70"]',
+        '',
+        '1.  炮二平五    马８进７   2.  马二进三    卒３进１  ',
+        '{黑方进3卒是屏风马应中炮的一种着法。一般认为，这种走法使后手方的作战计划暴露过早，',
+        '因此，后手方必须十分熟悉这一布局的变化，才能应付裕如。黑方的用意在于，不让对方先进七兵，因为李义庭对中炮进七兵的布局尤其擅长}',
+        '3.  车一平二    车９平８   4.  马八进九  ',
+        '{过去，红棋的一方往往走巡河车，然后兑兵，',
+        '如王再越在《梅花谱》中所介绍的，现在，这种走法比较不常见了，原因是它的变化已为大家所熟悉，容易成和。',
+        '红方上边马之后，一般有炮八平六（五六炮）、炮八平七（五七炮）、炮八进四（五八炮，但须先进三兵）或车九进一的四种变化} ',
+        '马２进３ 5.  炮八平六  ',
+        '{红方选定五六炮的布局} ',
+        '车１平２  ',
+        '{黑方一般习见的走法是炮8进2，既防红右车过河，又封红左车，但红方可以进七兵先献，以后升右车捉死卒，红方仍保留先手。',
+        '如改应马2进3封车，红方兵三进一，将来有炮六进三打马，黑方马2退3后再炮六进一打卒，一般认为演变下去对红方有利}',
+        '6.  车九平八    象７进５  ',
+        '{早作马回窝心新颖布局的准备} ',
+        '7.  车八进六    卒７进１   8.  车八平七    马３退５  ',
+        '{有句老话：“马回中心必定凶”。意思是，回窝心马的一方总是凶多吉少，但这是过去的看法，',
+        '建国后象棋布局日新月异，早就打破了前人的常规。黑方不宜走马3进4，否则红炮打士得势}',
+        '9.  车二进四  ',
+        '{红车巡河比过河车路宽敞，但此时如改走炮五进四，得中卒后，仍有先手。兑去子力以后，局势比现在稍要简单一些。',
+        '为谋求复杂变化的条件下斗智，寻找胜利的可能，红方的战术思想是：尽量保持战斗实力，争取主动} ',
+        '炮２进５  ',
+        '{为削弱红方中路攻势，进炮邀兑，这步棋是明智的}',
+        '10. 兵九进一 ',
+        '{挺边兵为边马开路，出马以后可以支援左车，是稳步进攻的着法} ',
+        '炮８进１ 11. 车七进二    炮２平５   12. 相三进五    车２进３  ',
+        '{黑方进车抢占要道，埋伏退炮打死车的阴谋}',
+        '13. 马九进八    车２平４   14. 仕六进五    炮８退２   15. 车七退二    车４平３   ',
+        '16. 马八进七    炮８平９ ',
+        '{现在黑方平炮兑车，已为以后弃子夺先准备条件}',
+        '17. 车二平四  ',
+        '{红方避兑占四路要道比车二平六稳健。如果改走车二平六，粗看可以得士，但右翼容易受黑方威胁。',
+        '如改走车二进五兑车，容易走成和局} ',
+        '车８进７   18. 车四进四  ',
+        '{这时，棋盘上逐渐出现紧张局势，红方下一步有马七进八准备挂角的杀机} ',
+        '马５进３   19. 炮六进五 ',
+        '{红方炮打马配合车攻击黑炮，来势汹汹} ',
+        '车８平７   ',
+        '20. 炮六平三    炮９进５ ',
+        '{经过一阵搏杀，黑方实现了弃子夺先的战术计划}',
+        '21. 炮三平七    炮９进３   22. 相五退三    车７进２   23. 车四平二    车７退３   ',
+        '24. 车二退八    炮９退３  ',
+        '{黑方虽失一子，但车炮控制要道，况5卒俱全，乍看起来，红方并不利。观至此，不禁为红方捏把汗}',
+        '25. 炮七平八  ',
+        '{既可以退炮打中卒，有可以进马压象田，红方此时借对攻达到积极防守的目的}',
+        ' 炮９平５  ',
+        '{炮轰中兵是棋势复杂化。如改走平车杀中兵，较为平稳，易成和局}',
+        '26. 相七进五  ',
+        '{经过惊涛骇浪之后，红方谨慎地补上一相。其实，改补相为上士（士五进四），则红方以车马炮单缺相对黑车炮多卒，',
+        '谋攻谋和究竟都比较主动。但这时的局势千变万化，一时奥妙难测，在受竞赛时限的条件下要洞察其秘，毕竟是有困难的}',
+        ' 炮５退１  ',
+        '{黑方退炮后，黑车即将调往右翼，给红方以巨大的威胁} ',
+        '27. 马七进六    士４进５   28. 炮八进二  象３进１ 29. 马六退八 将５平４ 30. 马八退六    炮５退１   ',
+        '31. 炮八退四    车７平３  32. 炮八平五    卒５进１  ',
+        '{为摆脱黑方的威胁，红方在以上几个回合中，马炮协作，以机警细致的着法步步紧迫黑方，终于兑去黑炮，平息了风波。',
+        '现在的局势：红方车马兵单缺相，黑方车多卒士象全。以后双方残局着法工稳，终成正和} ',
+        '33. 车二进四    车３平４   34. 马六进七    象１退３   35. 车二进二    车４退５   36. 车二平七    卒９进１ ',
+        '37. 马七退六    车４平２   38. 车七退一    卒５进１   39. 车七平八    车２进３   40. 马六退八    卒５进１ ',
+        '41. 马八进七    将４进１   42. 相五退三    卒７进１   43. 马七退九    1/2-1/2'
+      ],
+      expect: true
+    },
+    {
+      // Load PGN with comment before first move
+      fen: '2R6/5k2C/n8/p1p5p/6b2/6p2/9/9/9/4K4 b - - 0 38',
+      pgn: [
+        '[Game "Chinese Chess"]',
+        '[Event "许银川让九子对聂棋圣"]',
+        '[Site "广州"]',
+        '[Date "1999.12.09"]',
+        '[Red "许银川"]',
+        '[Black "聂卫平"]',
+        '[Result "1-0"]',
+        '[FEN "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/9/1C5C1/9/RN2K2NR r - - 0 1"]',
+        '{　　评注：许银川',
+        '　　象棋让九子原属茶余饭后的娱乐，不意今日却被摆上赛桌，更为离奇的是：我的对手竟是在围棋棋坛上叱咤风云的聂大帅。赛前我并不了解对手的实力，但相信以聂棋圣在围棋上所体现出来的过人智慧，必能在棋理上触类旁通。因此我在赛前也作了一些准备，在对局中更是小心翼翼，不敢掉以轻心。',
+        '　　许银川让去５只兵和双士双相，执红先行。棋盘如右图所示。当然，PGN文件里是无法嵌入图片的。}',
+        '',
+        '',
+        '',
+        '1. 炮八平五 炮８平５',
+        '{　　红方首着架中炮必走之着，聂棋圣还架中炮拼兑子力，战术对头。}',
+        '2. 炮五进五 象７进５ 3. 炮二平五',
+        '{　　再架中炮也属正着，如改走马八进七，则象５退７，红方帅府受攻，当然若红方仍再架中炮拼兑，那么失去双炮就难有作用了。}',
+        '马８进７ 4. 马二进三 车９平８ 5. 马八进七 马２进１ 6. 车九平六 车１平２',
+        '{　　聂棋圣仍按常规战法出动主力，却忽略了红方车塞象眼的凶着，应走车１进１。}',
+        '7. 车六进八',
+        '{　　红车疾点象眼，局势霎时有剑拔弩张之感。这种对弈不能以常理揣度，红方只能像程咬金的三板斧一般猛攻一轮，若黑方防守得法则胜负立判。}',
+        '炮２进７',
+        '{　　却说聂棋圣见我来势汹汹，神色顿时颇为凝重，一番思索之后沉下底炮以攻为守，果是身手不凡。此着如改走炮２平３，则帅五平六，炮３进５，车六进一，将５进１，炮五退二，黑方不易驾驭局面。}',
+        '8. 车一进四 炮２平１ 9. 马七进八 炮１退４ 10. 马八退七 炮１进４ 11. 马七进八 车２进２',
+        '{　　其实黑方仍可走炮１退４，红方若续走马八退七，则仍炮１进４不变作和，因黑右车叫将红可车六退九，故不算犯规。}',
+        '12. 炮五平八 炮１退４',
+        '{　　劣着，导致失子，应走车２平３，红方如马八进六，则车３退１，红方无从着手。但有一点必须注意，黑车躲进暗道似与棋理相悖，故聂棋圣弃子以求局势缓和情有可原。}',
+        '13. 炮八进五 炮１平９ 14. 炮八平三 车８进２ 15. 炮三进一 车８进２ 16. 马八进六 炮９平５',
+        '17. 炮三平一 士６进５ 18. 马六进四 车８平５ 19. 帅五平六',
+        '{　　可直接走马四进三叫将再踩中象。}',
+        '车５平６ 20. 马四进三 将５平６ 21. 车六退四 卒５进１ 22. 车六进二 炮５平７',
+        '23. 前马退二 象５进７ 24. 马二退三 卒５进１ 25. 车六平三 卒５平６ 26. 车三进三 将６进１',
+        '27. 后马进二 士５进６ 28. 马二进三 将６平５ 29. 前马进二',
+        '{　　红方有些拖沓，应直接走车三平六立成绝杀。}',
+        '将５进１ 30. 车三平六 士６退５ 31. 马二退三 车６退１ 32. 车六退三',
+        '{　　再擒一车，以下着法仅是聊尽人事而已。}',
+        '车６平７ 33. 车六平三 卒６平７ 34. 车三平五 将５平６ 35. 帅六平五 将６退１',
+        '36. 车五进二 将６退１ 37. 车五进一 将６进１ 38. 车五平七',
+        '{　　至此，聂棋圣认负。与此同时，另一盘围棋对弈我被屠去一条大龙，已无力再战，遂平分秋色，皆大欢喜。}',
+        '1-0'
+      ],
+      expect: true
+    },
+    */
+  ];
+
+  var newline_chars = ['\n', '<br />', '\r\n', 'BLAH'];
+
+  tests.forEach(function(t, i) {
+    newline_chars.forEach(function(newline, j) {
+      it(i + String.fromCharCode(97 + j), function() {
+        var sloppy = t.sloppy || false;
+        var result = xiangqi.load_pgn(t.pgn.join(newline), {sloppy: sloppy,
+          newline_char: newline});
+        var should_pass = t.expect;
+
+        // some tests are expected to fail
+        if (should_pass) {
+
+          // some PGN's tests contain comments which are stripped during parsing,
+          // so we'll need compare the results of the load against a FEN string
+          // (instead of the reconstructed PGN [e.g. test.pgn.join(newline)])
+          if ('fen' in t) {
+            assert(result && xiangqi.fen() === t.fen);
+          } else {
+            assert(result && xiangqi.pgn({ max_width: 45, newline_char: newline }) === t.pgn.join(newline));
+          }
+
+        } else {
+          // this test should fail, so make sure it does
+          assert(result === should_pass);
+        }
+      });
+
+    });
+
+  });
+
+  // special case dirty file containing a mix of \n and \r\n
+  it('dirty pgn', function() {
+    var pgn =
+      '[Event "1982年全国赛"]\n' +
+      '[Date "1982.12.11"]\n' +
+      '[Result "1/2-1/2"]\n' +
+      '[Red "柳大华"]\r\n' +
+      '[Black "杨官璘"]\n' +
+      '[Format "ICCS"]\n' +
+      '\r\n' +
+      '1.  b2e2 b9c7 2.  b0c2 a9b9 3.  a0b0 h9g7\n' +
+      '4.  g3g4 c6c5 5.  b0b6 b7a7 6.  b6c6 a7a8\n' +
+      '7.  h0g2 f9e8 8.  h2i2 a8c8 9.  c6d6 c7b5\n' +
+      '10. i0h0 i9h9 11. c2e1 c5c4 12. d6d5 c8c3\r\n' +
+      '13. h0h6 b5d4 14. e2c2 b9b7 15. c2c4 b7d7\n' +
+      '16. g2f4 h7i7 17. h6g6 h9h2 18. g4g5 c3b3\n' +
+      '19. g5f5 b3b0 20. e1g2 d4f5 21. f0e1 h2h6\n' +
+      '22. d5c5 c9a7 23. g6h6 a7c5 24. h6h3 b0b3\n' +
+      '25. e3e4 b3b4 26. g0e2 b4e4 27. i2i1 i7i8\n' +
+      '28. i1g1 i8g8 29. c4c2 d7f7 30. c2b2 c5a7\n' +
+      '31. h3c3 f7b7 32. b2c2 b7f7 33. c2b2 f7b7\n' +
+      '34. b2a2 b7f7 35. a2a6 f5h4 36. a6b6 g9e7\r\n' +
+      '37. g1f1 h4f3 38. b6b3 f3g1 39. e0f0 g7f5\n' +
+      '40. c3e3 e6e5 41. b3b1 f7f6 42. e3g3 g8f8\n' +
+      '43. f1f2 g1i0 44. g3h3 f8f9 45. b1b5 i0g1\n' +
+      '46. h3h5 a7c5 47. b5e5 e4b4 48. a3a4 b4b3\n' +
+      '49. f2f3 b3b2 50. e1d2 b2b0 51. f0f1 b0d0\n' +
+      '52. a4a5 d0g0 53. f1e1 g0g2 54. f3f5 f9f5\n' +
+      '55. f4g2 f6b6 56. e1f1 f5f9 57. h5h1 b6e6\n' +
+      '58. e5d5 e8f7 59. f1e1 e6b6 60. a5b5 b6a6\r\n' +
+      '61. b5a5 a6b6 62. a5b5 b6a6 63. b5a5 1/2-1/2';
+
+    var result = xiangqi.load_pgn(pgn, { newline_char: '\r?\n' });
+    assert(result);
+
+    assert(xiangqi.load_pgn(pgn));
+    assert(xiangqi.pgn().match(/^\[\[/) === null);
+  });
+
+});
+
 
 describe('Make Move', function() {
 

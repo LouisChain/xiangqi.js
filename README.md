@@ -306,43 +306,56 @@ The method will return `true` if the PGN was parsed successfully, otherwise `fal
 
 ```js
 var xiangqi = new Xiangqi();
-pgn = ['[Event "Casual Game"]',
-       '[Site "Berlin GER"]',
-       '[Date "1852.??.??"]',
-       '[EventDate "?"]',
-       '[Round "?"]',
-       '[Result "1-0"]',
-       '[White "Adolf Anderssen"]',
-       '[Black "Jean Dufresne"]',
-       '[ECO "C52"]',
-       '[WhiteElo "?"]',
-       '[BlackElo "?"]',
-       '[PlyCount "47"]',
+pgn = ['[Game "Chinese Chess"]',
+       '[Event "1982年全国赛"]',
+       '[Date "1982.12.11"]',
+       '[Red "柳大华"]',
+       '[Black "杨官璘"]',
+       '[Result "1/2-1/2"]',
+       '[Format "ICCS"]',
        '',
-       '1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.b4 Bxb4 5.c3 Ba5 6.d4 exd4 7.O-O',
-       'd3 8.Qb3 Qf6 9.e5 Qg6 10.Re1 Nge7 11.Ba3 b5 12.Qxb5 Rb8 13.Qa4',
-       'Bb6 14.Nbd2 Bb7 15.Ne4 Qf5 16.Bxd3 Qh5 17.Nf6+ gxf6 18.exf6',
-       'Rg8 19.Rad1 Qxf3 20.Rxe7+ Nxe7 21.Qxd7+ Kxd7 22.Bf5+ Ke8',
-       '23.Bd7+ Kf8 24.Bxe7# 1-0'];
+       '1. b2e2 b9c7 2. b0c2 a9b9 3. a0b0 h9g7',
+       '4. g3g4 c6c5 5. b0b6 b7a7 6. b6c6 a7a8',
+       '7. h0g2 f9e8 8. h2i2 a8c8 9. c6d6 c7b5',
+       '10. i0h0 i9h9 11. c2e1 c5c4 12. d6d5 c8c3',
+       '13. h0h6 b5d4 14. e2c2 b9b7 15. c2c4 b7d7',
+       '16. g2f4 h7i7 17. h6g6 h9h2 18. g4g5 c3b3',
+       '19. g5f5 b3b0 20. e1g2 d4f5 21. f0e1 h2h6',
+       '22. d5c5 c9a7 23. g6h6 a7c5 24. h6h3 b0b3',
+       '25. e3e4 b3b4 26. g0e2 b4e4 27. i2i1 i7i8',
+       '28. i1g1 i8g8 29. c4c2 d7f7 30. c2b2 c5a7',
+       '31. h3c3 f7b7 32. b2c2 b7f7 33. c2b2 f7b7',
+       '34. b2a2 b7f7 35. a2a6 f5h4 36. a6b6 g9e7',
+       '37. g1f1 h4f3 38. b6b3 f3g1 39. e0f0 g7f5',
+       '40. c3e3 e6e5 41. b3b1 f7f6 42. e3g3 g8f8',
+       '43. f1f2 g1i0 44. g3h3 f8f9 45. b1b5 i0g1',
+       '46. h3h5 a7c5 47. b5e5 e4b4 48. a3a4 b4b3',
+       '49. f2f3 b3b2 50. e1d2 b2b0 51. f0f1 b0d0',
+       '52. a4a5 d0g0 53. f1e1 g0g2 54. f3f5 f9f5',
+       '55. f4g2 f6b6 56. e1f1 f5f9 57. h5h1 b6e6',
+       '58. e5d5 e8f7 59. f1e1 e6b6 60. a5b5 b6a6',
+       '61. b5a5 a6b6 62. a5b5 b6a6 63. b5a5 1/2-1/2'];
 
 xiangqi.load_pgn(pgn.join('\n'));
 // -> true
 
 xiangqi.fen();
-// -> 1r3kr1/pbpBBp1p/1b3P2/8/8/2P2q2/P4PPP/3R2K1 b - - 0 24
+// -> 3akc3/9/4ba3/r7p/P1bC5/9/8P/3AB1N2/4K1nR1/2B6 b - - 16 63
 
 xiangqi.ascii();
-// -> '  +------------------------+
-//     8 | .  r  .  .  .  k  r  . |
-//     7 | p  b  p  B  B  p  .  p |
-//     6 | .  b  .  .  .  P  .  . |
-//     5 | .  .  .  .  .  .  .  . |
-//     4 | .  .  .  .  .  .  .  . |
-//     3 | .  .  P  .  .  q  .  . |
-//     2 | P  .  .  .  .  P  P  P |
-//     1 | .  .  .  R  .  .  K  . |
-//       +------------------------+
-//         a  b  c  d  e  f  g  h'
+// -> '   +---------------------------+
+//      9 | .  .  .  a  k  c  .  .  . |
+//      8 | .  .  .  .  .  .  .  .  . |
+//      7 | .  .  .  .  b  a  .  .  . |
+//      6 | r  .  .  .  .  .  .  .  p |
+//      5 | P  .  b  C  .  .  .  .  . |
+//      4 | .  .  .  .  .  .  .  .  . |
+//      3 | .  .  .  .  .  .  .  .  P |
+//      2 | .  .  .  A  B  .  N  .  . |
+//      1 | .  .  .  .  K  .  n  R  . |
+//      0 | .  .  B  .  .  .  .  .  . |
+//        +---------------------------+
+//          a  b  c  d  e  f  g  h  i
 
 
 // Parse non-standard move formats and unusual line separators
