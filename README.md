@@ -494,14 +494,14 @@ max width and/or a newline character settings.
 
 ```js
 var xiangqi = new Xiangqi();
-xiangqi.header('White', 'Plunky', 'Black', 'Plinkie');
-xiangqi.move('e4');
-xiangqi.move('e5');
-xiangqi.move('Nc3');
-xiangqi.move('Nc6');
+xiangqi.header('Red', '吕钦', 'Black', '许银川');
+xiangqi.move('h2e2');
+xiangqi.move('h9g7');
+xiangqi.move('h0g2');
+xiangqi.move('i9h9');
 
 xiangqi.pgn({ max_width: 5, newline_char: '<br />' });
-// -> '[White "Plunky"]<br />[Black "Plinkie"]<br /><br />1. e4 e5<br />2. Nc3 Nc6'
+// -> '[Red "吕钦"]<br />[Black "许银川"]<br /><br />1. h2e2 h9g7<br />2. h0g2 i9h9'
 ```
 
 ### .put(piece, square)
