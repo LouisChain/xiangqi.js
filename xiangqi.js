@@ -717,6 +717,60 @@ var Xiangqi = function(fen) {
     return repetition;
   }
 
+  function get_repetition() {
+    let repetition = 0;
+    let p1 = {};
+    let p2 = {};
+    let i = history.length - 1;
+    let j = 0;
+    while (i >= 0) {
+      let move = history[i].move;
+      let sum = move.from + move.to;
+      if (i % 2 === 0) {
+        if (p1.color) {
+          if (p1.piece === move.piece && p1.sum === sum) {
+            p1 = Object.assign(p1, move);
+            p1.sum = sum;
+            p1.repeat += 1;
+          } else {
+            break;
+          }
+        } else {
+          p1 = Object.assign({}, move);
+          p1.sum = sum;
+          p1.repeat = 0;
+        }
+      } else {
+        if (p2.color) {
+          if (p2.piece === move.piece && p2.sum === sum) {
+            p2 = Object.assign(p2, move);
+            p2.sum = sum;
+            p2.repeat += 1;
+          } else {
+            break;
+          }
+        } else {
+          p2 = Object.assign({}, move);
+          p2.sum = sum;
+          p2.repeat = 0;
+        }
+      }
+
+      if (j % 2 !== 0) {
+        if (p1.repeat === p2.repeat) {
+          repetition++;
+        } else {
+          break;
+        }
+      }
+
+      i--;
+      j++;
+    }
+
+    return repetition;
+  }
+
   function push(move) {
     history.push({
       move: move,
@@ -1133,6 +1187,10 @@ var Xiangqi = function(fen) {
 
     in_threefold_repetition: function() {
       return in_threefold_repetition();
+    },
+
+    get_repetition: function() {
+      return get_repetition();
     },
 
     game_over: function() {
