@@ -771,6 +771,137 @@ var Xiangqi = function(fen) {
     return repetition;
   }
 
+  /**
+   * Every new move push to history must be checked right away, we call as check CONTINUOUSLY CATCH NON PROTECTOR PIECE CCNPP
+   * NOTE: the flow we do below may take cost
+   * Exception:
+   * 0. If one or more piece catch continuously a piece without protector will consider as break rule --> done
+   * 1. A king or pawn catch a piece not consider as a CCNPP --> done
+   * 2. A move catch a PAWN not cross river yet is not a CCNPP --> not yet
+   * 3. A move catch a piece then that piece can eat the catcher is not a CCNPP --> done
+   * 4. Can catch a Rook continuously --> done
+   */
+  function get_repeat_catch() {
+    let repetition = 0;
+    let undoes = [];
+    let moveToCheck = {};
+    let moveCatching = [];
+    while (history.length) {
+      let move = history[history.length - 1];
+      if (move.move.piece === KING || move.move.piece === PAWN) break;
+      let square = algebraic(move.move.to);
+      let opponent = turn !== move.turn;// or true
+      let moveList = moves({ square, opponent, verbose: true });
+      for (let k = 0; k < moveList.length; k++) {
+        if (moveList[k].captured && (moveList[k].piece !== KING || moveList[k].piece !== ROOK)) {
+          let inProtected = in_protected(moveList[k].to);
+          if (!inProtected) {
+            // check if can eat against the move (exchange piece)
+            let moveList2 = moves({ square: moveList[k].to, opponent: false, verbose: true });
+            let isExchange = false;
+            for (let h = 0; h < moveList2.length; h++) {
+              if (moveList2[h].captured && moveList2[h].to === moveList[k].from) {
+                isExchange = true;
+                break;
+              }
+            }
+            if (!isExchange) {
+              moveCatching.push(moveList[k]);
+            } else {
+              break;
+            }
+          }
+        }
+      }
+      undoes.push(undo_move());
+      if (history.length) {
+        moveToCheck = Object.assign(moveToCheck, history[history.length - 1]);
+        undoes.push(undo_move());
+      }
+      if (moveCatching.length <= 0) {
+        break;
+      } else {
+        let isOldCatch = is_old_catch(moveCatching, moveToCheck);
+        if (isOldCatch) {
+          repetition++;
+        } else {
+          break;
+        }
+      }
+    }
+    while (true) {
+      if (!undoes.length) {
+        break;
+      }
+      make_move(undoes.pop());
+    }
+    return repetition;
+  }
+
+  /**
+   * The current turn must be the square's turn
+   */
+  function in_protected(square) {
+    let piece = remove(square);
+    if (piece) {
+      let opponent = turn !== (piece.color);// or false
+      let ms = moves({ opponent });
+      let n = ms.length;
+      if (n > 0) {
+        for (let i = 0; i < n; i++) {
+          if (ms[i].substr(2) === square) {
+            put(piece, square);
+            return square;
+          }
+        }
+      }
+      put(piece, square);
+    }
+    return null;
+  }
+
+  /** Check if moveCatching contains moveToCheck
+   * @param moveCatching is a list of moves in the past that catch some moves
+   * @param moveToCheck if this move is insde moveCatching mean this is the old catch move*/
+  function is_old_catch(moveCatching, moveToCheck) {
+    for (let i = 0; i < moveCatching.length; i++) {
+      let catcher = moveCatching[i];
+      let from = algebraic(moveToCheck.move.from);
+      let to = algebraic(moveToCheck.move.to);
+      if (moveToCheck.move.piece === catcher.captured &&
+        (from === catcher.to || to === catcher.to)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function moves(options) {
+    /* The internal representation of a xiangqi move is in 0x9a format, and
+       * not meant to be human-readable.  The code below converts the 0x9a
+       * square coordinates to algebraic coordinates.  It also prunes an
+       * unnecessary move keys resulting from a verbose call.
+       */
+
+    var ugly_moves = generate_moves(options);
+    var moves = [];
+
+    for (var i = 0, len = ugly_moves.length; i < len; i++) {
+      // does the user want a full move object (most likely not), or just ICCS
+      if (
+        typeof options !== 'undefined' &&
+        'verbose' in options &&
+        options.verbose
+      ) {
+        moves.push(make_pretty(ugly_moves[i]));
+      } else {
+        moves.push(move_to_iccs(ugly_moves[i], false));
+      }
+    }
+
+    return moves;
+  }
+
   function push(move) {
     history.push({
       move: move,
@@ -1135,29 +1266,7 @@ var Xiangqi = function(fen) {
     },
 
     moves: function(options) {
-      /* The internal representation of a xiangqi move is in 0x9a format, and
-       * not meant to be human-readable.  The code below converts the 0x9a
-       * square coordinates to algebraic coordinates.  It also prunes an
-       * unnecessary move keys resulting from a verbose call.
-       */
-
-      var ugly_moves = generate_moves(options);
-      var moves = [];
-
-      for (var i = 0, len = ugly_moves.length; i < len; i++) {
-        // does the user want a full move object (most likely not), or just ICCS
-        if (
-          typeof options !== 'undefined' &&
-          'verbose' in options &&
-          options.verbose
-        ) {
-          moves.push(make_pretty(ugly_moves[i]));
-        } else {
-          moves.push(move_to_iccs(ugly_moves[i], false));
-        }
-      }
-
-      return moves;
+      return moves(options);
     },
 
     in_check: function() {
@@ -1191,6 +1300,10 @@ var Xiangqi = function(fen) {
 
     get_repetition: function() {
       return get_repetition();
+    },
+
+    get_repeat_catch: function () {
+      return get_repeat_catch();
     },
 
     game_over: function() {

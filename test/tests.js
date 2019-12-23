@@ -33,6 +33,56 @@ describe('Perft', function() {
 });
 */
 
+describe('GetRepeatCatchNonProtector', function() {
+
+  var repetition = [
+    {pgn: `[FEN "2bak4/4a4/4br3/9/9/9/4R4/1p2B2p1/4A4/2BAK4 r - - 1 2"]
+
+2. e3h3 h2g2 3. h3b3 b2c2 4. b3g3 g2h2 5. g3c3 c2b2 6. c3h3`, repeat: 0},// Catch two pieces continuously
+    {pgn: `[FEN "2bak4/4a4/4br3/9/9/9/4R4/1p2B2p1/4A4/2BAK4 r - - 1 2"]
+
+2. e3h3 h2g2 3. h3g3 g2h2 4. g3h3 h2g2 5. h3g3 g2h2 6. g3h3 h2g2 7. h3g3`, repeat: 6},
+    {pgn: `1. h2e2 h9g7 2. h0g2 i9h9 3. i0h0 g6g5 4. c3c4 b9c7 5. h0h6 h7i7 6. h6g6 i7i8 7. e3e4 d9e8 8. e4e5 i8g8 9. g6f6 g7h5 10. f6g6 h5g7 11. g6f6 g7h5 12. f6g6`, repeat: 0},
+    {pgn: `[FEN "4k4/1R7/6r2/6p2/9/9/9/9/4A4/4K4 r - - 1 2"]
+
+2. b8b6 g6g5 3. b6b5 g5g4 4. b5b4 g4g3 5. b4b3 g3g2 6. b3b2`, repeat: 0},// Catch a piece with protector
+    {pgn: `[FEN "4k4/9/1N7/6p2/9/2p6/9/9/4A4/4K4 r - - 1 2"]
+
+2. b7d6 c4c3 3. d6e4 c3d3 4. e4c5 d3c3 5. c5a4 c3b3 6. a4c5 b3c3 7. c5e4`, repeat: 6},
+    {pgn: `[FEN "4k4/9/9/9/9/p8/C8/9/4A4/4K4 r - - 1 2"]
+
+2. a3b3 a4b4 3. b3c3 b4c4 4. c3d3 c4d4 5. d3c3 d4c4 6. c3b3 c4b4`, repeat: 0}, // Pawn catch continuously
+    {pgn: `[FEN "3rk3n/9/9/4n4/9/1R7/1R7/9/4A4/4K4 r - - 1 2"]
+
+2. b4b6 e6f4 3. b3b4 f4e2 4. b4b2 e2g3 5. b6g6 g3f1 6. g6f6 f1h0 7. b2h2`, repeat:6},
+    {pgn: `[FEN "2ba1kr2/4a4/4br3/9/9/1R7/4c4/4B2R1/4A4/1NBAK4 r - - 1 2"]
+
+2. b0c2 e3e5 3. b4e4 e5i5 4. h2i2 i5h5 5. i2h2 h5i5 6. e4i4 i5e5 7. h2h5 e5e6 8. c2d4 e6e4 9. h5h4`, repeat: 8},// need check this again coz at move 9th, cannon can eat rook i4 so should be repeat 7
+    {pgn: `[FEN "2ba1k3/4a4/4b4/9/9/9/4r1r2/4B4/4A2RR/2BAK4 r - - 1 2"]
+
+2. h1g1 g3h3 3. i1h1 h3i3 4. h1i1 i3h3 5. g1h1 h3g3 6. h1g1 g3h3 7. i1h1`, repeat: 0},
+    {pgn: `[FEN "2ba1k3/4a4/4b4/9/9/9/5r2r/4B4/4A1R1R/2BAK4 r - - 1 2"]
+
+2. i1h1 i3h3 3. h1i1 h3i3 4. g1h1 i3h3 5. h1g1 f3g3`, repeat: 0},
+    {pgn: `[FEN "2bak4/4a4/1P2b4/7P1/3r5/9/9/4BR3/4A4/2BAK4 r - - 1 2"]
+
+2. h6h7 d5h5 3. h7g7 h5b5 4. b7c7 b5c5 5. c7b7 c5g5 6. g7h7 g5b5 7. b7c7 b5h5`, repeat: 0},
+    {pgn: `[FEN "2bak4/4a4/1P2b4/7P1/3r5/9/9/4BR3/4A4/2BAK4 r - - 1 2"]
+
+2. h6h7 d5h5 3. h7g7 h5g5 4. g7h7 g5h5 5. h7g7 h5g5 6. g7h7 g5h5 7. h7g7 h5g5`, repeat: 6}
+  ];
+
+  repetition.forEach(function(item) {
+    let xiangqi = new Xiangqi();
+    xiangqi.load_pgn(item.pgn);
+
+    it(`item: ${item.pgn} \n`, function() {
+      assert(xiangqi.get_repeat_catch() === item.repeat);
+    });
+  });
+
+});
+
 describe('Single Square Move Generation', function() {
 
   var positions = [
