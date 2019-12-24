@@ -717,6 +717,15 @@ var Xiangqi = function(fen) {
     return repetition;
   }
 
+  function redo(undoes) {
+    while (true) {
+      if (!undoes.length) {
+        break;
+      }
+      make_move(undoes.pop());
+    }
+  }
+
   function get_repetition() {
     let repetition = 0;
     let p1 = {};
@@ -769,6 +778,58 @@ var Xiangqi = function(fen) {
     }
 
     return repetition;
+  }
+
+  /**
+   * Get number of check continuously right after the move push to history
+   * We allow check continuously with condition: if num check > 5 then do not allow one piece persist check move more than 2 times for example : the ROOK d8d9 then d9d8 => lose
+   * This rule will allow to solve posture 10 20 30 40...60 moves continuously check
+   * Persist >=2 will be loser
+   * @returns {{repeat: number, persist: number}}
+   */
+  function get_repeat_check() {
+    let result = {
+      repeat: 0,
+      persist: 0
+    };
+    let undoes = [];
+    let oldChecker = {};
+    let continueCount = true;
+    while (history.length) {
+      if (in_check()) {
+        result.repeat += 1;
+      } else {
+        break;
+      }
+      if (history.length) undoes.push(undo_move());
+      if (history.length) undoes.push(undo_move());
+    }
+    redo(undoes);
+    if (result.repeat > 5) {
+      let temp = result.repeat;
+      while (history.length && temp > 5) {
+        if (in_check()) {
+          let checker = Object.assign({}, history[history.length - 1].move);
+          if (oldChecker.from) {
+            if (continueCount && oldChecker.piece === checker.piece && (oldChecker.from + oldChecker.to === checker.from + checker.to)) {
+              result.persist += 1;
+            } else {
+              continueCount = false;
+            }
+          } else {
+            if (continueCount) {
+              result.persist += 1;
+            }
+          }
+          oldChecker = checker;
+        }
+        if (history.length) undoes.push(undo_move());
+        if (history.length) undoes.push(undo_move());
+        temp--;
+      }
+    }
+    redo(undoes);
+    return result;
   }
 
   /**
@@ -829,12 +890,7 @@ var Xiangqi = function(fen) {
         }
       }
     }
-    while (true) {
-      if (!undoes.length) {
-        break;
-      }
-      make_move(undoes.pop());
-    }
+    redo(undoes);
     return repetition;
   }
 
@@ -1304,6 +1360,10 @@ var Xiangqi = function(fen) {
 
     get_repeat_catch: function () {
       return get_repeat_catch();
+    },
+
+    get_repeat_check: function() {
+      return get_repeat_check();
     },
 
     game_over: function() {

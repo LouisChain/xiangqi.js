@@ -33,7 +33,89 @@ describe('Perft', function() {
 });
 */
 
-describe('GetRepeatCatchNonProtector', function() {
+describe('Get Repetition', function() {
+  let repetition = [
+    {pgn: `[FEN "5k3/9/9/9/9/7R1/4cr3/4B2R1/4A4/2BAK2C1 r - - 1 2"]
+
+2. h4h9 f9f8 3. h9h8 f8f9 4. h8h9 f9f8 5. h2h8 f8f7 6. h8h7 f7f8 7. h9h8 f8f9 8. h8h9 f9f8 9. h7h8 f8f7 10. h8h7 f7f8 11. h9h8`, repeat: 1},
+    {pgn: `[FEN "5k3/9/9/9/9/7R1/4cr3/4B2R1/4A4/2BAK2C1 r - - 1 2"]
+
+2. h4h9 f9f8 3. h9h8 f8f9 4. h8h9 f9f8 5. h2h8 f8f7 6. h8h7 f7f8 7. h9h8 f8f9 8. h8h9`, repeat: 1},
+    {pgn: `1. h2e2 h9g7 2. h0g2 i9h9 3. i0h0 g6g5 4. h0h6 b9c7 5. c3c4 h7i7 6. h6g6 i7i8 7. e3e4 d9e8 8. e4e5 i8g8 9. g6f6 g7h5 10. f6g6 h5g7 11. g6f6 g7h5 12. f6g6 h5g7 13. g6f6 g7h5 14. f6g6 h5g7`, repeat: 6},
+  ];
+
+  repetition.forEach(function(item) {
+    let xiangqi = new Xiangqi();
+    xiangqi.load_pgn(item.pgn);
+
+    it(`item: ${item.pgn} \n`, function() {
+      assert(xiangqi.get_repetition() === item.repeat);
+    });
+  });
+
+});
+
+describe('Get Repeat Check', function() {
+  let repetition = [
+    {pgn: `[FEN "4k4/8C/9/p8/9/9/3R5/3RB4/r3r4/3K5 r - - 0 1"]
+
+2.d3d9 e9e8 3.d2d8 e8e7 4.d8d7 e7e8 5.d9d8 e8e9 6.d8d9 e9e8 7.d9d8 e8e9 8.d7e7 e9f9 9.d8d9 f9f8 10.d9d8`, repeat: 9, persist: 2},
+    {pgn: `[FEN "4k4/8C/9/p8/9/9/3R5/3RB4/r3r4/3K5 r - - 0 1"]
+
+2.d3d9 e9e8 3.d2d8 e8e7 4.d8d7 e7e8 5.d9d8 e8e9 6.d8d9 e9e8 7.d9d8 e8e9 8.d7e7 e9f9 9.d8d9 `, repeat: 8, persist: 1},
+    {pgn: `[FEN "4k4/8C/9/p8/9/9/3R5/3RB4/r3r4/3K5 r - - 0 1"]
+
+2.d3d9 e9e8 3.d2d8 e8e7 4.d8d7 e7e8 5.d9d8 e8e9 6.d8d9 e9e8 7.d9d8 e8e9 8.d7e7`, repeat: 7, persist: 1},
+    {pgn: `[FEN "4k4/8C/9/p8/9/9/3R5/3RB4/r3r4/3K5 r - - 0 1"]
+
+2.d3d9 e9e8 3.d2d8 e8e7 4.d8d7 e7e8 5.d9d8 e8e9 6.d8d9 e9e8 7.d9d8 e8e9 8.d7e7 e9f9 9.e7f7`, repeat: 8, persist: 1},
+    {pgn: `[FEN "4k4/8C/9/p8/9/9/3R5/3RB4/r3r4/3K5 r - - 0 1"]
+
+2.d3d9 e9e8 3.d2d8 e8e7 4.d8d7 e7e8 5.d9d8 e8e9 6.d8d9 e9e8 7.d9d8`, repeat: 6, persist: 1},
+    {pgn: `[FEN "4k4/8C/9/p8/9/9/3R5/3RB4/r3r4/3K5 r - - 0 1"]
+
+2.d3d9 e9e8 3.d2d8 e8e7 4.d8d7 e7e8 5.d9d8 e8e9 6.d8d9 e9e8 7.d7d8 e8e7 8.d9e9 e7f7 9.e9f9 f7e7 10.d8d7 e7e8 11.d7d8`, repeat: 10, persist: 2},
+    {pgn: `[FEN "4k4/4a4/4P4/1c1P1PNCR/rN7/1r5n1/3n5/9/4p4/5K3 r - - 2 1"]
+
+2.i6i9 e8f9 3.h6h9 f9e8 4.h9h8 e8f9 5.e7e8 e9e8 6.g6f8 e8e9 7.f8d7 e9e8 8.d7c9 e8e9 9.h8h9 f9e8 10.h9h5 e8f9 11.c9d7 e9d9 12.h5h9 d9d8 13.i9i8 f9e8 14.h9h8 e8d7 15.h8h5 d8d9 16.i8i9 d9d8 17.d6d7 d8e8 18.d7e7 e8d8 19.e7e8 d8e8 20.b5d6 e8d8 21.d6f7 d8e8 22.i9i8 e8e7 23.h5h7`, repeat: 22, persist: 1},
+    {pgn: `[FEN "5kN2/1R6C/b1n1b1nr1/9/9/4cC3/9/4pp3/6p2/3rcK1R1 r - - 2 1"]
+
+2.g9f7 g7f5 3.b8f8 f9e9 4.f8d8 e9f9 5.f7g9 f5g7 6.i8i9 g7h9 7.g9h7 e7g9 8.h7f6 f9e9 9.f6g8 e9f9 10.d8f8 f9e9 11.f8e8 e9d9 12.e8e9 d9d8 13.i9i8 e4e8 14.g8f6 e8e6 15.h0h8 d8d7 16.h8h7 h9g7 17.h7g7 g9e7 18.g7e7 d7d8 19.f6e8`, repeat: 18, persist: 1},
+    {pgn: `[FEN "3a1k3/4a4/9/1C3N3/9/9/c8/3A5/4A1R2/1n1K2c1r r - - 1 2"]
+
+2. b6b9 f9f8 3. f6h7 f8f7 4. g1g7 f7f8 5. g7g3 f8f7 6. g3f3 f7e7 7. f3e3 e7f7 8. h7g5 f7f8 9. e3f3 e8f7 10. g5e6 f8e8 11. e6c7 e8f8 12. c7d9 f8e8 13. f3e3 e8d8 14. e3d3 d8e8 15. d9c7 e8f8 16. d3d8 f7e8 17.d8e8 f8f9 18.c7d9`, repeat: 17, persist: 1},
+    {pgn: `[FEN "5k3/9/9/9/9/7R1/4cr3/4B2R1/4A4/2BAK2C1 r - - 1 2"]
+
+2. h4h9 f9f8 3. h9h8 f8f9 4. h8h9 f9f8 5. h2h8 f8f7 6. h8h7`, repeat: 5, persist: 0},
+    {pgn: `[FEN "5k3/9/9/9/9/7R1/4cr3/4B2R1/4A4/2BAK2C1 r - - 1 2"]
+
+2. h4h9 f9f8 3. h9h8 f8f9 4. h8h9 f9f8 5. h2h8 f8f7 6. h8h7 f7f8 7. h9h8 f8f9 8. h8h9`, repeat: 7, persist: 2},
+    {pgn: `[FEN "5k3/9/9/9/9/7R1/4cr3/4B2R1/4A4/2BAK2C1 r - - 1 2"]
+
+2. h4h9 f9f8 3. h9h8 f8f9 4. h8h9 f9f8 5. h2h8 f8f7 6. h8h7 f7f8 7. h9h8 f8f9 8. h8h9 f9f8 9. h7h8 f8f7 10. h8h7 f7f8 11. h9h8`, repeat: 10, persist: 1},
+    {pgn: `[FEN "3a1a3/3k5/4b4/9/9/1N4R2/2p3C2/5Ar1r/4AK3/9 r - - 1 2"]
+
+2. b4c6 d8e8 3. g3e3 e7c9 4. c6e5 c9e7 5. e5g6 e7c9 6. g4e4 e8d8 7. e4d4 d8e8 8. g6e5 c9e7 9. e5d7 e7g9 10. d7f6 e8e9 11. f6e4 f9e8 12. e4d6 e8d7 13. d6f7 e9e8 14. f7e5 g9e7 15. e5d7 e7c9 16. d7e5 c9e7 17. e5c6 e7c5 18. d4d8 e8e9 19. c6e7 d9e8 20. d8e8 e9d9 21. e8e9 d9d8 22. e9d9`, repeat: 21, persist: 1},
+    {pgn: `[FEN "C2k1abr1/9/1R1c1a2c/9/3N5/7n1/9/4B4/4p4/2B2K3 r - - 1 2"]
+
+2. b7b9 d9d8 3. b9b8 d8d9 4. d5c7 d9e9 5. c7b9 d7d9 6. b9d8 e9e8 7. d8b7 e8e7 8. a9a7 d9d7 9. b7d6 d7d9 10. b8b7 d9d7 11. b7b3 e7e8 12. b3b8 e8e9 13. d6f7 e9d9 14. b8b9`, repeat: 13, persist: 1}
+];
+
+  repetition.forEach(function(item) {
+    let xiangqi = new Xiangqi();
+    xiangqi.load_pgn(item.pgn);
+
+    it(`item: ${item.pgn} \n`, function() {
+      let repeatCheck = xiangqi.get_repeat_check();
+      console.log(repeatCheck.persist + '\n');
+      assert(repeatCheck.repeat === item.repeat);
+      assert(repeatCheck.persist === item.persist);
+    });
+  });
+
+});
+
+describe('Get Repeat Catch Non Protector', function() {
 
   var repetition = [
     {pgn: `[FEN "2bak4/4a4/4br3/9/9/9/4R4/1p2B2p1/4A4/2BAK4 r - - 1 2"]
