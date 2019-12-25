@@ -781,6 +781,21 @@ var Xiangqi = function(fen) {
   }
 
   /**
+   * Every move push to history must be checked right away
+   * @returns {boolean}
+   */
+  function is_previous_check() {
+    let result = false;
+    let undoes = [];
+    if (history.length) {
+      undoes.push(undo_move());
+      result = in_check();
+    }
+    redo(undoes);
+    return result;
+  }
+
+  /**
    * Get number of check continuously right after the move push to history
    * We allow check continuously with condition: if num check > 5 then do not allow one piece persist check move more than 2 times for example : the ROOK d8d9 then d9d8 => lose
    * This rule will allow to solve posture 10 20 30 40...60 moves continuously check
@@ -879,7 +894,7 @@ var Xiangqi = function(fen) {
         moveToCheck = Object.assign(moveToCheck, history[history.length - 1]);
         undoes.push(undo_move());
       }
-      if (moveCatching.length <= 0) {
+      if (moveCatching.length <= 0 || !moveToCheck.move) {
         break;
       } else {
         let isOldCatch = is_old_catch(moveCatching, moveToCheck);
@@ -1364,6 +1379,14 @@ var Xiangqi = function(fen) {
 
     get_repeat_check: function() {
       return get_repeat_check();
+    },
+
+    is_previous_check: function() {
+      return is_previous_check();
+    },
+
+    get_half_moves: function() {
+      return half_moves;
     },
 
     game_over: function() {
