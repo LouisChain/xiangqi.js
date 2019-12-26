@@ -118,6 +118,24 @@ describe('Get Repeat Check', function() {
 describe('Get Repeat Catch Non Protector', function() {
 
   var repetition = [
+    {pgn: `[FEN "2ba1k1r1/4a4/4b2r1/9/4c4/8R/6R2/4B4/4A4/2BAKN3 r - - 0 1"]
+
+2.i4i5 e5e4 3.i5i4 h7h6 4.g3g4`, repeat: 0},
+    {pgn: `[FEN "2ba1k1r1/4a4/4b2r1/9/4c4/8R/6R2/4B4/4A4/2BAKN3 r - - 0 1"]
+
+2.i4i5 e5e6 3.i5i6 e6e4 4.g3g4`, repeat: 3},
+    {pgn: `[FEN "2ba1k1r1/4a4/4b2r1/9/4c4/8R/6R2/4B4/4A4/2BAKN3 r - - 0 1"]
+
+2.i4i5 e5e6 3.i5i6 e6e4 4.g3g4 e4e5 5.g4g5`, repeat: 0},
+    {pgn: `[FEN "2ba1kr2/4a4/4br3/9/9/1R7/4c4/4B2R1/4A4/1NBAK4 r - - 1 2"]
+
+2. b0c2 e3e5 3. b4e4 e5i5 4. h2i2 i5h5 5. i2h2 h5i5 6. e4i4 i5e5 7. h2h5 e5e6 8. c2d4`, repeat: 5},
+    {pgn: `[FEN "4k4/4a4/4P4/1c1P1PNCR/rN7/1r5n1/3n5/9/4p4/5K3 r - - 2 1"]
+
+1. d6d7 a5b5 2. d7d8 b5f5 3. g6f4 f5b5 4. f4h5 b4c4 5. h6g6 c4d4 6. g6g1 d4b4 7. g1f1 h4i2 8. h5f4 b4c4 9. f4g2 c4b4 10. g2h4 i2g1 11. f6f7 b4f4 12. f7f8 f4f5 13. d8c8 f5c5 14. c8d8 c5d5 15. d8c8 d5h5 16. c8d8 h5f5 17. f8g8 f5g5 18. g8f8 g5d5 19. i6i1 d5f5 20. f8g8 b6b9 21. d8c8 f5c5 22. c8d8 c5d5 23. d8c8 d5c5 24. c8d8 c5d5 25. d8c8 d5g5 26. g8h8 g5h5 27. h8g8 h5g5 28. g8f8 g5f5 29. f8g8 f5h5 30. c8d8 h5d5 31. h4g2 d5f5 32. f1f3 f5f6 33. f3f5 f6f8 34. f5f1 f8f6 35. d8c8 f6c6`, repeat: 1},
+    {pgn: `[FEN "3k5/9/9/9/9/9/9/9/6cc1/4K3R r - - 0 1"]
+
+1. i0h0 h1i1 2. h0i0 i1h1 3. i0h0 h1i1 4. h0i0 i1h1 5. i0h0 h1i1 6. h0i0`, repeat: 6},
     {pgn: `[FEN "2bak4/4a4/4br3/9/9/9/4R4/1p2B2p1/4A4/2BAK4 r - - 1 2"]
 
 2. e3h3 h2g2 3. h3b3 b2c2 4. b3g3 g2h2 5. g3c3 c2b2 6. c3h3`, repeat: 0},// Catch two pieces continuously
@@ -139,7 +157,7 @@ describe('Get Repeat Catch Non Protector', function() {
 2. b4b6 e6f4 3. b3b4 f4e2 4. b4b2 e2g3 5. b6g6 g3f1 6. g6f6 f1h0 7. b2h2`, repeat:6},
     {pgn: `[FEN "2ba1kr2/4a4/4br3/9/9/1R7/4c4/4B2R1/4A4/1NBAK4 r - - 1 2"]
 
-2. b0c2 e3e5 3. b4e4 e5i5 4. h2i2 i5h5 5. i2h2 h5i5 6. e4i4 i5e5 7. h2h5 e5e6 8. c2d4 e6e4 9. h5h4`, repeat: 8},// need check this again coz at move 9th, cannon can eat rook i4 so should be repeat 7
+2. b0c2 e3e5 3. b4e4 e5i5 4. h2i2 i5h5 5. i2h2 h5i5 6. e4i4 i5e5 7. h2h5 e5e6 8. c2d4 e6e4 9. h5h4`, repeat: 0},// need check this again coz at move 9th, cannon can eat rook i4 so should be repeat 7
     {pgn: `[FEN "2ba1k3/4a4/4b4/9/9/9/4r1r2/4B4/4A2RR/2BAK4 r - - 1 2"]
 
 2. h1g1 g3h3 3. i1h1 h3i3 4. h1i1 i3h3 5. g1h1 h3g3 6. h1g1 g3h3 7. i1h1`, repeat: 0},

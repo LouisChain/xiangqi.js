@@ -861,10 +861,12 @@ var Xiangqi = function(fen) {
     let repetition = 0;
     let undoes = [];
     let moveToCheck = {};
+    let prvmtCheck = {}
     let moveCatching = [];
     while (history.length) {
       let move = history[history.length - 1];
       if (move.move.piece === KING || move.move.piece === PAWN) break;
+      if (is_exchange_move(move)) break;
       let square = algebraic(move.move.to);
       let opponent = turn !== move.turn;// or true
       let moveList = moves({ square, opponent, verbose: true });
@@ -872,32 +874,24 @@ var Xiangqi = function(fen) {
         if (moveList[k].captured && (moveList[k].piece !== KING || moveList[k].piece !== ROOK)) {
           let inProtected = in_protected(moveList[k].to);
           if (!inProtected) {
-            // check if can eat against the move (exchange piece)
-            let moveList2 = moves({ square: moveList[k].to, opponent: false, verbose: true });
-            let isExchange = false;
-            for (let h = 0; h < moveList2.length; h++) {
-              if (moveList2[h].captured && moveList2[h].to === moveList[k].from) {
-                isExchange = true;
-                break;
-              }
-            }
-            if (!isExchange) {
-              moveCatching.push(moveList[k]);
-            } else {
-              break;
-            }
+            moveCatching.push(moveList[k]);
           }
         }
       }
       undoes.push(undo_move());
       if (history.length) {
         moveToCheck = Object.assign(moveToCheck, history[history.length - 1]);
+        if (is_exchange_move(moveToCheck)) break;
+        if (!prvmtCheck.move) {
+          prvmtCheck = Object.assign(prvmtCheck, moveToCheck);
+        }
         undoes.push(undo_move());
       }
       if (moveCatching.length <= 0 || !moveToCheck.move) {
         break;
       } else {
-        let isOldCatch = is_old_catch(moveCatching, moveToCheck);
+        let isOldCatch = is_old_catch(moveCatching, moveToCheck, prvmtCheck);
+        prvmtCheck = Object.assign(prvmtCheck, moveToCheck);
         if (isOldCatch) {
           repetition++;
         } else {
@@ -910,37 +904,63 @@ var Xiangqi = function(fen) {
   }
 
   /**
+   * A move that one piece on that row and col can be eaten by next turn is an exchange move
+   */
+  function is_exchange_move(move) {
+    let moveList = moves({ opponent: false, verbose: true });
+    for (let h = 0; h < moveList.length; h++) {
+      let _move = moveList[h];
+      let _to = _move.to;
+      let to = algebraic(move.move.to);
+      if (_move.captured && (_to.charAt(0) === to.charAt(0) || _to.charAt(1) === to.charAt(1))) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * The current turn must be the square's turn
    */
   function in_protected(square) {
     let piece = remove(square);
     if (piece) {
       let opponent = turn !== (piece.color);// or false
-      let ms = moves({ opponent });
+      let ms = moves({ opponent, verbose: true });
       let n = ms.length;
       if (n > 0) {
         for (let i = 0; i < n; i++) {
-          if (ms[i].substr(2) === square) {
+          if (ms[i].piece !== CANNON && ms[i].iccs.substr(2) === square) {
             put(piece, square);
             return square;
           }
         }
       }
       put(piece, square);
+      ms = moves({ opponent, verbose: true });
+      n = ms.length;
+      if (n > 0) {
+        for (let i = 0; i < n; i++) {
+          if (ms[i].piece === CANNON && ms[i].iccs.substr(2) === square) {
+            return square;
+          }
+        }
+      }
     }
     return null;
   }
 
   /** Check if moveCatching contains moveToCheck
    * @param moveCatching is a list of moves in the past that catch some moves
-   * @param moveToCheck if this move is insde moveCatching mean this is the old catch move*/
-  function is_old_catch(moveCatching, moveToCheck) {
+   * @param moveToCheck if this move is inside moveCatching mean this is the old catch move*/
+  function is_old_catch(moveCatching, moveToCheck, prvmtCheck) {
+    if (!prvmtCheck.move || (prvmtCheck.move.piece !== moveToCheck.move.piece) && prvmtCheck.move.to !== moveToCheck.move.to)
+      return false;
+
     for (let i = 0; i < moveCatching.length; i++) {
       let catcher = moveCatching[i];
-      let from = algebraic(moveToCheck.move.from);
-      let to = algebraic(moveToCheck.move.to);
-      if (moveToCheck.move.piece === catcher.captured &&
-        (from === catcher.to || to === catcher.to)) {
+      if (moveToCheck.move.piece === catcher.captured && moveToCheck.move.to === SQUARES[catcher.to]) {
         return true;
       }
     }
