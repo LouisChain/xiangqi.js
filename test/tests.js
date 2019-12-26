@@ -118,6 +118,9 @@ describe('Get Repeat Check', function() {
 describe('Get Repeat Catch Non Protector', function() {
 
   var repetition = [
+    {pgn: `[FEN "4k4/4a4/4P4/1c1P1PNCR/rN7/1r5n1/3n5/9/4p4/5K3 r - - 2 1"]
+
+1. g6h4 b4b5 2. h4f3 b5h5 3. h6h8 h5h3 4. h8h7 h3h1 5. h7h8 h1h3 6. h8h9 h3h7 7. h9h8 h7h3 8. f3g5 h3g3 9. g5i4 g3i3 10. i4g5 i3g3 11. g5i4 a5a6 12. i4g5 b6b7 13. g5i4 a6a5 14. i4g5 b7b6 15. g5i4 g3i3 16. i4g5 i3g3 17. g5i4 g3i3 18. i4g5 i3g3 19. g5i4`, repeat: 0},
     {pgn: `[FEN "2ba1k1r1/4a4/4b2r1/9/4c4/8R/6R2/4B4/4A4/2BAKN3 r - - 0 1"]
 
 2.i4i5 e5e4 3.i5i4 h7h6 4.g3g4`, repeat: 0},

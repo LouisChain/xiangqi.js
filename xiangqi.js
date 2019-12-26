@@ -871,7 +871,7 @@ var Xiangqi = function(fen) {
       let opponent = turn !== move.turn;// or true
       let moveList = moves({ square, opponent, verbose: true });
       for (let k = 0; k < moveList.length; k++) {
-        if (moveList[k].captured && (moveList[k].piece !== KING || moveList[k].piece !== ROOK)) {
+        if (moveList[k].captured && get(moveList[k].to).type !== KING && get(moveList[k].to).type !== ROOK) {
           let inProtected = in_protected(moveList[k].to);
           if (!inProtected) {
             moveCatching.push(moveList[k]);
