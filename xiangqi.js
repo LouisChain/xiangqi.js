@@ -795,6 +795,17 @@ var Xiangqi = function(fen) {
     return result;
   }
 
+  function is_previous_repeat_catch() {
+    let result = 0;
+    let undoes = [];
+    if (history.length) {
+      undoes.push(undo_move());
+      result = get_repeat_catch();
+    }
+    redo(undoes);
+    return result > 0;
+  }
+
   /**
    * Get number of check continuously right after the move push to history
    * We allow check continuously with condition: if num check > 5 then do not allow one piece persist check move more than 2 times for example : the ROOK d8d9 then d9d8 => lose
@@ -1403,6 +1414,10 @@ var Xiangqi = function(fen) {
 
     is_previous_check: function() {
       return is_previous_check();
+    },
+
+    is_previous_repeat_catch: function() {
+      return is_previous_repeat_catch();
     },
 
     get_half_moves: function() {
